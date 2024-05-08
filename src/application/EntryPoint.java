@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class EntryPoint extends Application{
 	  @Override
 	    public void start(Stage primaryStage) throws Exception{
-	        Parent root = FXMLLoader.load(getClass().getResource("/scenes/TestScene.fxml"));
+	        Parent root = FXMLLoader.load(getClass().getResource("/scenes/mainScene/TestScene.fxml"));
 	        primaryStage.setTitle("Fortily");
 	        primaryStage.setScene(new Scene(root));
 	        primaryStage.show();
