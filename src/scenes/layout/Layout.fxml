@@ -130,9 +130,6 @@
             </Button>
          </children></VBox>
    </left>
-   <center>
-      <AnchorPane prefHeight="748.0" prefWidth="1055.0" BorderPane.alignment="CENTER" />
-   </center>
    <bottom>
       <BorderPane prefHeight="130.0" prefWidth="1260.0" style="-fx-background-color: #1a1a1a;" BorderPane.alignment="CENTER">
          <top>
