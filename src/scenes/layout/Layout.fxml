@@ -143,7 +143,7 @@
                         <Font name="Dubai Regular" size="15.0" />
                      </font>
                   </Label>
-                  <Slider prefHeight="37.0" prefWidth="1106.0" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                  <Slider fx:id="progressSlider" prefHeight="37.0" prefWidth="1106.0" style="-fx-cursor: hand;" stylesheets="@../../css/styles.css" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets left="20.0" right="20.0" />
                      </padding>
@@ -217,7 +217,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../assets/images/icons8-diagonal-arrows-right-100.png" />
+                              <Image url="@../../assets/images/icons8-full-screen-100.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -256,6 +256,12 @@
                   <Insets right="30.0" />
                </padding>
                <children>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                     <image>
+                        <Image url="@../../assets/images/icons8-mute-100.png" />
+                     </image>
+                  </ImageView>
+                  <Slider fx:id="volumeSlider" prefHeight="14.0" prefWidth="111.0" style="-fx-cursor: hand;" />
                   <Button mnemonicParsing="false" style="-fx-background-color: transparent;" stylesheets="@../../css/styles.css">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
