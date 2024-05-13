@@ -19,7 +19,7 @@ public class EntryPoint extends Application{
 	        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/assets/images/Fortily.png")));
 	        primaryStage.setTitle("Fortily");
 	        primaryStage.setScene(new Scene(splashScreen));
-	        primaryStage.setWidth(1300);
+	        primaryStage.setWidth(1400);
 	        primaryStage.setHeight(1000);
 	        primaryStage.show();
 	        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.7), event -> {
