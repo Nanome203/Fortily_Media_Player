@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -188,6 +189,9 @@
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
+                     <tooltip>
+                        <Tooltip text="Loop : OFF" textOverrun="LEADING_ELLIPSIS" />
+                     </tooltip>
                   </Button>
                   <Button mnemonicParsing="false" styleClass="button-style" stylesheets="@../../css/styles.css">
                      <graphic>
@@ -213,9 +217,9 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="button-style" stylesheets="@../../css/styles.css">
+                  <Button fx:id="playPauseBtn" mnemonicParsing="false" onAction="#handlePlayPauseBtn" styleClass="button-style" stylesheets="@../../css/styles.css">
                      <graphic>
-                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="playPauseBtnImgView" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../assets/images/icons8-play-button-100.png" />
                            </image>
@@ -295,11 +299,11 @@
                   <Insets right="30.0" />
                </padding>
                <children>
-                  <Button mnemonicParsing="false" styleClass="button-style" stylesheets="@../../css/styles.css">
+                  <Button fx:id="volumeBtn" mnemonicParsing="false" onAction="#handleVolumeBtn" styleClass="button-style" stylesheets="@../../css/styles.css">
                      <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="volumeBtnImgView" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../assets/images/icons8-mute-100.png" />
+                              <Image url="@../../assets/images/icons8-volume-100.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -307,7 +311,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </Button>
-                  <Slider fx:id="volumeSlider" prefHeight="14.0" prefWidth="111.0" style="-fx-cursor: hand;" />
+                  <Slider fx:id="volumeSlider" prefHeight="14.0" prefWidth="111.0" style="-fx-cursor: hand;" stylesheets="@../../css/styles.css" value="100.0" />
                   <Button mnemonicParsing="false" styleClass="button-style" stylesheets="@../../css/styles.css">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
