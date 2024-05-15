@@ -3,6 +3,10 @@
 	-fx-background-radius: 10;
 	-fx-cursor:hand;
 }
+
+#imageSongContainer:hover:pressed {
+	-fx-background-color: #46516B;
+}
 .sidebar-item {
 	-fx-background-color:transparent;
 	-fx-text-fill: white;
@@ -19,11 +23,19 @@
 
 .button-style {
 	-fx-background-color: transparent;
+	-fx-cursor:hand;
 }
 
 .button-style:hover {
 	-fx-background-color: #384154;
 	-fx-background-radius: 50;
-	-fx-cursor:hand;
+}
+
+.button-style:hover:pressed {
+	-fx-background-color: #46516B;
+}
+
+#volumeSlider.slider .track {
+	-fx-background-color:#2880E8;
 }
 
