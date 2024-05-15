@@ -75,7 +75,7 @@ public class LayoutController implements Initializable {
 				@Override
 	            public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 					StackPane trackPane = (StackPane) progressSlider.lookup(".track");
-	                String style = String.format("-fx-background-color: linear-gradient(to right, gray %d%%, white %d%%);",
+	                String style = String.format("-fx-background-color: linear-gradient(to right, #2880E8 %d%%, white %d%%);",
 	                        new_val.intValue(), new_val.intValue());
 	                trackPane.setStyle(style);
 	            }
@@ -85,7 +85,7 @@ public class LayoutController implements Initializable {
 				@Override
 	            public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 					StackPane trackPane = (StackPane) volumeSlider.lookup(".track");
-	                String style = String.format("-fx-background-color: linear-gradient(to right, gray %d%%, white %d%%);",
+	                String style = String.format("-fx-background-color: linear-gradient(to right, #2880E8 %d%%, white %d%%);",
 	                        new_val.intValue(), new_val.intValue());
 	                trackPane.setStyle(style);
 	            }
