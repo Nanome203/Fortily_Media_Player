@@ -7,6 +7,13 @@
 #imageSongContainer:hover:pressed {
 	-fx-background-color: #46516B;
 }
+
+#imageSongContainer .label {
+	-fx-text-fill:white;
+}
+#imageSongContainer .label:hover {
+	-fx-text-fill:#2880E8;
+}
 .sidebar-item {
 	-fx-background-color:transparent;
 	-fx-text-fill: white;
@@ -14,11 +21,14 @@
 }
 .sidebar-item:hover,
 .active {
+	-fx-background-color:#202633;
+	-fx-text-fill:#2880E8;
+}
+
+.active {
 	-fx-text-fill:#2880E8;
 	-fx-border-width: 0 0 0 5;
 	-fx-border-color: #2880E8;
-	-fx-background-color:#202633;
-	
 }
 
 .button-style {
