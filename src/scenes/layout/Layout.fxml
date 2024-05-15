@@ -17,7 +17,7 @@
 
 <BorderPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="928.0" prefWidth="1306.0" style="-fx-background-color: #1D2129;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.layout.LayoutController">
    <left>
-      <VBox fx:id="sideBarContainer" prefHeight="748.0" prefWidth="255.0" style="-fx-background-color: #000;" BorderPane.alignment="CENTER">
+      <VBox fx:id="sideBarContainer" prefHeight="748.0" prefWidth="255.0" style="-fx-background-color: #161616;" BorderPane.alignment="CENTER">
          <children>
             <AnchorPane prefHeight="180.0" prefWidth="260.0">
                <children>
@@ -190,7 +190,10 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                      <tooltip>
-                        <Tooltip text="Loop : OFF" textOverrun="LEADING_ELLIPSIS" />
+                        <Tooltip text="Loop" textOverrun="LEADING_ELLIPSIS">
+                           <font>
+                              <Font name="Arial" size="15.0" />
+                           </font></Tooltip>
                      </tooltip>
                   </Button>
                   <Button mnemonicParsing="false" styleClass="button-style" stylesheets="@../../css/styles.css">
