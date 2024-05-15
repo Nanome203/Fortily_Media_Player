@@ -51,6 +51,9 @@ public class LayoutController implements Initializable {
 	    @FXML
 	    private Slider volumeSlider;
 	    
+	    @FXML
+	    private Button settings;
+	    
 	    
 
 		
@@ -58,6 +61,8 @@ public class LayoutController implements Initializable {
 	        for (Node node : sidebarNavigator.getChildren()) {
 	                ((Button)node).getStyleClass().remove("active");
 	        }
+	        
+	        settings.getStyleClass().remove("active");
 
 	        // Add 'selected' class to the clicked item
 	        ((Button)event.getSource()).getStyleClass().add("active");
