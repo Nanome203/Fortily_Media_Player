@@ -111,6 +111,12 @@ public class VideoPlayerController implements Initializable {
       }
     });
 
+    // start:dev
+    ImportedMediaPlayer importedMediaPlayer = new ImportedMediaPlayer();
+    mainMediaView.setMediaPlayer(importedMediaPlayer.getMediaPlayer());
+    importedMediaPlayer.playMediaPlayer();
+    // end:dev
+
     selectMainMediaButton.setOnAction(event -> {
       FileChooser fileChooser = new FileChooser();
       fileChooser.setInitialDirectory(new File("./src/assets/videos"));

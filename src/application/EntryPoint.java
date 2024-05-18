@@ -22,8 +22,11 @@ public class EntryPoint extends Application{
 	        primaryStage.setWidth(1400);
 	        primaryStage.setHeight(1000);
 	        primaryStage.show();
+
+	        Parent videoPlayer = FXMLLoader.load(getClass().getResource("/scenes/videoPlayer/VideoPlayer.fxml"));
 	        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.7), event -> {
-	            primaryStage.setScene(new Scene(root));
+	            // primaryStage.setScene(new Scene(root));
+	            primaryStage.setScene(new Scene(videoPlayer));
 	        }));
 	        timeline.play();
 	    }
