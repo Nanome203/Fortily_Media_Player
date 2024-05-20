@@ -354,7 +354,7 @@
       <StackPane fx:id="mainMediaContainer" BorderPane.alignment="CENTER">
          <children>
             <MediaView fx:id="mainMediaView" fitHeight="200.0" fitWidth="200.0" />
-            <Button fx:id="selectMainMediaButton" mnemonicParsing="false" text="Select Video" />
+            <Button fx:id="selectMainMediaButton" mnemonicParsing="false" text="Select Media" />
          </children>
       </StackPane>
    </center>
