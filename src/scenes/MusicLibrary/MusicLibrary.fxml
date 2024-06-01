@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="musicLibrary" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #1D2129; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.MusicLibrary.MusicLibraryController">
+    <children>
+        <TabPane id="tabMusic" fx:id="tabSong" layoutX="32.0" layoutY="84.0" prefHeight="478.0" prefWidth="733.0" stylesheets="@../../css/styles.css" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab style="-fx-background-color: #1D2129; -fx-text-fill: #f3f3f3;" text="All songs">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="448.0" prefWidth="732.0" style="-fx-background-color: #1D2129;" styleClass="tab" stylesheets="@../../css/styles.css">
+                            <children>
+                                <Button fx:id="shuffleAndPlayAllSongs" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" style="-fx-background-color: #1D2129; -fx-border-color: #2880E8; -fx-border-radius: 5;" text="Shuffle and play" textFill="#f3f3f3">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="playAll" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #2880E8; -fx-background-radius: 5; -fx-blend-mode: #2880E8;" text="Play all" textFill="#f3f3f3">
+                                    <font>
+                                        <Font name="Ebrima" size="14.0" />
+                                    </font>
+                                </Button>
+                                <ChoiceBox fx:id="choicebox" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onMouseClicked="#changebox" prefHeight="31.2" prefWidth="150.0" style="-fx-background-color: #1D2129; -fx-border-radius: 5; -fx-border-color: #2880E8;" stylesheets="@../../css/styles.css" />
+                                <TableView fx:id="TableSong" layoutY="96.0" prefHeight="353.0" prefWidth="734.0" style="-fx-background-color: #1D2129;" stylesheets="@../../css/styles.css">
+                                    <placeholder>
+                                        <Label text="" />
+                                    </placeholder>
+                                    <columns>
+                                        <TableColumn fx:id="title" prefWidth="252.00003051757812" style="-fx-background-color: #1D2129; -fx-border-color: #1D2129; -fx-text-fill: #f3f3f3;" text="Title" />
+                                        <TableColumn fx:id="artist" prefWidth="212.79998779296875" style="-fx-background-color: #1D2129; -fx-border-color: #1D2129; -fx-text-fill: #f3f3f3;" text="Artist" />
+                                        <TableColumn fx:id="album" prefWidth="204.0" style="-fx-background-color: #1D2129; -fx-border-color: #1D2129; -fx-text-fill: #f3f3f3;" text="Album" />
+                                        <TableColumn fx:id="duration" prefWidth="60.0" style="-fx-background-color: #1D2129; -fx-border-color: #1D2129; -fx-text-fill: #f3f3f3;" text="Duration" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab style="-fx-background-color: #1D2129; -fx-text-fill: #f3f3f3;" text="Albums">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Button fx:id="shuffleAndPlayAllSongs11" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" style="-fx-background-color: #1D2129; -fx-border-color: #2880E8; -fx-border-radius: 5;" text="Shuffle and play" textFill="#f3f3f3">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="playAll11" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #2880E8; -fx-background-radius: 5; -fx-blend-mode: #2880E8;" text="Play all" textFill="#f3f3f3">
+                                    <font>
+                                        <Font name="Ebrima" size="14.0" />
+                                    </font>
+                                </Button>
+                                <ChoiceBox fx:id="choicebox11" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onMouseClicked="#changebox" prefHeight="31.2" prefWidth="150.0" style="-fx-background-color: #1D2129; -fx-border-radius: 5; -fx-border-color: #2880E8;" stylesheets="@../../css/styles.css" />
+                                <TableView fx:id="TableAlbum" layoutX="-1.0" layoutY="96.0" prefHeight="353.0" prefWidth="734.0" stylesheets="@../../css/styles.css">
+                                    <placeholder>
+                                        <Label text="" />
+                                    </placeholder>
+                                    <columns>
+                                        <TableColumn fx:id="AlbumName" prefWidth="728.8000793457031" style="-fx-background-color: #1D2129; -fx-border-color: #1D2129; -fx-text-fill: #f3f3f3;" text="Album" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab style="-fx-background-color: #1D2129; -fx-text-fill: #f3f3f3;" text="Artists">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Button fx:id="shuffleAndPlayAllSongs1" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" style="-fx-background-color: #1D2129; -fx-border-color: #2880E8; -fx-border-radius: 5;" text="Shuffle and play" textFill="#f3f3f3">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="playAll1" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #2880E8; -fx-background-radius: 5; -fx-blend-mode: #2880E8;" text="Play all" textFill="#f3f3f3">
+                                    <font>
+                                        <Font name="Ebrima" size="14.0" />
+                                    </font>
+                                </Button>
+                                <ChoiceBox fx:id="choicebox1" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onMouseClicked="#changebox" prefHeight="31.2" prefWidth="150.0" style="-fx-background-color: #1D2129; -fx-border-radius: 5; -fx-border-color: #2880E8;" stylesheets="@../../css/styles.css" />
+                                <TableView fx:id="TableArtists" layoutY="96.0" prefHeight="355.0" prefWidth="734.0" stylesheets="@../../css/styles.css">
+                                    <placeholder>
+                                        <Label text="" />
+                                    </placeholder>
+                                    <columns>
+                                        <TableColumn fx:id="ArtistName" prefWidth="728.8000793457031" style="-fx-background-color: #1D2129; -fx-border-color: #1D2129; -fx-text-fill: #f3f3f3;" text="Artist" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+        <Label layoutX="37.0" layoutY="34.0" prefHeight="22.0" prefWidth="57.0" text="Music" textFill="#f3f3f3">
+            <font>
+                <Font name="Ebrima Bold" size="20.0" />
+            </font>
+        </Label>
+        <Button fx:id="addFolder" layoutX="655.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#addFolder" style="-fx-background-color: #1D2129;" text="Add folder" textFill="#2880e8">
+            <font>
+                <Font name="Ebrima" size="20.0" />
+            </font>
+        </Button>
+    </children>
+</AnchorPane>

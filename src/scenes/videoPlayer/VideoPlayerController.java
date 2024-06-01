@@ -105,16 +105,29 @@ public class VideoPlayerController implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("/scenes/layout/Layout.fxml"));
         currentStage.setScene(new Scene(root));
         System.out.println("Switched to layout");
-        mediaPlayer.stop();
+        if (mediaPlayer != null)
+          mediaPlayer.stop();
       } catch (Exception e) {
         e.printStackTrace();
       }
     });
 
+    // start:dev
+    // ImportedMediaPlayer importedMediaPlayer = new ImportedMediaPlayer();
+    // mainMediaView.setMediaPlayer(importedMediaPlayer.getMediaPlayer());
+    // importedMediaPlayer.playMediaPlayer();
+    // end:dev
+
     selectMainMediaButton.setOnAction(event -> {
       FileChooser fileChooser = new FileChooser();
       fileChooser.setInitialDirectory(new File("./src/assets/videos"));
-      fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video Files", "*.mp4", "*.flv", "*.mkv"));
+      fileChooser.getExtensionFilters()
+          .add(new FileChooser.ExtensionFilter("Media Files", "*.mp3", "*.wav", "*.m4a", "*.flac", "*.ogg", "*.mp4",
+              "*.flv", "*.mkv", "*.mpeg"));
+      fileChooser.getExtensionFilters()
+          .add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.m4a", "*.flac", "*.ogg"));
+      fileChooser.getExtensionFilters()
+          .add(new FileChooser.ExtensionFilter("Video Files", "*.mp4", "*.flv", "*.mkv", "*.mpeg", "*.ogg"));
       fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All", "*"));
       File selectedMediaFile = fileChooser.showOpenDialog(null);
 
@@ -123,8 +136,9 @@ public class VideoPlayerController implements Initializable {
             .filter(f -> f.contains("."))
             .map(f -> f.substring(selectedMediaFile.getName().lastIndexOf(".") + 1)).map(Object::toString)
             .orElse("");
-        boolean isVideoFile = selectedMediaFileExtension.matches("mp4|flv|mkv");
-        if (isVideoFile) {
+        boolean isAudioFile = selectedMediaFileExtension.matches("mp3|wav|m4a|flac|ogg");
+        boolean isVideoFile = selectedMediaFileExtension.matches("mp4|flv|mkv|mpeg|ogg");
+        if (isAudioFile || isVideoFile) {
           if (mediaPlayer != null) {
             mediaPlayer.stop();
           }
