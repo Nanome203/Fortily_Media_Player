@@ -1,7 +1,7 @@
 #imageSongContainer:hover {
 	-fx-background-color: #384154;
 	-fx-background-radius: 10;
-	-fx-cursor:hand;
+	-fx-cursor: hand;
 }
 
 #imageSongContainer:hover:pressed {
@@ -9,31 +9,38 @@
 }
 
 #imageSongContainer .label {
-	-fx-text-fill:white;
-}
-#imageSongContainer .label:hover {
-	-fx-text-fill:#2880E8;
-}
-.sidebar-item {
-	-fx-background-color:transparent;
 	-fx-text-fill: white;
-	-fx-cursor:hand;
 }
+
+#imageSongContainer .label:hover {
+	-fx-text-fill: #2880E8;
+}
+
+.sidebar-item {
+	-fx-background-color: transparent;
+	-fx-text-fill: white;
+	-fx-cursor: hand;
+}
+
 .sidebar-item:hover,
 .active {
-	-fx-background-color:#202633;
-	-fx-text-fill:#2880E8;
+	-fx-background-color: #202633;
+	-fx-text-fill: #2880E8;
+}
+
+.sidebar-item:pressed {
+	-fx-background-color: #384258;
 }
 
 .active {
-	-fx-text-fill:#2880E8;
+	-fx-text-fill: #2880E8;
 	-fx-border-width: 0 0 0 5;
 	-fx-border-color: #2880E8;
 }
 
 .button-style {
 	-fx-background-color: transparent;
-	-fx-cursor:hand;
+	-fx-cursor: hand;
 }
 
 .button-style:hover {
@@ -46,6 +53,5 @@
 }
 
 #volumeSlider.slider .track {
-	-fx-background-color:#2880E8;
+	-fx-background-color: #2880E8;
 }
-

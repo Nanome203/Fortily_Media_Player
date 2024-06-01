@@ -1,16 +1,24 @@
 package scenes.layout;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,6 +26,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import utils.Utils;
 
 public class LayoutController implements Initializable {
 
@@ -40,10 +55,10 @@ public class LayoutController implements Initializable {
 	private VBox sidebarNavigator;
 
 	@FXML
-	private Button siderBarMusicLib;
+	private Button sideBarMusicLib;
 
 	@FXML
-	private Button siderBarVideoLib;
+	private Button sideBarVideoLib;
 
 	@FXML
 	private VBox sideBarContainer;
@@ -53,6 +68,9 @@ public class LayoutController implements Initializable {
 
 	@FXML
 	private Slider volumeSlider;
+
+	@FXML
+	private Label volumeLabel, currentTimeLabel, mediaDurationLabel;
 
 	@FXML
 	private Button settings;
@@ -66,6 +84,51 @@ public class LayoutController implements Initializable {
 
 	private static boolean isPlayButton = true,
 			isMuted = false;
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		try {
+			Parent homeScene = FXMLLoader.load(getClass().getResource("/scenes/spinningDisk/SpinningDisk.fxml"));
+			mainContainer.setCenter(homeScene);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		progressSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+				StackPane trackPane = (StackPane) progressSlider.lookup(".track");
+				String style = String.format(
+						"-fx-background-color: linear-gradient(to right, #2880E8 %.5f%%, white %.5f%%);",
+						new_val.floatValue(), new_val.floatValue());
+				trackPane.setStyle(style);
+			}
+		});
+
+		volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+				StackPane trackPane = (StackPane) volumeSlider.lookup(".track");
+				String style = String.format(
+						"-fx-background-color: linear-gradient(to right, #2880E8 %d%%, white %d%%);",
+						new_val.intValue(), new_val.intValue());
+				trackPane.setStyle(style);
+				if (volumeSlider.getValue() == 0.0) {
+					File file = new File("src/assets/images/icons8-mute-100.png");
+					Image image = new Image(file.toURI().toString());
+					volumeBtnImgView.setImage(image);
+					isMuted = true;
+				}
+
+				else {
+					File file = new File("src/assets/images/icons8-volume-100.png");
+					Image image = new Image(file.toURI().toString());
+					volumeBtnImgView.setImage(image);
+					isMuted = false;
+				}
+			}
+		});
+
+	}
 
 	public void selectItem(ActionEvent event) {
 		for (Node node : sidebarNavigator.getChildren()) {
@@ -107,44 +170,4 @@ public class LayoutController implements Initializable {
 			isMuted = true;
 		}
 	}
-
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		progressSlider.valueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-				StackPane trackPane = (StackPane) progressSlider.lookup(".track");
-				String style = String.format(
-						"-fx-background-color: linear-gradient(to right, #2880E8 %.5f%%, white %.5f%%);",
-						new_val.floatValue(), new_val.floatValue());
-				trackPane.setStyle(style);
-			}
-		});
-
-		volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-				StackPane trackPane = (StackPane) volumeSlider.lookup(".track");
-				String style = String.format(
-						"-fx-background-color: linear-gradient(to right, #2880E8 %d%%, white %d%%);",
-						new_val.intValue(), new_val.intValue());
-				trackPane.setStyle(style);
-				if (volumeSlider.getValue() == 0.0) {
-					File file = new File("src/assets/images/icons8-mute-100.png");
-					Image image = new Image(file.toURI().toString());
-					volumeBtnImgView.setImage(image);
-					isMuted = true;
-				}
-
-				else {
-					File file = new File("src/assets/images/icons8-volume-100.png");
-					Image image = new Image(file.toURI().toString());
-					volumeBtnImgView.setImage(image);
-					isMuted = false;
-				}
-			}
-		});
-
-	}
-
 }
