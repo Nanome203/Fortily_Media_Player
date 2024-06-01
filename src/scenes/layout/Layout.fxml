@@ -70,7 +70,7 @@
                         <Insets />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="siderBarMusicLib" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefHeight="56.0" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Music Library" textFill="#fffefe">
+                  <Button fx:id="siderBarMusicLib" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onMouseClicked="#openMusicLibrary" prefHeight="56.0" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Music Library" textFill="#fffefe">
                      <font>
                         <Font name="Ebrima Bold" size="20.0" />
                      </font>
