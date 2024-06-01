@@ -146,6 +146,29 @@ public class LayoutController implements Initializable {
 
 		// Add 'selected' class to the clicked item
 		((Button) event.getSource()).getStyleClass().add("active");
+		if (event.getSource() == sideBarMusicLib) {
+
+			// Test loading music scene, not official code
+
+			try {
+				Parent musicLibScene = FXMLLoader
+						.load(getClass().getResource("/scenes/MusicLibrary/MusicLibrary.fxml"));
+				mainContainer.setCenter(musicLibScene);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (event.getSource() == sideBarHome) {
+
+			// Test loading home scene, not official code
+
+			try {
+				Parent homeScene = FXMLLoader.load(getClass().getResource("/scenes/spinningDisk/SpinningDisk.fxml"));
+				mainContainer.setCenter(homeScene);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void handlePlayPauseBtn(ActionEvent event) {
