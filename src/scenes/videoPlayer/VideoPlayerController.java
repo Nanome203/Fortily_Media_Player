@@ -105,7 +105,8 @@ public class VideoPlayerController implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("/scenes/layout/Layout.fxml"));
         currentStage.setScene(new Scene(root));
         System.out.println("Switched to layout");
-        mediaPlayer.stop();
+        if (mediaPlayer != null)
+          mediaPlayer.stop();
       } catch (Exception e) {
         e.printStackTrace();
       }
