@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="928.0" prefWidth="1306.0" style="-fx-background-color: #1D2129;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.layout.LayoutController">
+<BorderPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" style="-fx-background-color: #1D2129;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.layout.LayoutController">
    <left>
       <VBox fx:id="sideBarContainer" prefHeight="748.0" prefWidth="255.0" style="-fx-background-color: #161616;" BorderPane.alignment="CENTER">
          <children>
@@ -48,15 +48,18 @@
                         <Insets left="10.0" />
                      </padding>
                   </HBox>
-               </children></AnchorPane>
+               </children>
+               <padding>
+                  <Insets bottom="40.0" />
+               </padding></AnchorPane>
             <VBox fx:id="sidebarNavigator" prefHeight="510.0" prefWidth="240.0" spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Button fx:id="sideBarHome" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefHeight="56.0" prefWidth="318.0" stylesheets="@../../css/styles.css" text="Home" textFill="#fffefe">
+                  <Button fx:id="sideBarHome" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" stylesheets="@../../css/styles.css" text="Home" textFill="#fffefe">
                      <font>
-                        <Font name="Ebrima Bold" size="20.0" />
+                        <Font name="Ebrima Bold" size="18.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../assets/images/icons8-home-100.png" />
                            </image>
@@ -69,13 +72,16 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                     </padding>
                   </Button>
-                  <Button fx:id="siderBarMusicLib" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefHeight="56.0" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Music Library" textFill="#fffefe">
+                  <Button fx:id="siderBarMusicLib" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Music Library" textFill="#fffefe">
                      <font>
-                        <Font name="Ebrima Bold" size="20.0" />
+                        <Font name="Ebrima Bold" size="18.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../assets/images/icons8-musical-note-100.png" />
                            </image>
@@ -84,13 +90,16 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                     </padding>
                   </Button>
-                  <Button fx:id="siderBarVideoLib" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefHeight="56.0" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Video Library" textFill="#fffefe">
+                  <Button fx:id="siderBarVideoLib" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Video Library" textFill="#fffefe">
                      <font>
-                        <Font name="Ebrima Bold" size="20.0" />
+                        <Font name="Ebrima Bold" size="18.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../assets/images/icons8-video-100.png" />
                            </image>
@@ -99,13 +108,16 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                     </padding>
                   </Button>
-                  <Button fx:id="sideBarPlaylist" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefHeight="56.0" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Playlist" textFill="#fffefe">
+                  <Button fx:id="sideBarPlaylist" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Playlist" textFill="#fffefe">
                      <font>
-                        <Font name="Ebrima Bold" size="20.0" />
+                        <Font name="Ebrima Bold" size="18.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../assets/images/icons8-playlist-100.png" />
                            </image>
@@ -114,13 +126,16 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                     </padding>
                   </Button>
-                  <Button fx:id="sideBarFav" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefHeight="56.0" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Favorites" textFill="#fffefe">
+                  <Button fx:id="sideBarFav" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Favorites" textFill="#fffefe">
                      <font>
-                        <Font name="Ebrima Bold" size="20.0" />
+                        <Font name="Ebrima Bold" size="18.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../assets/images/icons8-favorites-100.png" />
                            </image>
@@ -129,12 +144,15 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                     </padding>
                   </Button>
                </children>
             </VBox>
-            <Button fx:id="settings" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefHeight="56.0" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Settings" textFill="#fffefe">
+            <Button fx:id="settings" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" stylesheets="@../../css/styles.css" text="Settings" textFill="#fffefe">
                <font>
-                  <Font name="Ebrima Bold" size="20.0" />
+                  <Font name="Ebrima Bold" size="18.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
@@ -146,34 +164,43 @@
                <VBox.margin>
                   <Insets />
                </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" top="10.0" />
+               </padding>
             </Button>
          </children></VBox>
    </left>
    <bottom>
-      <BorderPane prefHeight="130.0" prefWidth="1260.0" style="-fx-background-color: #292F3B;" BorderPane.alignment="CENTER">
+      <BorderPane style="-fx-background-color: #292F3B;" BorderPane.alignment="CENTER">
          <top>
-            <HBox alignment="CENTER" prefHeight="55.0" prefWidth="1260.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER" BorderPane.alignment="CENTER">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="83.0" text="00:00:00" textFill="WHITE">
+                  <Label alignment="CENTER_RIGHT" prefHeight="38.0" text="00:00:00" textFill="WHITE">
                      <font>
                         <Font name="Dubai Regular" size="15.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
                   </Label>
-                  <Slider fx:id="progressSlider" prefHeight="37.0" prefWidth="1106.0" style="-fx-cursor: hand;" stylesheets="@../../css/styles.css" HBox.hgrow="ALWAYS">
+                  <Slider fx:id="progressSlider" prefHeight="37.0" style="-fx-cursor: hand;" stylesheets="@../../css/styles.css" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets left="20.0" right="20.0" />
                      </padding>
                   </Slider>
-                  <Label prefHeight="38.0" prefWidth="83.0" text="00:00:00" textFill="WHITE">
+                  <Label prefHeight="38.0" text="00:00:00" textFill="WHITE">
                      <font>
                         <Font name="Dubai Regular" size="15.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
                   </Label>
                </children>
             </HBox>
          </top>
          <center>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
                   <Button mnemonicParsing="false" styleClass="button-style" stylesheets="@../../css/styles.css">
                      <graphic>
@@ -275,9 +302,9 @@
             </HBox>
          </center>
          <left>
-            <HBox fx:id="imageSongContainer" alignment="CENTER_LEFT" prefHeight="115.0" prefWidth="360.0" spacing="20.0" stylesheets="@../../css/styles.css">
+            <HBox fx:id="imageSongContainer" alignment="CENTER_LEFT" spacing="20.0" stylesheets="@../../css/styles.css">
                <children>
-                  <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../assets/images/music-note-icon-song-melody-tune-flat-symbol-free-vector.jpg" />
                      </image>
@@ -297,7 +324,7 @@
             </HBox>
          </left>
          <right>
-            <HBox alignment="CENTER_RIGHT" prefHeight="115.0" prefWidth="370.0" spacing="5.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
                <padding>
                   <Insets right="30.0" />
                </padding>
