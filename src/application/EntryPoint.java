@@ -10,29 +10,29 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class EntryPoint extends Application{
-	
-	  @Override
-	    public void start(Stage primaryStage) throws Exception{
-	        Parent root = FXMLLoader.load(getClass().getResource("/scenes/layout/Layout.fxml"));
-	        Parent splashScreen = FXMLLoader.load(getClass().getResource("/scenes/splashScreen/SplashScreen.fxml"));
-	        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/assets/images/Fortily.png")));
-	        primaryStage.setTitle("Fortily");
-	        primaryStage.setScene(new Scene(splashScreen));
-	        primaryStage.setWidth(1000);
-	        primaryStage.setHeight(800);
-	        primaryStage.show();
+public class EntryPoint extends Application {
 
-	        Parent videoPlayer = FXMLLoader.load(getClass().getResource("/scenes/videoPlayer/VideoPlayer.fxml"));
-	        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.7), event -> {
-	            // primaryStage.setScene(new Scene(root));
-	            primaryStage.setScene(new Scene(videoPlayer));
-	        }));
-	        timeline.play();
-	    }
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    Parent root = FXMLLoader.load(getClass().getResource("/scenes/layout/Layout.fxml"));
+    Parent splashScreen = FXMLLoader.load(getClass().getResource("/scenes/splashScreen/SplashScreen.fxml"));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/assets/images/Fortily.png")));
+    primaryStage.setTitle("Fortily");
+    primaryStage.setScene(new Scene(splashScreen));
+    primaryStage.setWidth(1000);
+    primaryStage.setHeight(800);
+    primaryStage.show();
 
+    // Parent tempScene =
+    FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
+    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.7), event -> {
+      primaryStage.setScene(new Scene(root));
+      // primaryStage.setScene(new Scene(tempScene));
+    }));
+    timeline.play();
+  }
 
-	    public static void main(String[] args) {
-	        launch(args);
-	    }
+  public static void main(String[] args) {
+    launch(args);
+  }
 }
