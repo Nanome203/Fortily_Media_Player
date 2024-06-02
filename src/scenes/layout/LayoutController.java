@@ -36,7 +36,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Stage;
-import scenes.MusicLibrary.*;
+import scenes.musicLibrary.*;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import utils.Utils;

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="videoLibraryContainer" fx:id="videoLibraryContainer" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.videoLibrary.VideoLibraryController">
+    <children>
+      <VBox alignment="CENTER" layoutY="25.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER">
+               <children>
+                    <Label fx:id="musicLibraryLabel" prefHeight="22.0" text="Video Library" textFill="#f3f3f3">
+                        <font>
+                            <Font name="Ebrima Bold" size="20.0" />
+                        </font>
+                    </Label>
+                  <HBox prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="addFolderButton" mnemonicParsing="false" onMouseClicked="#addFolder" styleClass="addFolderButton" text="Add folder" textFill="#2880e8">
+                        <font>
+                            <Font name="Ebrima" size="20.0" />
+                        </font>
+                    </Button>
+               </children>
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="40.0">
+               <children>
+                          <Button fx:id="playAllButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
+                              <font>
+                                  <Font name="Ebrima" size="14.0" />
+                              </font>
+                          </Button>
+                          <Button fx:id="shuffleAndPlayButton" mnemonicParsing="false" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
+                              <font>
+                                  <Font size="14.0" />
+                              </font>
+                          </Button>
+                          <ChoiceBox fx:id="filterChoiceBox" maxHeight="31.2" minHeight="31.2" onMouseClicked="#changebox" prefHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+            </HBox>
+            <GridPane alignment="CENTER" gridLinesVisible="true" prefHeight="389.0" prefWidth="725.0" vgap="20.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints percentHeight="0.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="imageView" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@../../../../../../../../Users/acer/OneDrive/Hình%20ảnh/Backgrounds/VSCode/1156620.jpg" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="imageView" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@../../../../../../../../Users/acer/OneDrive/Hình%20ảnh/Backgrounds/VSCode/1156620.jpg" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="imageView" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@../../../../../../../../Users/acer/OneDrive/Hình%20ảnh/Backgrounds/VSCode/1156620.jpg" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="imageView" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@../../../../../../../../Users/acer/OneDrive/Hình%20ảnh/Backgrounds/VSCode/1156620.jpg" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="imageView" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@../../../../../../../../Users/acer/OneDrive/Hình%20ảnh/Backgrounds/VSCode/1156620.jpg" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="imageView" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@../../../../../../../../Users/acer/OneDrive/Hình%20ảnh/Backgrounds/VSCode/1156620.jpg" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+               </children>
+            </GridPane>
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </VBox>
+    </children>
+   <stylesheets>
+      <URL value="@../../css/styles.css" />
+      <URL value="@VideoLibrary.css" />
+   </stylesheets>
+</AnchorPane>

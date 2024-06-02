@@ -1,4 +1,4 @@
-package scenes.musicLibrary;
+package scenes.videoLibrary;
 
 import java.io.File;
 import java.net.URL;
@@ -27,7 +27,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import model.SongMetadata;
 
-public class MusicLibraryController implements Initializable {
+public class VideoLibraryController implements Initializable {
 
   @FXML
   private Button shuffleAndPlayAllSongs;
