@@ -22,7 +22,7 @@
          <children>
             <HBox alignment="CENTER">
                <children>
-                    <Label fx:id="musicLibraryLabel" prefHeight="22.0" text="Music Library" textFill="#f3f3f3">
+                    <Label fx:id="musicLibraryLabel" prefHeight="22.0" text="Video Library" textFill="#f3f3f3">
                         <font>
                             <Font name="Ebrima Bold" size="20.0" />
                         </font>
