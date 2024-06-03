@@ -36,15 +36,15 @@ public class MusicLibraryController implements Initializable {
   @FXML
   private MediaPlayer mediaPlayer;
   @FXML
-  private TableView<SongMetadata> TableSong;
+  private TableView<SongMetadata> allSongsTable;
   @FXML
-  private TableColumn<SongMetadata, String> title;
+  private TableColumn<SongMetadata, String> allSongsTitleColumn;
   @FXML
-  private TableColumn<SongMetadata, String> artist;
+  private TableColumn<SongMetadata, String> allSongsArtistColumn;
   @FXML
-  private TableColumn<SongMetadata, String> album;
+  private TableColumn<SongMetadata, String> allSongsAlbumColumn;
   @FXML
-  private TableColumn<SongMetadata, String> duration;
+  private TableColumn<SongMetadata, String> allSongsDurationColumn;
   @FXML
   private Button addFolder;
   private ObservableList<SongMetadata> LSong = FXCollections.observableArrayList();
@@ -53,14 +53,14 @@ public class MusicLibraryController implements Initializable {
   @FXML
   private ChoiceBox<String> allSongsFilterChoiceBox;
   @FXML
-  private TableView<SongMetadata> TableArtists;
+  private TableView<SongMetadata> artistsTable;
   @FXML
-  private TableColumn<SongMetadata, String> ArtistName;
+  private TableColumn<SongMetadata, String> artistsNameColumn;
 
   @FXML
-  private TableView<SongMetadata> TableAlbum;
+  private TableView<SongMetadata> albumsTable;
   @FXML
-  private TableColumn<SongMetadata, String> AlbumName;
+  private TableColumn<SongMetadata, String> albumsNameColumn;
 
   Map<String, List<SongMetadata>> ListSongsOfArtist = new HashMap<>(); // key là tên ca sĩ, value là list nhạc của ca sĩ
                                                                        // đó
@@ -76,9 +76,9 @@ public class MusicLibraryController implements Initializable {
     allSongsFilterChoiceBox.getStyleClass().add("centered-choice-box");
     allSongsFilterChoiceBox.getItems().setAll("title", "artist", "album");
     allSongsFilterChoiceBox.setValue("title");
-    TableSong.getStyleClass().add("noheader");
-    TableArtists.getStyleClass().add("noheader");
-    TableAlbum.getStyleClass().add("noheader");
+    allSongsTable.getStyleClass().add("noheader");
+    artistsTable.getStyleClass().add("noheader");
+    albumsTable.getStyleClass().add("noheader");
   }
 
   @FXML
@@ -127,13 +127,13 @@ public class MusicLibraryController implements Initializable {
   void GetAllArtist() {
 
     LArtists.clear(); // Clear the existing list of artists
-    for (String ArtistName : ListSongsOfArtist.keySet()) {
+    for (String artistsNameColumn : ListSongsOfArtist.keySet()) {
 
-      LArtists.add(ListSongsOfArtist.get(ArtistName).get(0));
+      LArtists.add(ListSongsOfArtist.get(artistsNameColumn).get(0));
 
     }
-    TableArtists.setItems(LArtists);
-    ArtistName.setCellValueFactory(
+    artistsTable.setItems(LArtists);
+    artistsNameColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
   }
 
@@ -144,26 +144,26 @@ public class MusicLibraryController implements Initializable {
   void GetAllAlbum() {
 
     LAlbums.clear(); // Clear the existing list of artists
-    for (String AlbumNamee : ListSongsOfAlbum.keySet()) {
+    for (String albumsNameColumne : ListSongsOfAlbum.keySet()) {
 
-      LAlbums.add(ListSongsOfAlbum.get(AlbumNamee).get(0));
+      LAlbums.add(ListSongsOfAlbum.get(albumsNameColumne).get(0));
 
     }
-    TableAlbum.setItems(LAlbums);
-    AlbumName.setCellValueFactory(
+    albumsTable.setItems(LAlbums);
+    albumsNameColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAlbum()));
   }
 
   private void updateTableAndArtists() {
-    TableSong.setItems(LSong);
-    title.setCellValueFactory(
+    allSongsTable.setItems(LSong);
+    allSongsTitleColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
-    artist.setCellValueFactory(
+    allSongsArtistColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
-    duration.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDuration()));
-    album.setCellValueFactory(
+    allSongsAlbumColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAlbum()));
+    allSongsDurationColumn.setCellValueFactory(
+        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDuration()));
     GetAllArtist();
     GetAllAlbum();
   }
