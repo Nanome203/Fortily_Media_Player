@@ -95,7 +95,7 @@ public class LayoutController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			Parent homeScene = FXMLLoader.load(getClass().getResource("/scenes/spinningDisk/SpinningDisk.fxml"));
+			Parent homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
 			mainContainer.setCenter(homeScene);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -163,7 +163,7 @@ public class LayoutController implements Initializable {
 			// Test loading home scene, not official code
 
 			try {
-				Parent homeScene = FXMLLoader.load(getClass().getResource("/scenes/spinningDisk/SpinningDisk.fxml"));
+				Parent homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
 				mainContainer.setCenter(homeScene);
 			} catch (IOException e) {
 				e.printStackTrace();

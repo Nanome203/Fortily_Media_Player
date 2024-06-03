@@ -1,0 +1,12 @@
+.openFileBtnStyle {
+    -fx-background-color: #2880E8;
+    -fx-cursor: hand;
+}
+
+.openFileBtnStyle:hover {
+    -fx-background-color: #4e90e0;
+}
+
+.openFileBtnStyle:pressed {
+    -fx-background-color: #3a6ead;
+}
