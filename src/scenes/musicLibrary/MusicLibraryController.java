@@ -71,6 +71,34 @@ public class MusicLibraryController implements Initializable {
     for (ChoiceBox<String> choiceBox : choiceBoxes) {
       choiceBox.getItems().setAll("title", "artist", "album");
       choiceBox.setValue("title");
+      choiceBox.showingProperty().addListener((obs, wasShowing, isShowing) -> {
+        if (!isShowing) {
+          filterChoiceBoxValues(choiceBox);
+        }
+      });
+    }
+  }
+
+  void filterChoiceBoxValues(ChoiceBox<String> choiceBox) {
+    String selectedValue = choiceBox.getValue();
+    if (selectedValue == null) {
+      return;
+    }
+    switch (selectedValue) {
+      case "title":
+        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getTitle));
+        break;
+
+      case "artist":
+        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getArtist));
+        break;
+
+      case "album":
+        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getAlbum));
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -143,32 +171,6 @@ public class MusicLibraryController implements Initializable {
     GetAllArtist();
     GetAllAlbum();
   }
-
-  @FXML
-  void changebox(ActionEvent event) {
-    @SuppressWarnings("unchecked")
-    ChoiceBox<String> sourceChoiceBox = (ChoiceBox<String>) event.getSource();
-    String selectedValue = sourceChoiceBox.getValue();
-    if (selectedValue == null) {
-      return;
-    }
-    switch (selectedValue) {
-      case "title":
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getTitle));
-        break;
-
-      case "artist":
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getArtist));
-        break;
-
-      case "album":
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getAlbum));
-        break;
-
-      default:
-        break;
-    }
-  };
 
   @FXML
   void playAllSongs(MouseEvent event) {
