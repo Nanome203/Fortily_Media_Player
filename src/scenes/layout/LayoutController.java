@@ -2,44 +2,30 @@ package scenes.layout;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.Stage;
-import scenes.musicLibrary.*;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import utils.Utils;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class LayoutController implements Initializable {
 
@@ -86,20 +72,39 @@ public class LayoutController implements Initializable {
 	private Button playPauseBtn, volumeBtn;
 
 	@FXML
-	private ImageView playPauseBtnImgView,
-			volumeBtnImgView;
+	private ImageView playPauseBtnImgView, volumeBtnImgView, playlistBtnImgView, favoriteBtnImgView, songImageView;
 
-	private static boolean isPlayButton = true,
-			isMuted = false;
+	private static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false;
+
+	private Parent homeScene, musicLibScene, videoLibScene;
+
+	// temporary scene
+	private Parent homeWelcomeScene;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			Parent homeScene = FXMLLoader.load(getClass().getResource("/scenes/spinningDisk/SpinningDisk.fxml"));
+			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeRecent.fxml"));
+			homeWelcomeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
+			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
+			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
 			mainContainer.setCenter(homeScene);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		// adding border radius to song's image view
+		Rectangle clip = new Rectangle(songImageView.getFitWidth(), songImageView.getFitHeight());
+		clip.setArcWidth(30);
+		clip.setArcHeight(30);
+		songImageView.setClip(clip);
+		SnapshotParameters parameters = new SnapshotParameters();
+		parameters.setFill(Color.TRANSPARENT);
+		WritableImage image = songImageView.snapshot(parameters, null);
+		songImageView.setClip(null);
+		songImageView.setImage(image);
+
+		// adding color to progress slider's left trackpane
 		progressSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
@@ -147,27 +152,13 @@ public class LayoutController implements Initializable {
 		// Add 'selected' class to the clicked item
 		((Button) event.getSource()).getStyleClass().add("active");
 		if (event.getSource() == sideBarMusicLib) {
-
-			// Test loading music scene, not official code
-
-			try {
-				Parent musicLibScene = FXMLLoader
-						.load(getClass().getResource("/scenes/MusicLibrary/MusicLibrary.fxml"));
-				mainContainer.setCenter(musicLibScene);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			mainContainer.setCenter(musicLibScene);
 		}
 		if (event.getSource() == sideBarHome) {
-
-			// Test loading home scene, not official code
-
-			try {
-				Parent homeScene = FXMLLoader.load(getClass().getResource("/scenes/spinningDisk/SpinningDisk.fxml"));
-				mainContainer.setCenter(homeScene);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			mainContainer.setCenter(homeWelcomeScene);
+		}
+		if (event.getSource() == sideBarVideoLib) {
+			mainContainer.setCenter(videoLibScene);
 		}
 	}
 
@@ -201,13 +192,31 @@ public class LayoutController implements Initializable {
 		}
 	}
 
-	@FXML
-	void openMusicLibrary(MouseEvent event) throws IOException {
-		Parent musicLibrary = FXMLLoader.load(getClass().getResource("/scenes/MusicLibrary/MusicLibrary.fxml"));
-		Scene scene = new Scene(musicLibrary);
-		Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Music Library");
-		primaryStage.show();
+	public void handlePlaylistBtn(ActionEvent event) {
+		if (isInPlaylist) {
+			File file = new File("src/assets/images/icons8-playlist-100.png");
+			Image image = new Image(file.toURI().toString());
+			playlistBtnImgView.setImage(image);
+			isInPlaylist = false;
+		} else {
+			File file = new File("src/assets/images/icons8-blue-playlist-100.png");
+			Image image = new Image(file.toURI().toString());
+			playlistBtnImgView.setImage(image);
+			isInPlaylist = true;
+		}
+	}
+
+	public void handleFavoriteBtn(ActionEvent event) {
+		if (isFavorite) {
+			File file = new File("src/assets/images/icons8-heart-100.png");
+			Image image = new Image(file.toURI().toString());
+			favoriteBtnImgView.setImage(image);
+			isFavorite = false;
+		} else {
+			File file = new File("src/assets/images/icons8-blue-heart-100.png");
+			Image image = new Image(file.toURI().toString());
+			favoriteBtnImgView.setImage(image);
+			isFavorite = true;
+		}
 	}
 }

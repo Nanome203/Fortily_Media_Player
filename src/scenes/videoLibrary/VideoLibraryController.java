@@ -2,17 +2,13 @@ package scenes.videoLibrary;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -73,12 +69,12 @@ public class VideoLibraryController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle rb) {
 
-    allSongsFilterChoiceBox.getStyleClass().add("centered-choice-box");
-    allSongsFilterChoiceBox.getItems().setAll("title", "artist", "album");
-    allSongsFilterChoiceBox.setValue("title");
-    TableSong.getStyleClass().add("noheader");
-    TableArtists.getStyleClass().add("noheader");
-    TableAlbum.getStyleClass().add("noheader");
+    // allSongsFilterChoiceBox.getStyleClass().add("centered-choice-box");
+    // allSongsFilterChoiceBox.getItems().setAll("title", "artist", "album");
+    // allSongsFilterChoiceBox.setValue("title");
+    // TableSong.getStyleClass().add("noheader");
+    // TableArtists.getStyleClass().add("noheader");
+    // TableAlbum.getStyleClass().add("noheader");
   }
 
   @FXML

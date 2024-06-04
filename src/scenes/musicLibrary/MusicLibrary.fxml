@@ -13,113 +13,108 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="musicLibraryContainer" fx:id="musicLibraryContainer" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.musicLibrary.MusicLibraryController">
-  <children>
-    <TabPane fx:id="musicLibraryTabs" layoutX="32.0" layoutY="84.0" prefHeight="478.0" prefWidth="733.0" tabClosingPolicy="UNAVAILABLE">
-      <tabs>
-        <Tab fx:id="allSongsTab" text="All songs">
-          <content>
-            <AnchorPane fx:id="allSongsPane" minHeight="0.0" minWidth="0.0" prefHeight="448.0">
-              <children>
-                <Button fx:id="allSongsPlayAllButton" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" onMouseClicked="#playAllSongs" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
-                  <font>
-                    <Font name="Ebrima" size="14.0" />
-                  </font>
-                </Button>
-                <Button fx:id="allSongsShuffleAndPlayButton" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" onMouseClicked="#shuffleAndPlayAllSongs" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
-                  <font>
-                    <Font size="14.0" />
-                  </font>
-                </Button>
-                <ChoiceBox fx:id="allSongsFilterChoiceBox" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onAction="#changebox" prefHeight="31.2" prefWidth="150.0">
-                  <styleClass>
-                    <String fx:value="filterChoiceBox" />
-                    <String fx:value="center" />
-                  </styleClass>
-                </ChoiceBox>
-                <TableView fx:id="allSongsTable" layoutY="96.0" prefHeight="353.0" prefWidth="734.0" styleClass="noheader">
-                  <placeholder>
-                    <Label text="" />
-                  </placeholder>
-                  <columns>
-                    <TableColumn fx:id="allSongsTitleColumn" prefWidth="252.00003051757812" styleClass="column" text="Title" />
-                    <TableColumn fx:id="allSongsArtistColumn" prefWidth="212.79998779296875" styleClass="column" text="Artist" />
-                    <TableColumn fx:id="allSongsAlbumColumn" prefWidth="204.0" styleClass="column" text="Album" />
-                    <TableColumn fx:id="allSongsDurationColumn" prefWidth="60.0" styleClass="column" text="Duration" />
-                  </columns>
-                </TableView>
-              </children>
-            </AnchorPane>
-          </content>
-        </Tab>
-        <Tab fx:id="albumsTab" text="Albums">
-          <content>
-            <AnchorPane fx:id="albumsPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0">
-              <children>
-                <Button fx:id="albumsPlayAllButton" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
-                  <font>
-                    <Font name="Ebrima" size="14.0" />
-                  </font>
-                </Button>
-                <Button fx:id="albumsShuffleAndPlayButton" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
-                  <font>
-                    <Font size="14.0" />
-                  </font>
-                </Button>
-                <ChoiceBox fx:id="albumsFilterChoiceBox" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onAction="#changebox" prefHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
-                <TableView fx:id="albumsTable" layoutX="-1.0" layoutY="96.0" prefHeight="353.0" prefWidth="734.0" styleClass="noheader">
-                  <placeholder>
-                    <Label text="" />
-                  </placeholder>
-                  <columns>
-                    <TableColumn fx:id="albumsNameColumn" prefWidth="728.8000793457031" styleClass="column" text="Album" />
-                  </columns>
-                </TableView>
-              </children>
-            </AnchorPane>
-          </content>
-        </Tab>
-        <Tab fx:id="artistsTab" text="Artists">
-          <content>
-            <AnchorPane fx:id="artistsPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0">
-              <children>
-                <Button fx:id="artistsPlayAllButton" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
-                  <font>
-                    <Font name="Ebrima" size="14.0" />
-                  </font>
-                </Button>
-                <Button fx:id="artistsShuffleAndPlayButton" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
-                  <font>
-                    <Font size="14.0" />
-                  </font>
-                </Button>
-                <ChoiceBox fx:id="artistsFilterChoiceBox" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onAction="#changebox" prefHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
-                <TableView fx:id="artistsTable" layoutY="96.0" prefHeight="355.0" prefWidth="734.0" styleClass="noheader">
-                  <placeholder>
-                    <Label text="" />
-                  </placeholder>
-                  <columns>
-                    <TableColumn fx:id="artistsNameColumn" prefWidth="728.8000793457031" styleClass="column" text="Artist" />
-                  </columns>
-                </TableView>
-              </children>
-            </AnchorPane>
-          </content>
-        </Tab>
-      </tabs>
-    </TabPane>
-    <Label fx:id="musicLibraryLabel" layoutX="37.0" layoutY="34.0" prefHeight="22.0" text="Music Library" textFill="#f3f3f3">
-      <font>
-        <Font name="Ebrima Bold" size="20.0" />
-      </font>
-    </Label>
-    <Button fx:id="addFolderButton" layoutX="655.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#addFolder" styleClass="addFolderButton" text="Add folder" textFill="#2880e8">
-      <font>
-        <Font name="Ebrima" size="20.0" />
-      </font>
-    </Button>
-  </children>
-  <stylesheets>
-    <URL value="@../../css/styles.css" />
-    <URL value="@MusicLibrary.css" />
-  </stylesheets>
+    <children>
+        <TabPane fx:id="musicLibraryTabs" layoutX="32.0" layoutY="84.0" prefHeight="478.0" prefWidth="733.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab fx:id="allSongsTab" text="All songs">
+                    <content>
+                        <AnchorPane fx:id="allSongsPane" minHeight="0.0" minWidth="0.0" prefHeight="448.0">
+                            <children>
+                                <Button fx:id="allSongsPlayAllButton" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
+                                    <font>
+                                        <Font name="Ebrima" size="14.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="allSongsShuffleAndPlayButton" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Button>
+                                <ChoiceBox fx:id="allSongsFilterChoiceBox" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onMouseClicked="#changebox" prefHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
+                                <TableView fx:id="allSongsTable" layoutY="96.0" prefHeight="353.0" prefWidth="734.0">
+                                    <placeholder>
+                                        <Label text="" />
+                                    </placeholder>
+                                    <columns>
+                                        <TableColumn fx:id="allSongsTitleColumn" prefWidth="252.00003051757812" styleClass="column" text="Title" />
+                                        <TableColumn fx:id="allSongsArtistColumn" prefWidth="212.79998779296875" styleClass="column" text="Artist" />
+                                        <TableColumn fx:id="allSongsAlbumColumn" prefWidth="204.0" styleClass="column" text="Album" />
+                                        <TableColumn fx:id="allSongsDurationColumn" prefWidth="60.0" styleClass="column" text="Duration" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="albumsTab" text="Albums">
+                    <content>
+                        <AnchorPane fx:id="albumsPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0">
+                            <children>
+                                <Button fx:id="albumsPlayAllButton" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
+                                    <font>
+                                        <Font name="Ebrima" size="14.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="albumsShuffleAndPlayButton" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Button>
+                                <ChoiceBox fx:id="albumsFilterChoiceBox" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onMouseClicked="#changebox" prefHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
+                                <TableView fx:id="albumsTable" layoutX="-1.0" layoutY="96.0" prefHeight="353.0" prefWidth="734.0">
+                                    <placeholder>
+                                        <Label text="" />
+                                    </placeholder>
+                                    <columns>
+                                        <TableColumn fx:id="albumsNameColumn" prefWidth="728.8000793457031" styleClass="column" text="Album" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="artistsTab" text="Artists">
+                    <content>
+                        <AnchorPane fx:id="artistsPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0">
+                            <children>
+                                <Button fx:id="artistsPlayAllButton" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
+                                    <font>
+                                        <Font name="Ebrima" size="14.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="artistsShuffleAndPlayButton" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Button>
+                                <ChoiceBox fx:id="artistsFilterChoiceBox" layoutX="291.0" layoutY="26.0" maxHeight="31.2" minHeight="31.2" onMouseClicked="#changebox" prefHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
+                                <TableView fx:id="artistsTable" layoutY="96.0" prefHeight="355.0" prefWidth="734.0">
+                                    <placeholder>
+                                        <Label text="" />
+                                    </placeholder>
+                                    <columns>
+                                        <TableColumn fx:id="artistsNameColumn" prefWidth="728.8000793457031" styleClass="column" text="Artist" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+        <Label fx:id="musicLibraryLabel" layoutX="40.0" layoutY="40.0" prefHeight="22.0" text="Music Library" textFill="#f3f3f3">
+            <font>
+                <Font name="Ebrima Bold" size="40.0" />
+            </font>
+        </Label>
+        <Button fx:id="addFolderButton" layoutX="655.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#addFolder" styleClass="addFolderButton" text="Add folder" textFill="#2880e8">
+            <font>
+                <Font name="Ebrima" size="20.0" />
+            </font>
+        </Button>
+    </children>
+   <stylesheets>
+      <URL value="@../../css/styles.css" />
+      <URL value="@MusicLibrary.css" />
+   </stylesheets>
 </AnchorPane>
