@@ -25,7 +25,7 @@
                <children>
                   <Label prefHeight="47.0" prefWidth="634.0" text="WELCOME TO FORTILY" textFill="WHITE">
                      <font>
-                        <Font name="Arial Bold Italic" size="40.0" />
+                        <Font name="Ebrima Bold" size="40.0" />
                      </font>
                      <VBox.margin>
                         <Insets bottom="10.0" />

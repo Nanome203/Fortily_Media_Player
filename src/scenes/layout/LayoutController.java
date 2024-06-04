@@ -75,16 +75,20 @@ public class LayoutController implements Initializable {
 	private Button playPauseBtn, volumeBtn;
 
 	@FXML
-	private ImageView playPauseBtnImgView, volumeBtnImgView, songImageView;
+	private ImageView playPauseBtnImgView, volumeBtnImgView, playlistBtnImgView, favoriteBtnImgView, songImageView;
 
-	private static boolean isPlayButton = true, isMuted = false;
+	private static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false;
 
 	private Parent homeScene, musicLibScene, videoLibScene;
+
+	// temporary scene
+	private Parent homeWelcomeScene;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
+			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeRecent.fxml"));
+			homeWelcomeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
 			mainContainer.setCenter(homeScene);
@@ -154,7 +158,7 @@ public class LayoutController implements Initializable {
 			mainContainer.setCenter(musicLibScene);
 		}
 		if (event.getSource() == sideBarHome) {
-			mainContainer.setCenter(homeScene);
+			mainContainer.setCenter(homeWelcomeScene);
 		}
 		if (event.getSource() == sideBarVideoLib) {
 			mainContainer.setCenter(videoLibScene);
@@ -191,13 +195,31 @@ public class LayoutController implements Initializable {
 		}
 	}
 
-	@FXML
-	void openMusicLibrary(MouseEvent event) throws IOException {
-		Parent musicLibrary = FXMLLoader.load(getClass().getResource("/scenes/MusicLibrary/MusicLibrary.fxml"));
-		Scene scene = new Scene(musicLibrary);
-		Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Music Library");
-		primaryStage.show();
+	public void handlePlaylistBtn(ActionEvent event) {
+		if (isInPlaylist) {
+			File file = new File("src/assets/images/icons8-blue-playlist-100.png");
+			Image image = new Image(file.toURI().toString());
+			playlistBtnImgView.setImage(image);
+			isInPlaylist = false;
+		} else {
+			File file = new File("src/assets/images/icons8-playlist-100.png");
+			Image image = new Image(file.toURI().toString());
+			playlistBtnImgView.setImage(image);
+			isInPlaylist = true;
+		}
+	}
+
+	public void handleFavoriteBtn(ActionEvent event) {
+		if (isFavorite) {
+			File file = new File("src/assets/images/icons8-blue-heart-100.png");
+			Image image = new Image(file.toURI().toString());
+			favoriteBtnImgView.setImage(image);
+			isFavorite = false;
+		} else {
+			File file = new File("src/assets/images/icons8-heart-100.png");
+			Image image = new Image(file.toURI().toString());
+			favoriteBtnImgView.setImage(image);
+			isFavorite = true;
+		}
 	}
 }
