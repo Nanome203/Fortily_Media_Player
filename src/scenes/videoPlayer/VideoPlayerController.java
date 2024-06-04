@@ -97,7 +97,6 @@ public class VideoPlayerController implements Initializable {
   private static MediaPlayer mediaPlayer;
   private static Duration totalMediaDuration;
 
-  @Override
   public void initialize(URL arg0, ResourceBundle arg1) {
     sideBarHome.setOnMouseClicked(event -> {
       Stage currentStage = (Stage) sideBarVideoLib.getScene().getWindow();
@@ -122,10 +121,11 @@ public class VideoPlayerController implements Initializable {
       FileChooser fileChooser = new FileChooser();
       fileChooser.setInitialDirectory(new File("./src/assets/videos"));
       fileChooser.getExtensionFilters()
-          .add(new FileChooser.ExtensionFilter("Media Files", "*.mp3", "*.wav", "*.m4a", "*.flac", "*.ogg", "*.mp4",
+          .add(new FileChooser.ExtensionFilter("Media Files", "*.mp3", "*.wav", "*.m4a", "*.aac", "*.flac", "*.ogg",
+              "*.mp4",
               "*.flv", "*.mkv", "*.mpeg"));
       fileChooser.getExtensionFilters()
-          .add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.m4a", "*.flac", "*.ogg"));
+          .add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.m4a", "*.aac", "*.flac", "*.ogg"));
       fileChooser.getExtensionFilters()
           .add(new FileChooser.ExtensionFilter("Video Files", "*.mp4", "*.flv", "*.mkv", "*.mpeg", "*.ogg"));
       fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All", "*"));
