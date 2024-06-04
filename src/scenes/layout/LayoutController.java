@@ -13,7 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,8 +26,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import javafx.scene.input.MouseEvent;
 
 public class LayoutController implements Initializable {
 
@@ -197,12 +194,12 @@ public class LayoutController implements Initializable {
 
 	public void handlePlaylistBtn(ActionEvent event) {
 		if (isInPlaylist) {
-			File file = new File("src/assets/images/icons8-blue-playlist-100.png");
+			File file = new File("src/assets/images/icons8-playlist-100.png");
 			Image image = new Image(file.toURI().toString());
 			playlistBtnImgView.setImage(image);
 			isInPlaylist = false;
 		} else {
-			File file = new File("src/assets/images/icons8-playlist-100.png");
+			File file = new File("src/assets/images/icons8-blue-playlist-100.png");
 			Image image = new Image(file.toURI().toString());
 			playlistBtnImgView.setImage(image);
 			isInPlaylist = true;
@@ -211,12 +208,12 @@ public class LayoutController implements Initializable {
 
 	public void handleFavoriteBtn(ActionEvent event) {
 		if (isFavorite) {
-			File file = new File("src/assets/images/icons8-blue-heart-100.png");
+			File file = new File("src/assets/images/icons8-heart-100.png");
 			Image image = new Image(file.toURI().toString());
 			favoriteBtnImgView.setImage(image);
 			isFavorite = false;
 		} else {
-			File file = new File("src/assets/images/icons8-heart-100.png");
+			File file = new File("src/assets/images/icons8-blue-heart-100.png");
 			Image image = new Image(file.toURI().toString());
 			favoriteBtnImgView.setImage(image);
 			isFavorite = true;
