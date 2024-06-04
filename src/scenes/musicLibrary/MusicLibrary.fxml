@@ -20,12 +20,12 @@
           <content>
             <AnchorPane fx:id="allSongsPane" minHeight="0.0" minWidth="0.0" prefHeight="448.0">
               <children>
-                <Button fx:id="allSongsPlayAllButton" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" onMouseClicked="#playAll" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
+                <Button fx:id="allSongsPlayAllButton" layoutX="8.0" layoutY="26.0" mnemonicParsing="false" onMouseClicked="#playAllSongs" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
                   <font>
                     <Font name="Ebrima" size="14.0" />
                   </font>
                 </Button>
-                <Button fx:id="allSongsShuffleAndPlayButton" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
+                <Button fx:id="allSongsShuffleAndPlayButton" layoutX="131.0" layoutY="26.0" mnemonicParsing="false" onMouseClicked="#shuffleAndPlayAllSongs" styleClass="shuffleAndPlayButton" text="Shuffle and play" textFill="#f3f3f3">
                   <font>
                     <Font size="14.0" />
                   </font>

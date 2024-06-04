@@ -171,14 +171,24 @@ public class MusicLibraryController implements Initializable {
   };
 
   @FXML
-  void playAll(MouseEvent event) {
+  void playAllSongs(MouseEvent event) {
     if (LSong.isEmpty()) {
       return;
     }
-    playNextMedia(0);
+    playNextMedia(mediaList, 0);
   }
 
-  private void playNextMedia(int currentMediaIndex) {
+  @FXML
+  void shuffleAndPlayAllSongs(MouseEvent event) {
+    if (LSong.isEmpty()) {
+      return;
+    }
+    List<Media> shuffledMediaList = new ArrayList<>(mediaList);
+    java.util.Collections.shuffle(shuffledMediaList);
+    playNextMedia(shuffledMediaList, 0);
+  }
+
+  private void playNextMedia(List<Media> mediaList, int currentMediaIndex) {
     System.out.println(mediaList + "\n" + mediaList.size());
     System.out.println("Runnin" + currentMediaIndex);
     if (currentMediaIndex >= mediaList.size()) {
@@ -194,7 +204,7 @@ public class MusicLibraryController implements Initializable {
 
     mediaPlayer.setOnEndOfMedia(new Runnable() {
       public void run() {
-        playNextMedia(currentMediaIndex + 1);
+        playNextMedia(mediaList, currentMediaIndex + 1);
       }
     });
 
