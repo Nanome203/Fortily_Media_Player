@@ -54,6 +54,9 @@ public class LayoutController implements Initializable {
 	private Button sideBarVideoLib;
 
 	@FXML
+	private Button sideBarRecentMedia;
+
+	@FXML
 	private VBox sideBarContainer;
 
 	@FXML
@@ -76,16 +79,13 @@ public class LayoutController implements Initializable {
 
 	private static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false;
 
-	private Parent homeScene, musicLibScene, videoLibScene;
-
-	// temporary scene
-	private Parent homeWelcomeScene;
+	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeRecent.fxml"));
-			homeWelcomeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
+			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
+			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
 			mainContainer.setCenter(homeScene);
@@ -151,11 +151,14 @@ public class LayoutController implements Initializable {
 
 		// Add 'selected' class to the clicked item
 		((Button) event.getSource()).getStyleClass().add("active");
+		if (event.getSource() == sideBarHome) {
+			mainContainer.setCenter(homeScene);
+		}
 		if (event.getSource() == sideBarMusicLib) {
 			mainContainer.setCenter(musicLibScene);
 		}
-		if (event.getSource() == sideBarHome) {
-			mainContainer.setCenter(homeWelcomeScene);
+		if (event.getSource() == sideBarRecentMedia) {
+			mainContainer.setCenter(recentMediaScene);
 		}
 		if (event.getSource() == sideBarVideoLib) {
 			mainContainer.setCenter(videoLibScene);
