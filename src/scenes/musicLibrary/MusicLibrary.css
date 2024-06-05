@@ -22,3 +22,7 @@
 .addFolderButton {
   -fx-background-color: #1D2129;
 }
+
+.table-view .table-cell {
+    -fx-font-size: 18px;
+}
