@@ -4,10 +4,6 @@
  */
 package model;
 
-/**
- *
- * @author DELL
- */
 public class SongMetadata {
     private String Title;
     private String Artist;

@@ -2,179 +2,214 @@ package scenes.videoLibrary;
 
 import java.io.File;
 import java.net.URL;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import model.SongMetadata;
+import utils.Utils;
 
 public class VideoLibraryController implements Initializable {
-
   @FXML
-  private Button shuffleAndPlayAllSongs;
+  private VBox videoLibraryComponentsContainer;
   @FXML
-  private Button playAll;
+  private TableColumn<SongMetadata, String> videoLibraryTitleColumn;
   @FXML
-  private MediaPlayer mediaPlayer;
+  private TableColumn<SongMetadata, String> videoLibraryArtistColumn;
   @FXML
-  private TableView<SongMetadata> TableSong;
+  private TableColumn<SongMetadata, String> videoLibraryAlbumColumn;
   @FXML
-  private TableColumn<SongMetadata, String> title;
+  private TableColumn<SongMetadata, String> videoLibraryDurationColumn;
   @FXML
-  private TableColumn<SongMetadata, String> artist;
-  @FXML
-  private TableColumn<SongMetadata, String> album;
-  @FXML
-  private TableColumn<SongMetadata, String> duration;
-  @FXML
-  private Button addFolder;
+  private Button addFolderButton;
   private ObservableList<SongMetadata> LSong = FXCollections.observableArrayList();
   private ObservableList<SongMetadata> LAlbums = FXCollections.observableArrayList();
   private ObservableList<SongMetadata> LArtists = FXCollections.observableArrayList();
   @FXML
-  private ChoiceBox<String> allSongsFilterChoiceBox;
+  private ChoiceBox<String> filterChoiceBox;
   @FXML
-  private TableView<SongMetadata> TableArtists;
+  private TableView<SongMetadata> artistsTable;
   @FXML
-  private TableColumn<SongMetadata, String> ArtistName;
+  private TableColumn<SongMetadata, String> artistsNameColumn;
 
   @FXML
-  private TableView<SongMetadata> TableAlbum;
+  private TableView<SongMetadata> albumsTable;
   @FXML
-  private TableColumn<SongMetadata, String> AlbumName;
+  private TableColumn<SongMetadata, String> albumsNameColumn;
+  @FXML
+  private TableView<SongMetadata> videoLibraryTable;
 
-  Map<String, List<SongMetadata>> ListSongsOfArtist = new HashMap<>(); // key là tên ca sĩ, value là list nhạc của ca sĩ
-                                                                       // đó
-  Map<String, List<SongMetadata>> ListSongsOfAlbum = new HashMap<>(); // key là tên album, value là list nhạc của album
-                                                                      // đó.
+  List<Media> mediaList = new ArrayList<>();
+  private MediaPlayer mediaPlayer;
+  Map<String, List<SongMetadata>> ListSongsOfArtist = new HashMap<>();
+  // key là tên ca sĩ, value là list nhạc của ca sĩ đó
+  Map<String, List<SongMetadata>> ListSongsOfAlbum = new HashMap<>();
+  // key là tên album, value là list nhạc của album đó
 
-  /**
-   * Initializes the controller class.
-   */
-  @Override
-  public void initialize(URL url, ResourceBundle rb) {
+  public void initialize(URL arg0, ResourceBundle arg1) {
+    filterChoiceBox.getItems().setAll("title", "artist", "album");
+    filterChoiceBox.setValue("title");
+    filterChoiceBox.showingProperty().addListener((obs, wasShowing, isShowing) -> {
+      if (!isShowing) {
+        filterChoiceBoxValues(filterChoiceBox);
+      }
+    });
+  }
 
-    // allSongsFilterChoiceBox.getStyleClass().add("centered-choice-box");
-    // allSongsFilterChoiceBox.getItems().setAll("title", "artist", "album");
-    // allSongsFilterChoiceBox.setValue("title");
-    // TableSong.getStyleClass().add("noheader");
-    // TableArtists.getStyleClass().add("noheader");
-    // TableAlbum.getStyleClass().add("noheader");
+  void filterChoiceBoxValues(ChoiceBox<String> choiceBox) {
+    String selectedValue = choiceBox.getValue();
+    if (selectedValue == null) {
+      return;
+    }
+    switch (selectedValue) {
+      case "title":
+        FXCollections.sort(LSong, Comparator.comparing(song -> song.getTitle().toLowerCase()));
+        break;
+
+      case "artist":
+        FXCollections.sort(LSong, Comparator.comparing(song -> song.getArtist().toLowerCase()));
+        break;
+
+      case "album":
+        FXCollections.sort(LSong, Comparator.comparing(song -> song.getAlbum().toLowerCase()));
+        break;
+
+      default:
+        break;
+    }
   }
 
   @FXML
   void addFolder(MouseEvent event) {
-    FileChooser chooser = new FileChooser();
-    chooser.setTitle("Add Music Files");
-    chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac"));
-    List<File> files = chooser.showOpenMultipleDialog(null);
-    if (files != null && !files.isEmpty()) {
-      List<MediaPlayer> mediaPlayers = new ArrayList<>();
-      for (File file : files) {
-        String selectedFile = file.toURI().toString();
-        Media media = new Media(selectedFile);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayers.add(mediaPlayer);
-        mediaPlayer.setOnReady(() -> {
-          String artist = media.getMetadata().get("artist") != null ? media.getMetadata().get("artist").toString()
-              : "Unknown Artist";
-          String title = media.getMetadata().get("title") != null ? media.getMetadata().get("title").toString()
-              : file.getName();
-          double duration = media.getDuration().toMinutes();
-          String formattedDuration = String.format("%.2f", duration);
-          String albun = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
-              : "Unknown Album";
-          long dateModified = file.lastModified();
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Add Music Files");
+    // fileChooser
+    // .setInitialDirectory(new
+    // File("C:/MyLife/Schoolings/IE303/Project/Fortily_Media_Player/src/assets/videos"));
+    fileChooser.getExtensionFilters()
+        .add(new FileChooser.ExtensionFilter("Video Files", "*.mp4", "*.flv", "*.mkv", "*.mpeg", "*.ogg"));
+    List<File> files = fileChooser.showOpenMultipleDialog(null);
+    if (files == null || files.isEmpty()) {
+      return;
+    }
+    for (File file : files) {
+      String selectedFile = file.toURI().toString();
+      Media media = new Media(selectedFile);
+      mediaPlayer = new MediaPlayer(media);
+      mediaList.add(media);
+      String artist = media.getMetadata().get("artist") != null ? media.getMetadata().get("artist").toString()
+          : "Unknown Artist";
+      String title = media.getMetadata().get("title") != null ? media.getMetadata().get("title").toString()
+          : file.getName();
+      String durationString = Utils.formatTime(media.getDuration());
+      String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
+          : "Unknown Album";
+      long dateModified = file.lastModified();
 
-          SongMetadata songMetadata = new SongMetadata(title, artist, formattedDuration, albun, dateModified);
+      SongMetadata songMetadata = new SongMetadata(title, artist, durationString, album, dateModified);
 
-          LSong.add(songMetadata);
-
-          if (mediaPlayers.stream().allMatch(mp -> mp.getStatus() == MediaPlayer.Status.READY)) {
-            AddSongToArtist(artist, songMetadata);
-            AddSongToAlbum(albun, songMetadata);
-            updateTableAndArtists();
-          }
-
-        });
-      }
+      LSong.add(songMetadata);
+      updateTable();
     }
   }
 
-  void AddSongToArtist(String artist, SongMetadata songMetadata) {
-    ListSongsOfArtist.computeIfAbsent(artist, k -> new ArrayList<>()).add(songMetadata);
-  }
-
-  void GetAllArtist() {
-
+  private void GetAllArtist() {
     LArtists.clear(); // Clear the existing list of artists
-    for (String ArtistName : ListSongsOfArtist.keySet()) {
-
-      LArtists.add(ListSongsOfArtist.get(ArtistName).get(0));
-
+    for (String artistsNameColumn : ListSongsOfArtist.keySet()) {
+      LArtists.add(ListSongsOfArtist.get(artistsNameColumn).get(0));
     }
-    TableArtists.setItems(LArtists);
-    ArtistName.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
+    // artistsTable.setItems(LArtists);
+    // artistsNameColumn.setCellValueFactory(
+    // cellData -> new
+    // javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
   }
 
-  void AddSongToAlbum(String album, SongMetadata songMetadata) {
-    ListSongsOfAlbum.computeIfAbsent(album, k -> new ArrayList<>()).add(songMetadata);
-  }
-
-  void GetAllAlbum() {
-
+  private void GetAllAlbum() {
     LAlbums.clear(); // Clear the existing list of artists
-    for (String AlbumNamee : ListSongsOfAlbum.keySet()) {
-
-      LAlbums.add(ListSongsOfAlbum.get(AlbumNamee).get(0));
-
+    for (String albumsNameColumne : ListSongsOfAlbum.keySet()) {
+      LAlbums.add(ListSongsOfAlbum.get(albumsNameColumne).get(0));
     }
-    TableAlbum.setItems(LAlbums);
-    AlbumName.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAlbum()));
+    // albumsTable.setItems(LAlbums);
+    // albumsNameColumn.setCellValueFactory(
+    // cellData -> new
+    // javafx.beans.property.SimpleStringProperty(cellData.getValue().getAlbum()));
   }
 
-  private void updateTableAndArtists() {
-    TableSong.setItems(LSong);
-    title.setCellValueFactory(
+  private void updateTable() {
+    videoLibraryTable.setItems(LSong);
+    videoLibraryTitleColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
-    artist.setCellValueFactory(
+    videoLibraryArtistColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
-    duration.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDuration()));
-    album.setCellValueFactory(
+    videoLibraryAlbumColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAlbum()));
+    videoLibraryDurationColumn.setCellValueFactory(
+        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDuration()));
     GetAllArtist();
     GetAllAlbum();
   }
 
   @FXML
-  void changebox(MouseEvent event) {
-    allSongsFilterChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      if ("title".equals(newValue)) {
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getTitle));
-      } else if ("artist".equals(newValue)) {
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getArtist));
-      } else if ("album".equals(newValue)) {
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getAlbum));
+  void playAllSongs(MouseEvent event) {
+    if (LSong.isEmpty()) {
+      return;
+    }
+    mediaPlayer.stop();
+    playNextMedia(mediaList, 0);
+  }
+
+  @FXML
+  void shuffleAndPlayAllSongs(MouseEvent event) {
+    if (LSong.isEmpty()) {
+      return;
+    }
+    List<Media> shuffledMediaList = new ArrayList<>(mediaList);
+    java.util.Collections.shuffle(shuffledMediaList);
+    mediaPlayer.stop();
+    playNextMedia(shuffledMediaList, 0);
+  }
+
+  private void playNextMedia(List<Media> mediaList, int currentMediaIndex) {
+    if (currentMediaIndex >= mediaList.size()) {
+      System.out.println("Reached the end of the playlist.");
+      return;
+    }
+    mediaPlayer = new MediaPlayer(mediaList.get(currentMediaIndex));
+    mediaPlayer.play();
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+    }
+
+    mediaPlayer.setOnEndOfMedia(new Runnable() {
+      public void run() {
+        playNextMedia(mediaList, currentMediaIndex + 1);
       }
     });
+
   }
 
 }

@@ -86,15 +86,15 @@ public class MusicLibraryController implements Initializable {
     }
     switch (selectedValue) {
       case "title":
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getTitle));
+        FXCollections.sort(LSong, Comparator.comparing(song -> song.getTitle().toLowerCase()));
         break;
 
       case "artist":
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getArtist));
+        FXCollections.sort(LSong, Comparator.comparing(song -> song.getArtist().toLowerCase()));
         break;
 
       case "album":
-        FXCollections.sort(LSong, Comparator.comparing(SongMetadata::getAlbum));
+        FXCollections.sort(LSong, Comparator.comparing(song -> song.getAlbum().toLowerCase()));
         break;
 
       default:
@@ -116,25 +116,23 @@ public class MusicLibraryController implements Initializable {
       String selectedFile = file.toURI().toString();
       Media media = new Media(selectedFile);
       mediaPlayer = new MediaPlayer(media);
-      mediaPlayer.setOnReady(() -> {
-        mediaList.add(media);
-        String artist = media.getMetadata().get("artist") != null ? media.getMetadata().get("artist").toString()
-            : "Unknown Artist";
-        String title = media.getMetadata().get("title") != null ? media.getMetadata().get("title").toString()
-            : file.getName();
-        String durationString = Utils.formatTime(media.getDuration());
-        String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
-            : "Unknown Album";
-        long dateModified = file.lastModified();
+      mediaList.add(media);
+      String artist = media.getMetadata().get("artist") != null ? media.getMetadata().get("artist").toString()
+          : "Unknown Artist";
+      String title = media.getMetadata().get("title") != null ? media.getMetadata().get("title").toString()
+          : file.getName();
+      String durationString = Utils.formatTime(media.getDuration());
+      String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
+          : "Unknown Album";
+      long dateModified = file.lastModified();
 
-        SongMetadata songMetadata = new SongMetadata(title, artist, durationString, album, dateModified);
+      SongMetadata songMetadata = new SongMetadata(title, artist, durationString, album, dateModified);
 
-        LSong.add(songMetadata);
+      LSong.add(songMetadata);
 
-        ListSongsOfAlbum.computeIfAbsent(album, k -> new ArrayList<>()).add(songMetadata);
-        ListSongsOfArtist.computeIfAbsent(artist, k -> new ArrayList<>()).add(songMetadata);
-        updateTableAndArtists();
-      });
+      ListSongsOfAlbum.computeIfAbsent(album, k -> new ArrayList<>()).add(songMetadata);
+      ListSongsOfArtist.computeIfAbsent(artist, k -> new ArrayList<>()).add(songMetadata);
+      updateTable();
     }
   }
 
@@ -158,7 +156,7 @@ public class MusicLibraryController implements Initializable {
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAlbum()));
   }
 
-  private void updateTableAndArtists() {
+  private void updateTable() {
     allSongsTable.setItems(LSong);
     allSongsTitleColumn.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
@@ -177,6 +175,7 @@ public class MusicLibraryController implements Initializable {
     if (LSong.isEmpty()) {
       return;
     }
+    mediaPlayer.stop();
     playNextMedia(mediaList, 0);
   }
 
@@ -187,6 +186,7 @@ public class MusicLibraryController implements Initializable {
     }
     List<Media> shuffledMediaList = new ArrayList<>(mediaList);
     java.util.Collections.shuffle(shuffledMediaList);
+    mediaPlayer.stop();
     playNextMedia(shuffledMediaList, 0);
   }
 
