@@ -366,7 +366,7 @@
                         <Image url="@../../assets/images/music-note-icon-song-melody-tune-flat-symbol-free-vector.jpg" />
                      </image>
                   </ImageView>
-                  <Label text="SONG NAME" textFill="#fffefe">
+                  <Label fx:id="songName" prefWidth="130.0" text="SONG NAME" textFill="#fffefe">
                      <font>
                         <Font name="Ebrima Bold" size="20.0" />
                      </font>

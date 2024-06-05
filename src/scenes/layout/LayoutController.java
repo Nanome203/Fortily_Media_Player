@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import assets.mediaLoader.MediaLoader;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -26,6 +27,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import scenes.home.HomeEmptyController;
 
 public class LayoutController implements Initializable {
 
@@ -72,6 +74,9 @@ public class LayoutController implements Initializable {
 	private Button settings;
 
 	@FXML
+	private Label songName;
+
+	@FXML
 	private Button playPauseBtn, volumeBtn;
 
 	@FXML
@@ -81,10 +86,15 @@ public class LayoutController implements Initializable {
 
 	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene;
 
+	private MediaLoader mediaLoader;
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
+			homeScene = loader.load();
+			HomeEmptyController homeEmptyController = loader.getController();
+			homeEmptyController.receiveParentController(this);
 			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
@@ -92,6 +102,8 @@ public class LayoutController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		mediaLoader = MediaLoader.getMediaLoader();
 
 		// adding border radius to song's image view
 		Rectangle clip = new Rectangle(songImageView.getFitWidth(), songImageView.getFitHeight());
@@ -166,17 +178,27 @@ public class LayoutController implements Initializable {
 	}
 
 	public void handlePlayPauseBtn(ActionEvent event) {
-		if (isPlayButton) {
-			File file = new File("src/assets/images/icons8-pause-button-100.png");
-			Image image = new Image(file.toURI().toString());
-			playPauseBtnImgView.setImage(image);
-			isPlayButton = false;
-		} else {
+		if (isPlayButton && mediaLoader.mediaPlayerExists()) {
+			setPauseButtonImage();
+			mediaLoader.playCurrentMediaFile();
+		} else if (!isPlayButton && mediaLoader.mediaPlayerExists()) {
 			File file = new File("src/assets/images/icons8-play-button-100.png");
 			Image image = new Image(file.toURI().toString());
 			playPauseBtnImgView.setImage(image);
 			isPlayButton = true;
+			mediaLoader.pauseCurrentMediaFile();
 		}
+	}
+
+	public void setPauseButtonImage() {
+		File file = new File("src/assets/images/icons8-pause-button-100.png");
+		Image image = new Image(file.toURI().toString());
+		playPauseBtnImgView.setImage(image);
+		isPlayButton = false;
+	}
+
+	public void setSongName(String name) {
+		songName.setText(name);
 	}
 
 	public void handleVolumeBtn(ActionEvent event) {
