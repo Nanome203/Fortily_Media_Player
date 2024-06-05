@@ -63,7 +63,7 @@
                                     <Insets left="10.0" right="10.0" />
                                  </padding>
                               </HBox>
-                      <TableView fx:id="allSongsTable" layoutY="72.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="noheader" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+                      <TableView fx:id="allSongsTable" layoutY="72.0" maxWidth="1.7976931348623157E308" styleClass="noheader" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
                         <placeholder>
                           <Label text="" />
                         </placeholder>
