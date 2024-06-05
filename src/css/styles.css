@@ -24,16 +24,7 @@
 
 .sidebar-item:hover,
 .active {
-    -fx-background-color: #202633;
     -fx-text-fill: #2880E8;
-}
-
-.sidebar-item:pressed {
-    -fx-background-color: #384258;
-}
-
-.active {
-    -fx-border-width: 0 0 0 5;
 }
 
 .button-style {

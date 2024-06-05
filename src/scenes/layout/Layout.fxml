@@ -15,23 +15,23 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" style="-fx-background-color: #1D2129;" stylesheets="@../../css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.layout.LayoutController">
+<BorderPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" style="-fx-background-color: linear-gradient(to bottom, #14171D  50%, #184d8a);" stylesheets="@../../css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.layout.LayoutController">
    <left>
-      <VBox fx:id="sideBarContainer" prefHeight="748.0" prefWidth="255.0" style="-fx-background-color: #161616;" BorderPane.alignment="CENTER">
+      <VBox fx:id="sideBarContainer" prefHeight="642.0" prefWidth="257.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
          <children>
             <AnchorPane prefHeight="180.0" prefWidth="260.0">
                <children>
-                  <ImageView fitHeight="58.0" fitWidth="58.0" layoutX="20.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="58.0" fitWidth="58.0" layoutX="20.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../assets/images/Fortily.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="95.0" layoutY="36.0" prefHeight="17.0" prefWidth="143.0" text="FORTILY" textFill="WHITE">
+                  <Label layoutX="95.0" layoutY="40.0" prefHeight="17.0" prefWidth="143.0" text="FORTILY" textFill="WHITE">
                      <font>
                         <Font name="Lucida Sans Demibold Italic" size="25.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER_LEFT" layoutX="6.0" layoutY="104.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="241.0" style="-fx-background-color: #fff; -fx-background-radius: 20;">
+                  <HBox alignment="CENTER_LEFT" layoutX="6.0" layoutY="108.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="241.0" style="-fx-background-color: #fff; -fx-background-radius: 20;">
                      <children>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -51,7 +51,10 @@
                </children>
                <padding>
                   <Insets bottom="40.0" />
-               </padding></AnchorPane>
+               </padding>
+               <VBox.margin>
+                  <Insets top="13.0" />
+               </VBox.margin></AnchorPane>
             <VBox fx:id="sidebarNavigator" prefHeight="510.0" prefWidth="240.0" spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
                   <Button fx:id="sideBarHome" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" text="Home" textFill="#fffefe">
@@ -186,7 +189,7 @@
          </children></VBox>
    </left>
    <bottom>
-      <BorderPane style="-fx-background-color: #292F3B;" BorderPane.alignment="CENTER">
+      <BorderPane style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
          <top>
             <HBox alignment="CENTER" BorderPane.alignment="CENTER">
                <children>
