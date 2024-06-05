@@ -14,11 +14,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="musicLibraryContainer" fx:id="musicLibraryContainer" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.musicLibrary.MusicLibraryController">
+<AnchorPane id="musicLibraryContainer" fx:id="musicLibraryContainer" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.musicLibrary.MusicLibraryController">
   <children>
-      <VBox alignment="CENTER" layoutX="26.0" layoutY="28.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
          <children>
-            <HBox alignment="CENTER" prefHeight="55.0" prefWidth="738.0">
+            <HBox alignment="CENTER" prefHeight="55.0">
                <children>
                 <Label fx:id="musicLibraryLabel" prefHeight="52.0" prefWidth="277.0" text="Music Library" textFill="#f3f3f3">
                   <font>
@@ -35,8 +35,11 @@
                   </font>
                 </Button>
                </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
             </HBox>
-          <TabPane fx:id="musicLibraryTabs" prefHeight="478.0" prefWidth="760.0" tabClosingPolicy="UNAVAILABLE">
+          <TabPane fx:id="musicLibraryTabs" tabClosingPolicy="UNAVAILABLE">
             <tabs>
               <Tab fx:id="allSongsTab" text="All songs">
                 <content>
