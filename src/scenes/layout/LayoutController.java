@@ -6,7 +6,6 @@ import java.net.URL;
 import javafx.util.Duration;
 import java.util.ResourceBundle;
 
-import assets.mediaLoader.MediaLoader;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -28,6 +27,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import utils.MediaLoader;
+import utils.ReusableFileChooser;
 import utils.Utils;
 
 public class LayoutController implements Initializable {
@@ -40,7 +41,7 @@ public class LayoutController implements Initializable {
 
 	@FXML
 	private Button sideBarFav, sideBarHome, sideBarPlaylist, sideBarMusicLib, sideBarVideoLib, sideBarRecentMedia,
-			settings, playPauseBtn, volumeBtn;
+			settings, playPauseBtn, volumeBtn, back10s, skip10s;
 
 	@FXML
 	private VBox sidebarNavigator, sideBarContainer;
@@ -137,6 +138,8 @@ public class LayoutController implements Initializable {
 				volumeLabel.setText(String.format("%d", (int) volume));
 			}
 		});
+		ReusableFileChooser fileChooser = ReusableFileChooser.getFileChooser();
+		fileChooser.addSupportedExtensions();
 
 	}
 
@@ -168,10 +171,7 @@ public class LayoutController implements Initializable {
 			setPauseButtonImage();
 			mediaLoader.playCurrentMediaFile();
 		} else if (!isPlayButton && mediaLoader.mediaPlayerExists()) {
-			File file = new File("src/assets/images/icons8-play-button-100.png");
-			Image image = new Image(file.toURI().toString());
-			playPauseBtnImgView.setImage(image);
-			isPlayButton = true;
+			setPlayButtonImage();
 			mediaLoader.pauseCurrentMediaFile();
 		}
 	}
@@ -181,6 +181,13 @@ public class LayoutController implements Initializable {
 		Image image = new Image(file.toURI().toString());
 		playPauseBtnImgView.setImage(image);
 		isPlayButton = false;
+	}
+
+	public void setPlayButtonImage() {
+		File file = new File("src/assets/images/icons8-play-button-100.png");
+		Image image = new Image(file.toURI().toString());
+		playPauseBtnImgView.setImage(image);
+		isPlayButton = true;
 	}
 
 	public void setSongName(String name) {
@@ -241,6 +248,38 @@ public class LayoutController implements Initializable {
 			Image image = new Image(file.toURI().toString());
 			favoriteBtnImgView.setImage(image);
 			isFavorite = true;
+		}
+	}
+
+	public void handleBackSkipButtons(ActionEvent event) {
+		if (event.getSource() == back10s && mediaLoader.getMediaPlayer() != null) {
+			if (mediaLoader.getMediaPlayer().getTotalDuration() != null
+					&& mediaLoader.getMediaPlayer().getCurrentTime().lessThanOrEqualTo(Duration.seconds(10))) {
+				mediaLoader.getMediaPlayer()
+						.seek(Duration.seconds(0));
+				return;
+			}
+			mediaLoader.getMediaPlayer()
+					.seek(Duration.seconds(mediaLoader.getMediaPlayer().getTotalDuration().toSeconds()
+							* progressSlider.getValue() / 100.0 - 10));
+		} else if (event.getSource() == skip10s && mediaLoader.getMediaPlayer() != null) {
+			if (mediaLoader.getMediaPlayer().getTotalDuration() != null
+					&& (mediaLoader.getMediaPlayer().getTotalDuration().toSeconds()
+							- mediaLoader.getMediaPlayer().getCurrentTime().toSeconds()) <= 10) {
+				mediaLoader.getMediaPlayer().stop();
+				setPlayButtonImage();
+				return;
+			}
+			mediaLoader.getMediaPlayer()
+					.seek(Duration.seconds(mediaLoader.getMediaPlayer().getTotalDuration().toSeconds()
+							* progressSlider.getValue() / 100.0 + 10));
+		}
+	}
+
+	public void handleStopButton(ActionEvent event) {
+		if (mediaLoader.getMediaPlayer() != null) {
+			mediaLoader.getMediaPlayer().stop();
+			setPlayButtonImage();
 		}
 	}
 }

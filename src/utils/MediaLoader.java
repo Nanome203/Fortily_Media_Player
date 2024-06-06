@@ -1,10 +1,10 @@
-package assets.mediaLoader;
+package utils;
 
 import javafx.util.Duration;
 import scenes.layout.LayoutController;
-import utils.Utils;
 
 import java.io.File;
+import java.util.List;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -17,6 +17,8 @@ public class MediaLoader {
     private MediaPlayer mediaPlayer = null;
     private LayoutController layoutController = null;
 
+    private List<File> listOfMediaFiles = null;
+
     private MediaLoader() {
     };
 
@@ -24,6 +26,10 @@ public class MediaLoader {
         if (INSTANCE == null)
             INSTANCE = new MediaLoader();
         return INSTANCE;
+    }
+
+    public void receiveListOfMediaFiles(List<File> list) {
+        listOfMediaFiles = list;
     }
 
     public void receiveLayoutController(LayoutController layoutController) {
@@ -51,6 +57,11 @@ public class MediaLoader {
         // });
         mediaPlayer.setOnReady(() -> {
             layoutController.setTotalDuration(mediaPlayer.getTotalDuration());
+        });
+
+        mediaPlayer.setOnEndOfMedia(() -> {
+            mediaPlayer.stop();
+            layoutController.setPlayButtonImage();
         });
 
         // Update the slider as the video plays

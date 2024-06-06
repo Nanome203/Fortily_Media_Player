@@ -260,7 +260,7 @@
                         </Tooltip>
                      </tooltip>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="button-style">
+                  <Button fx:id="back10s" mnemonicParsing="false" onAction="#handleBackSkipButtons" styleClass="button-style">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -298,7 +298,7 @@
                         </Tooltip>
                      </tooltip>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="button-style">
+                  <Button fx:id="skip10s" mnemonicParsing="false" onAction="#handleBackSkipButtons" styleClass="button-style">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -336,11 +336,11 @@
                         </Tooltip>
                      </tooltip>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="button-style">
+                  <Button mnemonicParsing="false" onAction="#handleStopButton" styleClass="button-style">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../assets/images/icons8-full-screen-100.png" />
+                              <Image url="@../../assets/images/icons8-stop-circled-100.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -348,7 +348,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                      <tooltip>
-                        <Tooltip text="Zoom In/out" textOverrun="LEADING_ELLIPSIS">
+                        <Tooltip text="Stop" textOverrun="LEADING_ELLIPSIS">
                            <font>
                               <Font name="Arial" size="15.0" />
                            </font>

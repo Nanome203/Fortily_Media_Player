@@ -2,16 +2,17 @@ package scenes.home;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
-import assets.mediaLoader.MediaLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.stage.FileChooser;
+import utils.MediaLoader;
+import utils.ReusableFileChooser;
 
 public class HomeEmptyController implements Initializable {
     @FXML
@@ -27,8 +28,9 @@ public class HomeEmptyController implements Initializable {
     }
 
     public void openMediaFile(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        File selectedFile = fileChooser.showOpenDialog(null);
+        ReusableFileChooser fileChooser = ReusableFileChooser.getFileChooser();
+        // List<File> selectedFile = fileChooser.showOpenMultipleDialog(null);
+        File selectedFile = fileChooser.showOpenDialog();
         if (selectedFile != null)
             mediaLoader.playNewMediaFile(selectedFile);
     }
