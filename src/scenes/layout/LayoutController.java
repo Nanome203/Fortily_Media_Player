@@ -100,9 +100,6 @@ public class LayoutController implements Initializable {
 						"-fx-background-color: linear-gradient(to right, #2880E8 %.5f%%, white %.5f%%);",
 						new_val.doubleValue(), new_val.doubleValue());
 				trackPane.setStyle(style);
-				if (!mediaLoader.mediaPlayerExists()) {
-					progressSlider.setValue(0);
-				}
 			}
 		});
 

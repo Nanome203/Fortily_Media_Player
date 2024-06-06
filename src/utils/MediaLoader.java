@@ -105,7 +105,6 @@ public class MediaLoader {
                         && mediaPlayer.getTotalDuration().greaterThan(Duration.ZERO)) {
                     mediaPlayer.seek(mediaPlayer.getTotalDuration()
                             .multiply(layoutController.getProgressSlider().getValue() / 100));
-                    layoutController.getCurrentTimeLabel().setText(Utils.formatTime(mediaPlayer.getCurrentTime()));
                 }
             }
         });
