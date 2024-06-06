@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -41,7 +43,7 @@ public class LayoutController implements Initializable {
 
 	@FXML
 	private Button sideBarFav, sideBarHome, sideBarPlaylist, sideBarMusicLib, sideBarVideoLib, sideBarRecentMedia,
-			settings, playPauseBtn, volumeBtn, back10s, skip10s;
+			settings, playPauseBtn, volumeBtn, back10s, skip10s, nextButton, prevButton;
 
 	@FXML
 	private VBox sidebarNavigator, sideBarContainer;
@@ -266,13 +268,31 @@ public class LayoutController implements Initializable {
 			if (mediaLoader.getMediaPlayer().getTotalDuration() != null
 					&& (mediaLoader.getMediaPlayer().getTotalDuration().toSeconds()
 							- mediaLoader.getMediaPlayer().getCurrentTime().toSeconds()) <= 10) {
-				mediaLoader.getMediaPlayer().stop();
+				mediaLoader.getMediaPlayer().seek(mediaLoader.getMediaPlayer().getTotalDuration());
 				setPlayButtonImage();
 				return;
 			}
 			mediaLoader.getMediaPlayer()
 					.seek(Duration.seconds(mediaLoader.getMediaPlayer().getTotalDuration().toSeconds()
 							* progressSlider.getValue() / 100.0 + 10));
+		}
+	}
+
+	public void handleNextPrevButtons(ActionEvent event) {
+		if (event.getSource() == nextButton
+				&& mediaLoader.getReceivedListSize() >= 2
+				&& mediaLoader.getCurrentMediaIndex() < mediaLoader.getReceivedListSize() - 1) {
+			mediaLoader.setCurrentMediaIndex(mediaLoader.getCurrentMediaIndex() + 1);
+			int currentMediaIndex = mediaLoader.getCurrentMediaIndex();
+			ArrayList<File> MediaFiles = mediaLoader.getReceivedList();
+			mediaLoader.playNewMediaFile(MediaFiles.get(currentMediaIndex));
+		} else if (event.getSource() == prevButton
+				&& mediaLoader.getReceivedListSize() >= 2
+				&& mediaLoader.getCurrentMediaIndex() > 0) {
+			mediaLoader.setCurrentMediaIndex(mediaLoader.getCurrentMediaIndex() - 1);
+			int currentMediaIndex = mediaLoader.getCurrentMediaIndex();
+			ArrayList<File> MediaFiles = mediaLoader.getReceivedList();
+			mediaLoader.playNewMediaFile(MediaFiles.get(currentMediaIndex));
 		}
 	}
 

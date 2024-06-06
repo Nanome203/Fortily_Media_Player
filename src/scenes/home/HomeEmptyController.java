@@ -19,19 +19,22 @@ public class HomeEmptyController implements Initializable {
     Circle testCircle;
 
     private MediaLoader mediaLoader;
+    private ReusableFileChooser fileChooser;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         Image oshiNoKoImage = new Image("/assets/images/oshi-no-ko-head-bob.gif");
         testCircle.setFill(new ImagePattern(oshiNoKoImage));
         mediaLoader = MediaLoader.getMediaLoader();
+        fileChooser = ReusableFileChooser.getFileChooser();
     }
 
     public void openMediaFile(ActionEvent event) {
-        ReusableFileChooser fileChooser = ReusableFileChooser.getFileChooser();
-        // List<File> selectedFile = fileChooser.showOpenMultipleDialog(null);
-        File selectedFile = fileChooser.showOpenDialog();
-        if (selectedFile != null)
-            mediaLoader.playNewMediaFile(selectedFile);
+        List<File> selectedFileList = fileChooser.showOpenMultipleDialog();
+        if (!selectedFileList.isEmpty()) {
+            mediaLoader.receiveListOfMediaFiles(selectedFileList);
+            mediaLoader.playReceivedList();
+        }
+
     }
 }
