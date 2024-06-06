@@ -1,11 +1,11 @@
 #imageSongContainer:hover {
-    -fx-background-color: #384154;
+    -fx-background-color: rgba(90, 105, 143, 0.5);
     -fx-background-radius: 10;
     -fx-cursor: hand;
 }
 
 #imageSongContainer:hover:pressed {
-    -fx-background-color: #46516B;
+    -fx-background-color: rgba(90, 105, 143, 0.7);
 }
 
 #imageSongContainer .label {
@@ -33,12 +33,12 @@
 }
 
 .button-style:hover {
-    -fx-background-color: #49546A;
+    -fx-background-color: rgba(90, 105, 143, 0.5);
     -fx-background-radius: 50;
 }
 
 .button-style:hover:pressed {
-    -fx-background-color: #46516B;
+    -fx-background-color: rgba(90, 105, 143, 0.7);
 }
 
 #volumeSlider.slider .track {

@@ -3,6 +3,7 @@ package scenes.layout;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import javafx.util.Duration;
 import java.util.ResourceBundle;
 
 import assets.mediaLoader.MediaLoader;
@@ -27,7 +28,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import scenes.home.HomeEmptyController;
+import utils.Utils;
 
 public class LayoutController implements Initializable {
 
@@ -38,51 +39,24 @@ public class LayoutController implements Initializable {
 	private BorderPane mainContainer;
 
 	@FXML
-	private Button sideBarFav;
+	private Button sideBarFav, sideBarHome, sideBarPlaylist, sideBarMusicLib, sideBarVideoLib, sideBarRecentMedia,
+			settings, playPauseBtn, volumeBtn;
 
 	@FXML
-	private Button sideBarHome;
+	private VBox sidebarNavigator, sideBarContainer;
 
 	@FXML
-	private Button sideBarPlaylist;
+	private Slider progressSlider, volumeSlider;
 
 	@FXML
-	private VBox sidebarNavigator;
-
-	@FXML
-	private Button sideBarMusicLib;
-
-	@FXML
-	private Button sideBarVideoLib;
-
-	@FXML
-	private Button sideBarRecentMedia;
-
-	@FXML
-	private VBox sideBarContainer;
-
-	@FXML
-	private Slider progressSlider;
-
-	@FXML
-	private Slider volumeSlider;
-
-	@FXML
-	private Label volumeLabel, currentTimeLabel, mediaDurationLabel;
-
-	@FXML
-	private Button settings;
-
-	@FXML
-	private Label songName;
-
-	@FXML
-	private Button playPauseBtn, volumeBtn;
+	private Label volumeLabel, currentTimeLabel, mediaDurationLabel, songName;
 
 	@FXML
 	private ImageView playPauseBtnImgView, volumeBtnImgView, playlistBtnImgView, favoriteBtnImgView, songImageView;
 
-	private static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false;
+	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false;
+
+	private static double prevVolume = 100, volume = 100;
 
 	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene;
 
@@ -91,10 +65,7 @@ public class LayoutController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
-			homeScene = loader.load();
-			HomeEmptyController homeEmptyController = loader.getController();
-			homeEmptyController.receiveParentController(this);
+			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
 			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
@@ -104,6 +75,7 @@ public class LayoutController implements Initializable {
 		}
 
 		mediaLoader = MediaLoader.getMediaLoader();
+		mediaLoader.receiveLayoutController(this);
 
 		// adding border radius to song's image view
 		Rectangle clip = new Rectangle(songImageView.getFitWidth(), songImageView.getFitHeight());
@@ -123,18 +95,23 @@ public class LayoutController implements Initializable {
 				StackPane trackPane = (StackPane) progressSlider.lookup(".track");
 				String style = String.format(
 						"-fx-background-color: linear-gradient(to right, #2880E8 %.5f%%, white %.5f%%);",
-						new_val.floatValue(), new_val.floatValue());
+						new_val.doubleValue(), new_val.doubleValue());
 				trackPane.setStyle(style);
+				if (!mediaLoader.mediaPlayerExists()) {
+					progressSlider.setValue(0);
+				}
 			}
 		});
 
 		volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+				prevVolume = old_val.doubleValue();
+				volume = new_val.doubleValue();
 				StackPane trackPane = (StackPane) volumeSlider.lookup(".track");
 				String style = String.format(
-						"-fx-background-color: linear-gradient(to right, #2880E8 %d%%, white %d%%);",
-						new_val.intValue(), new_val.intValue());
+						"-fx-background-color: linear-gradient(to right, #2880E8 %.5f%%, white %.5f%%);",
+						volume, volume);
 				trackPane.setStyle(style);
 				if (volumeSlider.getValue() == 0.0) {
 					File file = new File("src/assets/images/icons8-mute-100.png");
@@ -149,6 +126,15 @@ public class LayoutController implements Initializable {
 					volumeBtnImgView.setImage(image);
 					isMuted = false;
 				}
+
+				// Set volume
+				if (mediaLoader.getMediaPlayer() != null) {
+					mediaLoader.getMediaPlayer().setVolume(volume / 100);
+					mediaLoader.getMediaPlayer().setMute(isMuted);
+				}
+
+				// Change label
+				volumeLabel.setText(String.format("%d", (int) volume));
 			}
 		});
 
@@ -201,17 +187,30 @@ public class LayoutController implements Initializable {
 		songName.setText(name);
 	}
 
+	public void setTotalDuration(Duration duration) {
+		mediaDurationLabel.setText(Utils.formatTime(duration));
+	}
+
+	public Slider getProgressSlider() {
+		return progressSlider;
+	}
+
+	public Label getCurrentTimeLabel() {
+		return currentTimeLabel;
+	}
+
 	public void handleVolumeBtn(ActionEvent event) {
 		if (isMuted) {
 			File file = new File("src/assets/images/icons8-volume-100.png");
 			Image image = new Image(file.toURI().toString());
 			volumeBtnImgView.setImage(image);
-			volumeSlider.setValue(100.0);
+			volumeSlider.setValue(prevVolume);
 			isMuted = false;
 		} else {
 			File file = new File("src/assets/images/icons8-mute-100.png");
 			Image image = new Image(file.toURI().toString());
 			volumeBtnImgView.setImage(image);
+			prevVolume = volume != 0.0 ? volume : prevVolume;
 			volumeSlider.setValue(0.0);
 			isMuted = true;
 		}
