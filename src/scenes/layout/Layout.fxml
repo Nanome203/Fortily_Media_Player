@@ -186,7 +186,10 @@
                   <Insets bottom="10.0" left="10.0" top="10.0" />
                </padding>
             </Button>
-         </children></VBox>
+         </children>
+         <BorderPane.margin>
+            <Insets left="5.0" />
+         </BorderPane.margin></VBox>
    </left>
    <bottom>
       <BorderPane style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
@@ -291,7 +294,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                      <tooltip>
-                        <Tooltip text="Play/Pause" textOverrun="LEADING_ELLIPSIS">
+                        <Tooltip fx:id="playPauseTooltip" text="Play" textOverrun="LEADING_ELLIPSIS">
                            <font>
                               <Font name="Arial" size="15.0" />
                            </font>

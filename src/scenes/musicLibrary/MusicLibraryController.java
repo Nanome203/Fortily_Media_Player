@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -23,7 +22,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import model.SongMetadata;
-import utils.Utils;
+import utils.Helpers;
 
 public class MusicLibraryController implements Initializable {
 
@@ -121,7 +120,7 @@ public class MusicLibraryController implements Initializable {
           : "Unknown Artist";
       String title = media.getMetadata().get("title") != null ? media.getMetadata().get("title").toString()
           : file.getName();
-      String durationString = Utils.formatTime(media.getDuration());
+      String durationString = Helpers.formatTime(media.getDuration());
       String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
           : "Unknown Album";
       long dateModified = file.lastModified();

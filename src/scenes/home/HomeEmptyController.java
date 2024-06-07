@@ -31,7 +31,7 @@ public class HomeEmptyController implements Initializable {
 
     public void openMediaFile(ActionEvent event) {
         List<File> selectedFileList = fileChooser.showOpenMultipleDialog();
-        if (!selectedFileList.isEmpty() || selectedFileList != null) {
+        if (selectedFileList != null) {
             mediaLoader.receiveListOfMediaFiles(selectedFileList);
             mediaLoader.playReceivedList();
         }

@@ -30,7 +30,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import model.SongMetadata;
-import utils.Utils;
+import utils.Helpers;
 
 public class VideoLibraryController implements Initializable {
   @FXML
@@ -124,7 +124,7 @@ public class VideoLibraryController implements Initializable {
           : "Unknown Artist";
       String title = media.getMetadata().get("title") != null ? media.getMetadata().get("title").toString()
           : file.getName();
-      String durationString = Utils.formatTime(media.getDuration());
+      String durationString = Helpers.formatTime(media.getDuration());
       String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
           : "Unknown Album";
       long dateModified = file.lastModified();

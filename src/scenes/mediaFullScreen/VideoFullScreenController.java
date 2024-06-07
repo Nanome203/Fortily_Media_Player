@@ -8,11 +8,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaView;
 import utils.MediaLoader;
 
-public class MediaFullScreenController implements Initializable {
+public class VideoFullScreenController implements Initializable {
 
     @FXML
     private BorderPane musicVideoContainer;
@@ -25,7 +24,7 @@ public class MediaFullScreenController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         mediaLoader = MediaLoader.getMediaLoader();
-        mediaLoader.receiveMediaFullScreenController(this);
+        mediaLoader.receiveVideoFullScreenController(this);
         musicVideoContainer.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {

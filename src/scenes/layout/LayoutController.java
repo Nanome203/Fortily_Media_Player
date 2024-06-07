@@ -20,11 +20,10 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -59,11 +58,16 @@ public class LayoutController implements Initializable {
 	@FXML
 	private ImageView playPauseBtnImgView, volumeBtnImgView, playlistBtnImgView, favoriteBtnImgView, songImageView;
 
-	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false;
+	@FXML
+	private Tooltip playPauseTooltip;
+
+	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false,
+			isFullScreen = false, isAudioFile = false, isVideoFile = false;
 
 	private static double prevVolume = 100, volume = 100;
 
-	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, mediaFullScreenScene;
+	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
+			musicFullScreenScene, prevScene;
 
 	private MediaLoader mediaLoader;
 
@@ -74,15 +78,27 @@ public class LayoutController implements Initializable {
 			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
-			mediaFullScreenScene = FXMLLoader
-					.load(getClass().getResource("/scenes/mediaFullScreen/MediaFullScreen.fxml"));
+			videoFullScreenScene = FXMLLoader
+					.load(getClass().getResource("/scenes/mediaFullScreen/VideoFullScreen.fxml"));
+			musicFullScreenScene = FXMLLoader
+					.load(getClass().getResource("/scenes/mediaFullScreen/MusicFullScreen.fxml"));
 			mainContainer.setCenter(homeScene);
+			prevScene = homeScene;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		imageSongContainer.setOnMouseClicked(event -> {
-			if (event.getButton() == MouseButton.PRIMARY) {
-				mainContainer.setCenter(mediaFullScreenScene);
+			if (!isFullScreen && isAudioFile) {
+				mainContainer.setCenter(musicFullScreenScene);
+				isFullScreen = true;
+			}
+
+			else if (!isFullScreen && isVideoFile) {
+				mainContainer.setCenter(videoFullScreenScene);
+				isFullScreen = true;
+			} else {
+				mainContainer.setCenter(prevScene);
+				isFullScreen = false;
 			}
 		});
 		mediaLoader = MediaLoader.getMediaLoader();
@@ -161,15 +177,19 @@ public class LayoutController implements Initializable {
 		((Button) event.getSource()).getStyleClass().add("active");
 		if (event.getSource() == sideBarHome) {
 			mainContainer.setCenter(homeScene);
+			prevScene = homeScene;
 		}
 		if (event.getSource() == sideBarMusicLib) {
 			mainContainer.setCenter(musicLibScene);
+			prevScene = musicLibScene;
 		}
 		if (event.getSource() == sideBarRecentMedia) {
 			mainContainer.setCenter(recentMediaScene);
+			prevScene = recentMediaScene;
 		}
 		if (event.getSource() == sideBarVideoLib) {
 			mainContainer.setCenter(videoLibScene);
+			prevScene = videoLibScene;
 		}
 	}
 
@@ -186,6 +206,7 @@ public class LayoutController implements Initializable {
 	public void setPauseButtonImage() {
 		File file = new File("src/assets/images/icons8-pause-button-100.png");
 		Image image = new Image(file.toURI().toString());
+		playPauseTooltip.setText("Pause");
 		playPauseBtnImgView.setImage(image);
 		isPlayButton = false;
 	}
@@ -193,6 +214,7 @@ public class LayoutController implements Initializable {
 	public void setPlayButtonImage() {
 		File file = new File("src/assets/images/icons8-play-button-100.png");
 		Image image = new Image(file.toURI().toString());
+		playPauseTooltip.setText("Play");
 		playPauseBtnImgView.setImage(image);
 		isPlayButton = true;
 	}
@@ -203,6 +225,16 @@ public class LayoutController implements Initializable {
 
 	public void setTotalDuration(Duration duration) {
 		mediaDurationLabel.setText(Helpers.formatTime(duration));
+	}
+
+	public void setVideoFullScreenScene() {
+		isFullScreen = true;
+		mainContainer.setCenter(videoFullScreenScene);
+	}
+
+	public void setMusicFullScreenScene() {
+		isFullScreen = true;
+		mainContainer.setCenter(musicFullScreenScene);
 	}
 
 	public Slider getProgressSlider() {
