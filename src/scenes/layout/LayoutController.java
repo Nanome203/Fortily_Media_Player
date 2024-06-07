@@ -33,7 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import utils.MediaLoader;
 import utils.ReusableFileChooser;
-import utils.Utils;
+import utils.Helpers;
 
 public class LayoutController implements Initializable {
 
@@ -202,7 +202,7 @@ public class LayoutController implements Initializable {
 	}
 
 	public void setTotalDuration(Duration duration) {
-		mediaDurationLabel.setText(Utils.formatTime(duration));
+		mediaDurationLabel.setText(Helpers.formatTime(duration));
 	}
 
 	public Slider getProgressSlider() {
