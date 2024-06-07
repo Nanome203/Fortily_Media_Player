@@ -199,6 +199,10 @@ public class VideoPlayerController implements Initializable {
               }
             }
           });
+          // Update label according to slider
+          progressSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+            currentTimeLabel.setText(Utils.formatTime(totalMediaDuration.toMillis() * (double) newValue / 100.0));
+          });
 
           // Update the slider as the video plays
           mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
