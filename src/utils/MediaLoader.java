@@ -70,7 +70,7 @@ public class MediaLoader {
                     && mediaPlayer.getTotalDuration().greaterThan(Duration.ZERO)) {
                 layoutController.getProgressSlider()
                         .setValue(newValue.toMillis() / mediaPlayer.getTotalDuration().toMillis() * 100);
-                layoutController.getCurrentTimeLabel().setText(Utils.formatTime(newValue));
+                layoutController.getCurrentTimeLabel().setText(Helpers.formatTime(newValue));
             }
         });
         layoutController.setSongName(selectedFile.getName().replaceFirst("[.].+$", ""));
