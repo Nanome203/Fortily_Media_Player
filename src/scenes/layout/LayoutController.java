@@ -23,6 +23,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -61,7 +63,7 @@ public class LayoutController implements Initializable {
 
 	private static double prevVolume = 100, volume = 100;
 
-	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene;
+	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, mediaFullScreenScene;
 
 	private MediaLoader mediaLoader;
 
@@ -72,11 +74,17 @@ public class LayoutController implements Initializable {
 			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
+			mediaFullScreenScene = FXMLLoader
+					.load(getClass().getResource("/scenes/mediaFullScreen/MediaFullScreen.fxml"));
 			mainContainer.setCenter(homeScene);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		imageSongContainer.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY) {
+				mainContainer.setCenter(mediaFullScreenScene);
+			}
+		});
 		mediaLoader = MediaLoader.getMediaLoader();
 		mediaLoader.receiveLayoutController(this);
 

@@ -2,6 +2,7 @@ package utils;
 
 import javafx.util.Duration;
 import scenes.layout.LayoutController;
+import scenes.mediaFullScreen.MediaFullScreenController;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class MediaLoader {
     private Media media = null;
     private MediaPlayer mediaPlayer = null;
     private LayoutController layoutController = null;
+    private MediaFullScreenController mfsController = null;
 
     private ArrayList<File> MediaFiles = null;
     private int currentMediaIndex;
@@ -45,6 +47,10 @@ public class MediaLoader {
         this.layoutController = layoutController;
     }
 
+    public void receiveMediaFullScreenController(MediaFullScreenController controller) {
+        mfsController = controller;
+    }
+
     // this function plays the media files in the received list
     public void playReceivedList() {
         playNewMediaFile(MediaFiles.get(currentMediaIndex));
@@ -57,6 +63,11 @@ public class MediaLoader {
         }
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
+
+        // test code
+        if (mfsController != null)
+            mfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
+        //
         layoutController.setPauseButtonImage();
         synchronizeWithLayout(selectedFile.getName());
 
@@ -85,6 +96,12 @@ public class MediaLoader {
             layoutController.getCurrentTimeLabel().setText(Utils.formatTime(mediaPlayer.getCurrentTime()));
             layoutController.getProgressSlider().setValue(0);
             layoutController.setSongName(name.replaceFirst("[.].+$", ""));
+        });
+
+        // Update label according to slider
+        layoutController.getProgressSlider().valueProperty().addListener((obs, oldValue, newValue) -> {
+            layoutController.getCurrentTimeLabel()
+                    .setText(Utils.formatTime(mediaPlayer.getTotalDuration().toMillis() * (double) newValue / 100.0));
         });
 
         // Update the slider as the video plays
