@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.File;
+import java.util.List;
 
 import javafx.util.Duration;
 
@@ -55,5 +56,31 @@ public class Helpers {
 
   public static boolean isVideoFile(File file) {
     return Constants.VIDEO_FILE_PATTERN.matcher(file.getName()).matches();
+  }
+
+  public static void findFilesRecursively(File directory, List<File> filesList, String fileType) {
+    File[] files = directory.listFiles();
+    if (files == null) {
+      return;
+    }
+    for (File file : files) {
+      if (file.isDirectory()) {
+        findFilesRecursively(file, filesList, fileType);
+      } else
+        switch (fileType) {
+          case "audio":
+            if (isAudioFile(file)) {
+              filesList.add(file);
+            }
+            break;
+          case "video":
+            if (isVideoFile(file)) {
+              filesList.add(file);
+            }
+            break;
+          default:
+            break;
+        }
+    }
   }
 }

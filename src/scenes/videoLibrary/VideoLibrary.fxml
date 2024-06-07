@@ -18,11 +18,11 @@
          <children>
             <HBox alignment="CENTER">
                <children>
-                    <Label fx:id="musicLibraryLabel" prefHeight="22.0" text="Video Library" textFill="#f3f3f3">
-                        <font>
-                            <Font name="Ebrima Bold" size="20.0" />
-                        </font>
-                    </Label>
+                  <Label fx:id="videoLibraryLabel" prefHeight="52.0" prefWidth="277.0" text="Video Library" textFill="#f3f3f3">
+                     <font>
+                        <Font name="Ebrima Bold" size="40.0" />
+                     </font>
+                  </Label>
                   <HBox prefWidth="200.0" HBox.hgrow="ALWAYS" />
                     <Button fx:id="addFolderButton" mnemonicParsing="false" onMouseClicked="#addFolder" styleClass="addFolderButton" text="Add folder" textFill="#2880e8">
                         <font>
