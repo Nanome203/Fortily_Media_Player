@@ -388,9 +388,9 @@ public class FavoriteController implements Initializable {
 	{
 		if(mediaPlayer != null)
 		{
-			getCurrentMediaPlaying = null;
 			mediaPlayer.stop();
 		}
+		getCurrentMediaPlaying = null;
 	}
 	
 }

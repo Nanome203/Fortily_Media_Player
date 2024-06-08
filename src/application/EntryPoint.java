@@ -15,6 +15,7 @@ public class EntryPoint extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     Parent root = FXMLLoader.load(getClass().getResource("/scenes/layout/Layout.fxml"));
+    Parent root2 = FXMLLoader.load(getClass().getResource("/scenes/favorite/Favorite.fxml"));
     Parent splashScreen = FXMLLoader.load(getClass().getResource("/scenes/splashScreen/SplashScreen.fxml"));
     primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/assets/images/Fortily.png")));
     primaryStage.setTitle("Fortily");
