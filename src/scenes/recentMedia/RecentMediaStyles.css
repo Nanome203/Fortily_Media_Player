@@ -11,3 +11,13 @@
 .openFileBtnStyle:pressed {
     -fx-background-color: #3a6ead;
 }
+
+.tab, .column {
+  -fx-background-color: #1D2129;
+  -fx-text-fill: #F3F3F3;
+}
+
+
+.scroll-pane .viewport {
+  -fx-background-color: transparent;
+}
