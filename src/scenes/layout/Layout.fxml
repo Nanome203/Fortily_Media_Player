@@ -343,7 +343,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../assets/images/icons8-stop-circled-100.png" />
+                              <Image url="@../../assets/images/icons8-replay-100.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -351,7 +351,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                      <tooltip>
-                        <Tooltip text="Stop" textOverrun="LEADING_ELLIPSIS">
+                        <Tooltip text="Replay" textOverrun="LEADING_ELLIPSIS">
                            <font>
                               <Font name="Arial" size="15.0" />
                            </font>

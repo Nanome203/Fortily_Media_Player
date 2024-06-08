@@ -70,7 +70,6 @@ public class MediaLoader {
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
-        // test code
         if (Helpers.isVideoFile(selectedFile)) {
             layoutController.setVideoFullScreenScene();
             vfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
@@ -82,7 +81,7 @@ public class MediaLoader {
             LayoutController.isVideoFile = false;
             mfsController.startRotation();
         }
-        //
+
         layoutController.setPauseButtonImage();
         synchronizeWithLayout(selectedFile.getName());
 
@@ -107,7 +106,7 @@ public class MediaLoader {
         mediaPlayer.play();
     }
 
-    public void synchronizeWithLayout(String name) {
+    private void synchronizeWithLayout(String name) {
         if (LayoutController.isMuted) {
             mediaPlayer.setMute(LayoutController.isMuted);
         }
@@ -164,9 +163,10 @@ public class MediaLoader {
 
     // this function plays the media file when user click the play button
     public void playCurrentMediaFile() {
-        if (mediaPlayer != null)
+        if (mediaPlayer != null) {
             mediaPlayer.play();
-        mfsController.continueRotation();
+            mfsController.continueRotation();
+        }
     }
 
     // this function pause the media file when user click the pause button
@@ -175,6 +175,11 @@ public class MediaLoader {
             mediaPlayer.pause();
             mfsController.stopRotation();
         }
+    }
+
+    public void startRotationFromLayout() {
+        if (mediaPlayer != null)
+            mfsController.startRotation();
     }
 
     public boolean mediaPlayerExists() {
