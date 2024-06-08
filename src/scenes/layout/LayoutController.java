@@ -121,7 +121,7 @@ public class LayoutController implements Initializable {
       @Override
       public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
         StackPane trackPane = (StackPane) progressSlider.lookup(".track");
-        String newValString = String.valueOf(new_val.doubleValue());
+        String newValString = String.valueOf((int) (new_val.doubleValue() * 100000) / 100000.0);
         String style = "-fx-background-color: linear-gradient(to right, #2880E8 " + newValString + "%, white "
             + newValString + "%);";
         trackPane.setStyle(style);
@@ -133,7 +133,7 @@ public class LayoutController implements Initializable {
       public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
         prevVolume = old_val.doubleValue();
         volume = new_val.doubleValue();
-        String volumeString = String.valueOf(volume);
+        String volumeString = String.valueOf((int) (volume * 100000) / 100000.0);
         StackPane trackPane = (StackPane) volumeSlider.lookup(".track");
         String style = "-fx-background-color: linear-gradient(to right, #2880E8 " + volumeString
             + "%, white " + volumeString
@@ -193,7 +193,7 @@ public class LayoutController implements Initializable {
       mainContainer.setCenter(videoLibScene);
       prevScene = videoLibScene;
     }
-    if(event.getSource() == sideBarFav){
+    if (event.getSource() == sideBarFav) {
       mainContainer.setCenter(favoriteScene);
       prevScene = favoriteScene;
     }
@@ -339,13 +339,13 @@ public class LayoutController implements Initializable {
     }
   }
 
-	public void handleStopButton(ActionEvent event) {
-		if (mediaLoader.getMediaPlayer() != null) {
-			mediaLoader.getMediaPlayer().seek(Duration.ZERO);
-			setPauseButtonImage();
-		}
-		if (isAudioFile) {
-			mediaLoader.startRotationFromLayout();
-		}
-	}
+  public void handleStopButton(ActionEvent event) {
+    if (mediaLoader.getMediaPlayer() != null) {
+      mediaLoader.getMediaPlayer().seek(Duration.ZERO);
+      setPauseButtonImage();
+    }
+    if (isAudioFile) {
+      mediaLoader.startRotationFromLayout();
+    }
+  }
 }

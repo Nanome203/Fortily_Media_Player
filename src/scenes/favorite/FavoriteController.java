@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+import utils.ReusableFileChooser;
 
 import dao.FavoriteDAO;
 import javafx.collections.FXCollections;
@@ -35,6 +36,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 public class FavoriteController implements Initializable {
+
 	private MediaLoader mediaLoader;
 
 	private FavoriteDAO favoriteDAO = new FavoriteDAO();
@@ -138,19 +140,9 @@ public class FavoriteController implements Initializable {
 
 	@FXML
 	public void addFile(MouseEvent evt) throws SQLException {
-		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Add Media Files");
-		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video File", "*.mp4"));
-			chooser.getExtensionFilters()
-					.add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac"));
-		} else if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Audio")) {
-			chooser.getExtensionFilters()
-					.add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac"));
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video File", "*.mp4"));
-		}
+		ReusableFileChooser chooser = ReusableFileChooser.getFileChooser();
 
-		List<File> files = chooser.showOpenMultipleDialog(null);
+		List<File> files = chooser.showOpenMultipleDialog();
 		if (files != null && !files.isEmpty()) {
 			// List<MediaPlayer> mediaPlayers = new ArrayList<>();
 			for (File file : files) {
@@ -183,7 +175,7 @@ public class FavoriteController implements Initializable {
 					double duration = media.getDuration().toMillis();
 					String formatDuration = convertDurationMillis((int) duration);
 
-					SongMetadata getIndex = new SongMetadata(title, artist, formatDuration, album, 0,
+					SongMetadata getIndex = new SongMetadata(title, artist, album, formatDuration, 0,
 							filePath.getAbsolutePath());
 
 					// Check for audio or video type
@@ -281,42 +273,15 @@ public class FavoriteController implements Initializable {
 			if (LVideo.isEmpty()) {
 				return;
 			}
-			stopPlaying();
-			// playNextMedia(LVideo, 0);
+			
 		} else // Audio
 		{
 			if (LAudio.isEmpty()) {
 				return;
 			}
-			stopPlaying();
-			// playNextMedia(LAudio, 0);
+			
 		}
 	}
-
-	// private void playNextMedia(List<SongMetadata> mediaList, int
-	// currentMediaIndex) {
-	// System.out.println(mediaList + "\n" + mediaList.size());
-	// System.out.println("Runnin" + currentMediaIndex);
-	// if (currentMediaIndex >= mediaList.size()) {
-	// System.out.println("Reached the end of the playlist.");
-	// return;
-	// }
-	// getCurrentMediaPlaying = mediaList.get(currentMediaIndex);
-	// mediaPlayer = new MediaPlayer(new Media(new
-	// File(mediaList.get(currentMediaIndex).getPathname()).toURI().toString()));
-	// mediaPlayer.play();
-	// try {
-	// Thread.sleep(1000);
-	// } catch (InterruptedException e) {
-	// }
-	//
-	// mediaPlayer.setOnEndOfMedia(new Runnable() {
-	// public void run() {
-	// playNextMedia(mediaList, currentMediaIndex + 1);
-	// }
-	// });
-	//
-	// }
 
 	private void playSingleMedia(SongMetadata getSongMetadata) {
 		stopPlaying();
