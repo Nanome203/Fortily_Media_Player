@@ -5,59 +5,67 @@
 package model;
 
 public class SongMetadata {
-    private String Title;
-    private String Artist;
-    private String Duration;
-    private String Album;
-    private long Date;
+  private String title;
+  private String artist;
+  private String album;
+  private String duration;
+  private long lastModified;
+  private String pathname;
 
-    public SongMetadata(String Title, String Artist, String Duration, String Album, long Date) {
-        this.Title = Title;
-        this.Artist = Artist;
-        this.Duration = Duration;
-        this.Album = Album;
-        this.Date = Date;
-    }
+  public SongMetadata(String title, String artist, String album, String duration, long lastModified, String pathname) {
+    this.title = title;
+    this.artist = artist;
+    this.album = album;
+    this.duration = duration;
+    this.lastModified = lastModified;
+    this.pathname = pathname;
+  }
 
-    public String getTitle() {
-        return Title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public void setTitle(String Title) {
-        this.Title = Title;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public String getArtist() {
-        return Artist;
-    }
+  public String getArtist() {
+    return artist;
+  }
 
-    public void setArtist(String Artist) {
-        this.Artist = Artist;
-    }
+  public void setArtist(String artist) {
+    this.artist = artist;
+  }
 
-    public String getDuration() {
-        return Duration;
-    }
+  public String getAlbum() {
+    return album;
+  }
 
-    public void setDuration(String Duration) {
-        this.Duration = Duration;
-    }
+  public void setAlbum(String album) {
+    this.album = album;
+  }
 
-    public String getAlbum() {
-        return Album;
-    }
+  public String getDuration() {
+    return duration;
+  }
 
-    public void setAlbum(String Album) {
-        this.Album = Album;
-    }
+  public void setDuration(String duration) {
+    this.duration = duration;
+  }
 
-    public long getDate() {
-        return Date;
-    }
+  public long getLastModified() {
+    return lastModified;
+  }
 
-    public void setDate(long Date) {
-        this.Date = Date;
-    }
-    
-    
+  public void setLastModified(long lastModified) {
+    this.lastModified = lastModified;
+  }
+
+  public String getPathname() {
+    return pathname;
+  }
+
+  public void setPathname(String pathname) {
+    this.pathname = pathname;
+  }
 }

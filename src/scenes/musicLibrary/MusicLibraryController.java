@@ -17,7 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -31,9 +30,7 @@ import utils.Helpers;
 public class MusicLibraryController implements Initializable {
 
   @FXML
-  private Button shuffleAndPlayAllSongs;
-  @FXML
-  private Button playAll;
+  private ChoiceBox<String> allSongsFilterChoiceBox, albumsFilterChoiceBox, artistsFilterChoiceBox;
   @FXML
   private TableView<SongMetadata> allSongsTable;
   @FXML
@@ -45,19 +42,15 @@ public class MusicLibraryController implements Initializable {
   @FXML
   private TableColumn<SongMetadata, String> allSongsDurationColumn;
   @FXML
-  private Button addFolderButton;
-  @FXML
-  private ChoiceBox<String> allSongsFilterChoiceBox, albumsFilterChoiceBox, artistsFilterChoiceBox;
-  @FXML
   private TableView<SongMetadata> artistsTable;
   @FXML
   private TableColumn<SongMetadata, String> artistsNameColumn;
-
   @FXML
   private TableView<SongMetadata> albumsTable;
   @FXML
   private TableColumn<SongMetadata, String> albumsNameColumn;
 
+  private List<ChoiceBox<String>> choiceBoxes = new ArrayList<ChoiceBox<String>>();
   private Set<File> selectedAudioDirectories = new HashSet<File>();
   private List<File> audioFilesList = new ArrayList<File>();
   private MediaPlayer mediaPlayer;
@@ -68,11 +61,12 @@ public class MusicLibraryController implements Initializable {
   Map<String, List<SongMetadata>> albumSongsMap = new HashMap<String, List<SongMetadata>>();
 
   public void initialize(URL arg0, ResourceBundle arg1) {
-    List<ChoiceBox<String>> choiceBoxes = new ArrayList<ChoiceBox<String>>(
+    choiceBoxes = new ArrayList<ChoiceBox<String>>(
         List.of(allSongsFilterChoiceBox, albumsFilterChoiceBox, artistsFilterChoiceBox));
     for (ChoiceBox<String> choiceBox : choiceBoxes) {
-      choiceBox.getItems().setAll("title", "artist", "album");
-      choiceBox.setValue("title");
+      choiceBox.getItems().setAll("title asc. ⌄", "title des. ⌃", "artist asc. ⌄", "artist des. ⌃", "album asc. ⌄",
+          "album des. ⌃", "date asc. ⌄", "date des. ⌃");
+      choiceBox.setValue("title asc. ⌄");
       choiceBox.showingProperty().addListener((obs, wasShowing, isShowing) -> {
         if (!isShowing) {
           filterChoiceBoxValues(choiceBox);
@@ -87,16 +81,41 @@ public class MusicLibraryController implements Initializable {
       return;
     }
     switch (selectedValue) {
-      case "title":
-        FXCollections.sort(allSongsList, Comparator.comparing(song -> song.getTitle().toLowerCase()));
+      case "title asc. ⌄":
+        FXCollections.sort(allSongsList, Comparator.comparing(SongMetadata::getTitle, String.CASE_INSENSITIVE_ORDER));
         break;
 
-      case "artist":
-        FXCollections.sort(allSongsList, Comparator.comparing(song -> song.getArtist().toLowerCase()));
+      case "title des. ⌃":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getTitle, String.CASE_INSENSITIVE_ORDER).reversed());
         break;
 
-      case "album":
-        FXCollections.sort(allSongsList, Comparator.comparing(song -> song.getAlbum().toLowerCase()));
+      case "artist asc. ⌄":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getArtist, String.CASE_INSENSITIVE_ORDER));
+        break;
+
+      case "artist des. ⌃":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getArtist, String.CASE_INSENSITIVE_ORDER).reversed());
+        break;
+
+      case "album asc. ⌄":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getAlbum, String.CASE_INSENSITIVE_ORDER));
+        break;
+
+      case "album des. ⌃":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getAlbum, String.CASE_INSENSITIVE_ORDER).reversed());
+        break;
+
+      case "date asc. ⌄":
+        FXCollections.sort(allSongsList, Comparator.comparing(SongMetadata::getLastModified));
+        break;
+
+      case "date des. ⌃":
+        FXCollections.sort(allSongsList, Comparator.comparing(SongMetadata::getLastModified).reversed());
         break;
 
       default:
@@ -132,25 +151,32 @@ public class MusicLibraryController implements Initializable {
       String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
           : "Unknown Album";
       String notReadyDurationString = Helpers.formatTime(media.getDuration());
-      long notReadyDateModified = file.lastModified();
-      SongMetadata notReadySongMetadata = new SongMetadata(title, artist, notReadyDurationString, album,
-          notReadyDateModified);
+      long notReadryLastModified = file.lastModified();
+      String pathname = file.getAbsolutePath();
+      SongMetadata notReadySongMetadata = new SongMetadata(title, artist, album, notReadyDurationString,
+          notReadryLastModified,
+          pathname);
 
       allSongsList.add(notReadySongMetadata);
-
       mediaPlayer.setOnReady(
           () -> {
             String durationString = Helpers.formatTime(media.getDuration());
-            long dateModified = file.lastModified();
-            SongMetadata songMetadata = new SongMetadata(title, artist, durationString, album, dateModified);
+            long lastModified = file.lastModified();
+            SongMetadata songMetadata = new SongMetadata(title, artist, album, durationString, lastModified, pathname);
 
             allSongsList.add(songMetadata);
             albumSongsMap.computeIfAbsent(album, k -> new ArrayList<SongMetadata>()).add(songMetadata);
             artistSongsMap.computeIfAbsent(artist, k -> new ArrayList<SongMetadata>()).add(songMetadata);
             updateTable();
+            for (ChoiceBox<String> choiceBox : choiceBoxes) {
+              filterChoiceBoxValues(choiceBox);
+            }
           });
     }
     updateTable();
+    for (ChoiceBox<String> choiceBox : choiceBoxes) {
+      filterChoiceBoxValues(choiceBox);
+    }
   }
 
   private void updateTableAllSongs() {
@@ -250,4 +276,15 @@ public class MusicLibraryController implements Initializable {
     });
   }
 
+  @FXML
+  void playMediaOnRowClick(MouseEvent event) {
+    SongMetadata selectedSong = allSongsTable.getSelectionModel().getSelectedItem();
+    if (selectedSong == null) {
+      return;
+    }
+    mediaPlayer.stop();
+    Media media = new Media(new File(selectedSong.getPathname()).toURI().toString());
+    mediaPlayer = new MediaPlayer(media);
+    mediaPlayer.play();
+  }
 }
