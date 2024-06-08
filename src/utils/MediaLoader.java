@@ -72,6 +72,19 @@ public class MediaLoader {
 
         synchronizeWithLayout(selectedFile);
 
+        if (LayoutController.isLooped) {
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.seek(Duration.ZERO);
+            });
+        } else {
+            setAutoPlayNextMediaOf(selectedFile);
+        }
+
+        mediaPlayer.play();
+        layoutController.setPauseButtonImage();
+    }
+
+    private void setAutoPlayNextMediaOf(File selectedFile) {
         mediaPlayer.setOnEndOfMedia(() -> {
             if (currentMediaIndex < MediaFiles.size() - 1) {
                 ++currentMediaIndex;
@@ -89,8 +102,6 @@ public class MediaLoader {
                 }
             }
         });
-
-        mediaPlayer.play();
     }
 
     private void synchronizeWithLayout(File selectedFile) {
@@ -109,7 +120,6 @@ public class MediaLoader {
                 LayoutController.isVideoFile = false;
                 mfsController.startRotation();
             }
-            layoutController.setPauseButtonImage();
             layoutController.setTotalDuration(mediaPlayer.getTotalDuration());
             layoutController.getCurrentTimeLabel().setText(Helpers.formatTime(mediaPlayer.getCurrentTime()));
             layoutController.getProgressSlider().setValue(0);
@@ -209,5 +219,22 @@ public class MediaLoader {
 
     public void setCurrentMediaIndex(int newIndex) {
         currentMediaIndex = newIndex;
+    }
+
+    public void setLoop() {
+        if (mediaPlayer != null) {
+            mediaPlayer.setOnEndOfMedia(null);
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.seek(Duration.ZERO);
+            });
+
+        }
+    }
+
+    public void setNoLoop() {
+        if (mediaPlayer != null) {
+            mediaPlayer.setOnEndOfMedia(null);
+            setAutoPlayNextMediaOf(MediaFiles.get(currentMediaIndex));
+        }
     }
 }

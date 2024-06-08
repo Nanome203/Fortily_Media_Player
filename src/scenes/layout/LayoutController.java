@@ -44,7 +44,7 @@ public class LayoutController implements Initializable {
 
 	@FXML
 	private Button sideBarFav, sideBarHome, sideBarPlaylist, sideBarMusicLib, sideBarVideoLib, sideBarRecentMedia,
-			settings, playPauseBtn, volumeBtn, back10s, skip10s, nextButton, prevButton;
+			settings, playPauseBtn, volumeBtn, back10s, skip10s, nextButton, prevButton, loopButton;
 
 	@FXML
 	private VBox sidebarNavigator, sideBarContainer;
@@ -56,13 +56,14 @@ public class LayoutController implements Initializable {
 	private Label volumeLabel, currentTimeLabel, mediaDurationLabel, songName;
 
 	@FXML
-	private ImageView playPauseBtnImgView, volumeBtnImgView, playlistBtnImgView, favoriteBtnImgView, songImageView;
+	private ImageView playPauseBtnImgView, volumeBtnImgView, playlistBtnImgView, favoriteBtnImgView, songImageView,
+			loopBtnImgView;
 
 	@FXML
-	private Tooltip playPauseTooltip;
+	private Tooltip playPauseTooltip, loopTooltip;
 
 	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false,
-			isFullScreen = false, isAudioFile = false, isVideoFile = false;
+			isFullScreen = false, isAudioFile = false, isVideoFile = false, isLooped = false;
 
 	private static double prevVolume = 100, volume = 100;
 
@@ -351,6 +352,24 @@ public class LayoutController implements Initializable {
 		}
 		if (isAudioFile) {
 			mediaLoader.startRotationFromLayout();
+		}
+	}
+
+	public void handleLoopButton(ActionEvent event) {
+		if (isLooped) {
+			File file = new File("src/assets/images/icons8-double-move-right-100.png");
+			Image image = new Image(file.toURI().toString());
+			loopBtnImgView.setImage(image);
+			loopTooltip.setText("Loop: OFF");
+			mediaLoader.setNoLoop();
+			isLooped = false;
+		} else {
+			File file = new File("src/assets/images/icons8-loop-100.png");
+			Image image = new Image(file.toURI().toString());
+			loopBtnImgView.setImage(image);
+			loopTooltip.setText("Loop: ON");
+			mediaLoader.setLoop();
+			isLooped = true;
 		}
 	}
 }

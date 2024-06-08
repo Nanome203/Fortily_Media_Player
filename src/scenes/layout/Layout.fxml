@@ -223,9 +223,9 @@
          <center>
             <HBox alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" styleClass="button-style">
+                  <Button fx:id="loopButton" mnemonicParsing="false" onAction="#handleLoopButton" styleClass="button-style">
                      <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="loopBtnImgView" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../assets/images/icons8-double-move-right-100.png" />
                            </image>
@@ -238,7 +238,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                      <tooltip>
-                        <Tooltip text="Loop: OFF" textOverrun="LEADING_ELLIPSIS">
+                        <Tooltip fx:id="loopTooltip" text="Loop: OFF" textOverrun="LEADING_ELLIPSIS">
                            <font>
                               <Font name="Arial" size="15.0" />
                            </font></Tooltip>
