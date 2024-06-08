@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -18,6 +20,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -29,7 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import utils.MediaLoader;
 import utils.ReusableFileChooser;
-import utils.Utils;
+import utils.Helpers;
 
 public class LayoutController implements Initializable {
 
@@ -41,7 +44,7 @@ public class LayoutController implements Initializable {
 
 	@FXML
 	private Button sideBarFav, sideBarHome, sideBarPlaylist, sideBarMusicLib, sideBarVideoLib, sideBarRecentMedia,
-			settings, playPauseBtn, volumeBtn, back10s, skip10s;
+			settings, playPauseBtn, volumeBtn, back10s, skip10s, nextButton, prevButton;
 
 	@FXML
 	private VBox sidebarNavigator, sideBarContainer;
@@ -55,11 +58,16 @@ public class LayoutController implements Initializable {
 	@FXML
 	private ImageView playPauseBtnImgView, volumeBtnImgView, playlistBtnImgView, favoriteBtnImgView, songImageView;
 
-	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false;
+	@FXML
+	private Tooltip playPauseTooltip;
+
+	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false,
+			isFullScreen = false, isAudioFile = false, isVideoFile = false;
 
 	private static double prevVolume = 100, volume = 100;
 
-	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene;
+	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
+			musicFullScreenScene, prevScene;
 
 	private MediaLoader mediaLoader;
 
@@ -70,11 +78,29 @@ public class LayoutController implements Initializable {
 			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
+			videoFullScreenScene = FXMLLoader
+					.load(getClass().getResource("/scenes/mediaFullScreen/VideoFullScreen.fxml"));
+			musicFullScreenScene = FXMLLoader
+					.load(getClass().getResource("/scenes/mediaFullScreen/MusicFullScreen.fxml"));
 			mainContainer.setCenter(homeScene);
+			prevScene = homeScene;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		imageSongContainer.setOnMouseClicked(event -> {
+			if (!isFullScreen && isAudioFile) {
+				mainContainer.setCenter(musicFullScreenScene);
+				isFullScreen = true;
+			}
 
+			else if (!isFullScreen && isVideoFile) {
+				mainContainer.setCenter(videoFullScreenScene);
+				isFullScreen = true;
+			} else {
+				mainContainer.setCenter(prevScene);
+				isFullScreen = false;
+			}
+		});
 		mediaLoader = MediaLoader.getMediaLoader();
 		mediaLoader.receiveLayoutController(this);
 
@@ -98,9 +124,6 @@ public class LayoutController implements Initializable {
 						"-fx-background-color: linear-gradient(to right, #2880E8 %.5f%%, white %.5f%%);",
 						new_val.doubleValue(), new_val.doubleValue());
 				trackPane.setStyle(style);
-				if (!mediaLoader.mediaPlayerExists()) {
-					progressSlider.setValue(0);
-				}
 			}
 		});
 
@@ -154,15 +177,19 @@ public class LayoutController implements Initializable {
 		((Button) event.getSource()).getStyleClass().add("active");
 		if (event.getSource() == sideBarHome) {
 			mainContainer.setCenter(homeScene);
+			prevScene = homeScene;
 		}
 		if (event.getSource() == sideBarMusicLib) {
 			mainContainer.setCenter(musicLibScene);
+			prevScene = musicLibScene;
 		}
 		if (event.getSource() == sideBarRecentMedia) {
 			mainContainer.setCenter(recentMediaScene);
+			prevScene = recentMediaScene;
 		}
 		if (event.getSource() == sideBarVideoLib) {
 			mainContainer.setCenter(videoLibScene);
+			prevScene = videoLibScene;
 		}
 	}
 
@@ -179,6 +206,7 @@ public class LayoutController implements Initializable {
 	public void setPauseButtonImage() {
 		File file = new File("src/assets/images/icons8-pause-button-100.png");
 		Image image = new Image(file.toURI().toString());
+		playPauseTooltip.setText("Pause");
 		playPauseBtnImgView.setImage(image);
 		isPlayButton = false;
 	}
@@ -186,6 +214,7 @@ public class LayoutController implements Initializable {
 	public void setPlayButtonImage() {
 		File file = new File("src/assets/images/icons8-play-button-100.png");
 		Image image = new Image(file.toURI().toString());
+		playPauseTooltip.setText("Play");
 		playPauseBtnImgView.setImage(image);
 		isPlayButton = true;
 	}
@@ -195,7 +224,17 @@ public class LayoutController implements Initializable {
 	}
 
 	public void setTotalDuration(Duration duration) {
-		mediaDurationLabel.setText(Utils.formatTime(duration));
+		mediaDurationLabel.setText(Helpers.formatTime(duration));
+	}
+
+	public void setVideoFullScreenScene() {
+		isFullScreen = true;
+		mainContainer.setCenter(videoFullScreenScene);
+	}
+
+	public void setMusicFullScreenScene() {
+		isFullScreen = true;
+		mainContainer.setCenter(musicFullScreenScene);
 	}
 
 	public Slider getProgressSlider() {
@@ -266,13 +305,31 @@ public class LayoutController implements Initializable {
 			if (mediaLoader.getMediaPlayer().getTotalDuration() != null
 					&& (mediaLoader.getMediaPlayer().getTotalDuration().toSeconds()
 							- mediaLoader.getMediaPlayer().getCurrentTime().toSeconds()) <= 10) {
-				mediaLoader.getMediaPlayer().stop();
+				mediaLoader.getMediaPlayer().seek(mediaLoader.getMediaPlayer().getTotalDuration());
 				setPlayButtonImage();
 				return;
 			}
 			mediaLoader.getMediaPlayer()
 					.seek(Duration.seconds(mediaLoader.getMediaPlayer().getTotalDuration().toSeconds()
 							* progressSlider.getValue() / 100.0 + 10));
+		}
+	}
+
+	public void handleNextPrevButtons(ActionEvent event) {
+		if (event.getSource() == nextButton
+				&& mediaLoader.getReceivedListSize() >= 2
+				&& mediaLoader.getCurrentMediaIndex() < mediaLoader.getReceivedListSize() - 1) {
+			mediaLoader.setCurrentMediaIndex(mediaLoader.getCurrentMediaIndex() + 1);
+			int currentMediaIndex = mediaLoader.getCurrentMediaIndex();
+			ArrayList<File> MediaFiles = mediaLoader.getReceivedList();
+			mediaLoader.playNewMediaFile(MediaFiles.get(currentMediaIndex));
+		} else if (event.getSource() == prevButton
+				&& mediaLoader.getReceivedListSize() >= 2
+				&& mediaLoader.getCurrentMediaIndex() > 0) {
+			mediaLoader.setCurrentMediaIndex(mediaLoader.getCurrentMediaIndex() - 1);
+			int currentMediaIndex = mediaLoader.getCurrentMediaIndex();
+			ArrayList<File> MediaFiles = mediaLoader.getReceivedList();
+			mediaLoader.playNewMediaFile(MediaFiles.get(currentMediaIndex));
 		}
 	}
 

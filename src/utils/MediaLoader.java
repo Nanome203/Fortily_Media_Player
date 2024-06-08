@@ -2,8 +2,11 @@ package utils;
 
 import javafx.util.Duration;
 import scenes.layout.LayoutController;
+import scenes.mediaFullScreen.MusicFullScreenController;
+import scenes.mediaFullScreen.VideoFullScreenController;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.InvalidationListener;
@@ -16,10 +19,14 @@ public class MediaLoader {
     private Media media = null;
     private MediaPlayer mediaPlayer = null;
     private LayoutController layoutController = null;
+    private VideoFullScreenController vfsController = null;
+    private MusicFullScreenController mfsController = null;
 
-    private List<File> listOfMediaFiles = null;
+    private ArrayList<File> MediaFiles = null;
+    private int currentMediaIndex;
 
     private MediaLoader() {
+        MediaFiles = new ArrayList<File>();
     };
 
     public static MediaLoader getMediaLoader() {
@@ -29,39 +36,92 @@ public class MediaLoader {
     }
 
     public void receiveListOfMediaFiles(List<File> list) {
-        listOfMediaFiles = list;
+        if (!MediaFiles.isEmpty())
+            MediaFiles.clear();
+        for (File file : list) {
+            MediaFiles.add(file);
+        }
+        currentMediaIndex = 0;
     }
 
+    // This function is only called once
     public void receiveLayoutController(LayoutController layoutController) {
         this.layoutController = layoutController;
     }
 
+    public void receiveVideoFullScreenController(VideoFullScreenController controller) {
+        vfsController = controller;
+    }
+
+    public void receiveMusicFullScreenController(MusicFullScreenController controller) {
+        mfsController = controller;
+    }
+
+    // this function plays the media files in the received list
+    public void playReceivedList() {
+        playNewMediaFile(MediaFiles.get(currentMediaIndex));
+    }
+
+    // this function plays the media file received from the file chooser
     public void playNewMediaFile(File selectedFile) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
+
+        // test code
+        if (Helpers.isVideoFile(selectedFile)) {
+            layoutController.setVideoFullScreenScene();
+            vfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
+            LayoutController.isVideoFile = true;
+            LayoutController.isAudioFile = false;
+        } else if (Helpers.isAudioFile(selectedFile)) {
+            layoutController.setMusicFullScreenScene();
+            LayoutController.isAudioFile = true;
+            LayoutController.isVideoFile = false;
+            mfsController.startRotation();
+        }
+        //
+        layoutController.setPauseButtonImage();
+        synchronizeWithLayout(selectedFile.getName());
+
+        mediaPlayer.setOnEndOfMedia(() -> {
+            if (currentMediaIndex < MediaFiles.size() - 1) {
+                ++currentMediaIndex;
+                playNewMediaFile(MediaFiles.get(currentMediaIndex));
+                if (Helpers.isAudioFile(selectedFile)) {
+                    mfsController.startRotation();
+                }
+            } else {
+                currentMediaIndex = 0;
+                playNewMediaFile(MediaFiles.get(currentMediaIndex));
+                mediaPlayer.pause();
+                layoutController.setPlayButtonImage();
+                if (Helpers.isAudioFile(selectedFile)) {
+                    mfsController.toStartPosition();
+                }
+            }
+        });
+
+        mediaPlayer.play();
+    }
+
+    public void synchronizeWithLayout(String name) {
         if (LayoutController.isMuted) {
             mediaPlayer.setMute(LayoutController.isMuted);
         }
-        mediaPlayer.play();
-        layoutController.setPauseButtonImage();
-        // mediaLoader.getMediaPlayer().statusProperty().addListener((obs, oldStatus,
-        // newStatus) -> {
-        // if (newStatus == MediaPlayer.Status.READY) {
-
-        // System.out.println(mediaLoader.getTotalDuration());
-        // layoutController.setTotalDuration(mediaLoader.getTotalDuration());
-        // }
-        // });
         mediaPlayer.setOnReady(() -> {
             layoutController.setTotalDuration(mediaPlayer.getTotalDuration());
+            layoutController.getCurrentTimeLabel().setText(Helpers.formatTime(mediaPlayer.getCurrentTime()));
+            layoutController.getProgressSlider().setValue(0);
+            layoutController.setSongName(name.replaceFirst("[.].+$", ""));
         });
 
-        mediaPlayer.setOnEndOfMedia(() -> {
-            mediaPlayer.stop();
-            layoutController.setPlayButtonImage();
+        // Update label according to slider
+        layoutController.getProgressSlider().valueProperty().addListener((obs, oldValue, newValue) -> {
+            layoutController.getCurrentTimeLabel()
+                    .setText(Helpers.formatTime(mediaPlayer.getTotalDuration().toMillis() * (double) newValue / 100.0));
         });
 
         // Update the slider as the video plays
@@ -70,10 +130,9 @@ public class MediaLoader {
                     && mediaPlayer.getTotalDuration().greaterThan(Duration.ZERO)) {
                 layoutController.getProgressSlider()
                         .setValue(newValue.toMillis() / mediaPlayer.getTotalDuration().toMillis() * 100);
-                layoutController.getCurrentTimeLabel().setText(Utils.formatTime(newValue));
+                layoutController.getCurrentTimeLabel().setText(Helpers.formatTime(newValue));
             }
         });
-        layoutController.setSongName(selectedFile.getName().replaceFirst("[.].+$", ""));
 
         // Seek the video when the slider is dragged
         layoutController.getProgressSlider().valueProperty().addListener(new InvalidationListener() {
@@ -103,14 +162,18 @@ public class MediaLoader {
         });
     }
 
+    // this function plays the media file when user click the play button
     public void playCurrentMediaFile() {
         if (mediaPlayer != null)
             mediaPlayer.play();
+        mfsController.continueRotation();
     }
 
+    // this function pause the media file when user click the pause button
     public void pauseCurrentMediaFile() {
         if (mediaPlayer != null) {
             mediaPlayer.pause();
+            mfsController.stopRotation();
         }
     }
 
@@ -122,5 +185,25 @@ public class MediaLoader {
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
+    }
+
+    public int getReceivedListSize() {
+        if (MediaFiles != null || !MediaFiles.isEmpty())
+            return MediaFiles.size();
+        return 0;
+    }
+
+    public ArrayList<File> getReceivedList() {
+        if (MediaFiles != null)
+            return MediaFiles;
+        return null;
+    }
+
+    public int getCurrentMediaIndex() {
+        return currentMediaIndex;
+    }
+
+    public void setCurrentMediaIndex(int newIndex) {
+        currentMediaIndex = newIndex;
     }
 }
