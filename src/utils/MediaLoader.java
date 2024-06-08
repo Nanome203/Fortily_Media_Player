@@ -6,15 +6,20 @@ import scenes.mediaFullScreen.MusicFullScreenController;
 import scenes.mediaFullScreen.VideoFullScreenController;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.SongDAO;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class MediaLoader {
+	
+    private SongDAO songDAO = new SongDAO();
+	
     private static MediaLoader INSTANCE = null;
     private Media media = null;
     private MediaPlayer mediaPlayer = null;
@@ -22,6 +27,8 @@ public class MediaLoader {
     private VideoFullScreenController vfsController = null;
     private MusicFullScreenController mfsController = null;
 
+     
+    
     private ArrayList<File> MediaFiles = null;
     private int currentMediaIndex;
 
@@ -89,7 +96,12 @@ public class MediaLoader {
                 }
             }
         });
-
+        
+        //        	if(songDAO.checkExist(selectedFile) == false)
+//        		songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
+//        	else 
+		songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+        
         mediaPlayer.play();
     }
 

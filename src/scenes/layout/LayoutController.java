@@ -71,10 +71,10 @@ public class LayoutController implements Initializable {
       isFullScreen = false, isAudioFile = false, isVideoFile = false;
 
   private static double prevVolume = 100, volume = 100;
-	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, playListScene,playListItemScene;
+	
 
   private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
-      musicFullScreenScene, prevScene;
+      musicFullScreenScene, prevScene,playListScene;
 
   private MediaLoader mediaLoader;
 
@@ -355,12 +355,7 @@ public class LayoutController implements Initializable {
 		}
 	}
 
-	public static LayoutController getInstance() {
-	        if (INSTANCE == null)
-	            INSTANCE = new LayoutController();
-	        return INSTANCE;
-	    
-	}
+	
 
 	
 }

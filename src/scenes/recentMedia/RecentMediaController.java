@@ -2,7 +2,9 @@ package scenes.recentMedia;
 
 import java.io.File;
 import java.net.URL;
+
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -10,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import dao.SongDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,11 +46,21 @@ public class RecentMediaController implements Initializable {
 	private TableColumn<SongMetadata, String> allMediaDurationColumn;
 	
 	@FXML
+	private TableColumn<SongMetadata, String> allMediaLastDateOpenedColumn;
+	
+	@FXML
 	private Button btnClearFile;
 	
-	private SongMetadata getCurrentMediaPlaying;
+	
+	
+	@FXML
+	private Button btnPlayAll;
+
+	
 	
 	private MediaPlayer mediaPlayer;
+	private SongMetadata getCurrentMediaPlaying;
+	
 	
 	private ObservableList<SongMetadata> LSong = FXCollections.observableArrayList();
 	
@@ -67,14 +80,53 @@ public class RecentMediaController implements Initializable {
 
 	}
 	
+	
+	
+	@FXML
+	public void playFile(MouseEvent evt) {
+		List<File> getList = new ArrayList<>();
+		
+			if (LSong.isEmpty()) {
+				return;
+			}
+			for (SongMetadata i : LSong) {
+				File file = new File(i.getPathname());
+				if (file != null)
+					getList.add(file);
+			}
+		
+		if (!getList.isEmpty()) {
+			mediaLoader.receiveListOfMediaFiles(getList);
+			mediaLoader.playReceivedList();
+		}
+	}
+	
+	public void mediaSelectionAction()
+	{
+			recentMediaTable.setItems(LSong);
+			allMediaTitleColumn.setCellValueFactory(
+				cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
+			allMediaLastDateOpenedColumn.setCellValueFactory(
+					cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getLastDayOpened()));
+			allMediaDurationColumn.setCellValueFactory(
+					cellData -> new javafx.beans.property.SimpleStringProperty(
+							cellData.getValue().getDuration()));
+		
+		
+	}
+	
 	public void showRecentMedia() throws SQLException {
-		List<File> listFilePath‎ = songDAO.getAllMedia();
-		System.out.println(listFilePath‎);
-		for(File filePath : listFilePath‎) {
+		if(!LSong.isEmpty())
+			LSong.clear();
+		List<SongMetadata> listMedia‎ = songDAO.getAllMedia();
+		System.out.println(listMedia‎);
+		for(SongMetadata song : listMedia‎) {
+			File filePath = new File(song.getPathname());
 			if(filePath != null)
 			{
+			
 				Media media = new Media(filePath.toURI().toString());
-				
+				System.out.println(filePath.toURI().toString());
 				MediaPlayer mediaPlayer = new MediaPlayer(media);
 				
 				mediaPlayer.setOnReady(() -> {
@@ -84,8 +136,11 @@ public class RecentMediaController implements Initializable {
 					double duration = media.getDuration().toMillis();
 					String formatDuration = convertDurationMillis((int) duration);
 					
-					SongMetadata getIndex = new SongMetadata(title, null, formatDuration, null, 0);
-					getIndex.setFilePath(filePath.getAbsolutePath());
+					SongMetadata getIndex = new SongMetadata(title, null, null, formatDuration, 0,filePath.getAbsolutePath());
+					getIndex.setLastDayOpened(song.getLastDayOpened());
+					
+					LSong.add(getIndex);
+					
 				
 				});
 			}
@@ -113,16 +168,36 @@ public class RecentMediaController implements Initializable {
 		
 		try {
 			showRecentMedia();
+			mediaSelectionAction();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	@FXML
+	public void clearFile(ActionEvent evt) throws SQLException {
+		ObservableList<SongMetadata> selectedItems = selectionModel.getSelectedItems(); // Selected Item
+		if (selectedItems.isEmpty())
+			return;
+		for (SongMetadata getPath : selectedItems) {
+			if (getPath.equals(getCurrentMediaPlaying)) {
+				stopPlaying();
+			}
+			songDAO.deleteMedia(getPath.getPathname());
+		}
+
+		showRecentMedia();
+		mediaSelectionAction();
+			
+		
+	}
+	
+	
 	private void playSingleMedia(SongMetadata selectedItem) {
 		stopPlaying();
 		getCurrentMediaPlaying = selectedItem;
-		mediaLoader.playNewMediaFile(new File(selectedItem.getFilePath()));
+		mediaLoader.playNewMediaFile(new File(selectedItem.getPathname()));
 	}
 
 	private void stopPlaying() {

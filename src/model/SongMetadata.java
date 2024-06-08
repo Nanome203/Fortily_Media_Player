@@ -11,8 +11,21 @@ public class SongMetadata {
   private String duration;
   private long lastModified;
   private String pathname;
+  private String lastDayOpened; // Format "yyyy-mm-dd HH:mm:ss"
+  
+  public String getLastDayOpened() {
+	return lastDayOpened;
+}
 
-  public SongMetadata(String title, String artist, String album, String duration, long lastModified, String pathname) {
+  public SongMetadata() {
+	  
+  }
+  
+public void setLastDayOpened(String lastDayOpened) {
+	this.lastDayOpened = lastDayOpened;
+}
+
+public SongMetadata(String title, String artist, String album, String duration, long lastModified, String pathname) {
     this.title = title;
     this.artist = artist;
     this.album = album;
