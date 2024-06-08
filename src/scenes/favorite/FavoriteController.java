@@ -269,17 +269,30 @@ public class FavoriteController implements Initializable {
 
 	@FXML
 	public void playFile(MouseEvent evt) {
+		List<File> getList = new ArrayList<>();
 		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
 			if (LVideo.isEmpty()) {
 				return;
 			}
-			
+			for (SongMetadata i : LVideo) {
+				File file = new File(i.getPathname());
+				if (file != null)
+					getList.add(file);
+			}
 		} else // Audio
 		{
 			if (LAudio.isEmpty()) {
 				return;
 			}
-			
+			for (SongMetadata i : LAudio) {
+				File file = new File(i.getPathname());
+				if (file != null)
+					getList.add(file);
+			}
+		}
+		if (!getList.isEmpty()) {
+			mediaLoader.receiveListOfMediaFiles(getList);
+			mediaLoader.playReceivedList();
 		}
 	}
 
