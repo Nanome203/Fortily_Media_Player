@@ -4,14 +4,24 @@
  */
 package model;
 
+
 public class SongMetadata {
     private String Title;
     private String Artist;
     private String Duration;
     private String Album;
     private long Date;
+    private String filePath;
 
-    public SongMetadata(String Title, String Artist, String Duration, String Album, long Date) {
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public SongMetadata(String Title, String Artist, String Duration, String Album, long Date) {
         this.Title = Title;
         this.Artist = Artist;
         this.Duration = Duration;
