@@ -5,31 +5,32 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.FileChooser;
+import javafx.stage.DirectoryChooser;
 import model.SongMetadata;
 import utils.Helpers;
 
 public class MusicLibraryController implements Initializable {
 
   @FXML
-  private Button shuffleAndPlayAllSongs;
-  @FXML
-  private Button playAll;
+  private ChoiceBox<String> allSongsFilterChoiceBox, albumsFilterChoiceBox, artistsFilterChoiceBox;
   @FXML
   private TableView<SongMetadata> allSongsTable;
   @FXML
@@ -41,35 +42,31 @@ public class MusicLibraryController implements Initializable {
   @FXML
   private TableColumn<SongMetadata, String> allSongsDurationColumn;
   @FXML
-  private Button addFolderButton;
-  private ObservableList<SongMetadata> LSong = FXCollections.observableArrayList();
-  private ObservableList<SongMetadata> LAlbums = FXCollections.observableArrayList();
-  private ObservableList<SongMetadata> LArtists = FXCollections.observableArrayList();
-  @FXML
-  private ChoiceBox<String> allSongsFilterChoiceBox, albumsFilterChoiceBox, artistsFilterChoiceBox;
-  @FXML
   private TableView<SongMetadata> artistsTable;
   @FXML
   private TableColumn<SongMetadata, String> artistsNameColumn;
-
   @FXML
   private TableView<SongMetadata> albumsTable;
   @FXML
   private TableColumn<SongMetadata, String> albumsNameColumn;
 
-  List<Media> mediaList = new ArrayList<>();
+  private List<ChoiceBox<String>> choiceBoxes = new ArrayList<ChoiceBox<String>>();
+  private Set<File> selectedAudioDirectories = new HashSet<File>();
+  private List<File> audioFilesList = new ArrayList<File>();
   private MediaPlayer mediaPlayer;
-  Map<String, List<SongMetadata>> ListSongsOfArtist = new HashMap<>();
-  // key là tên ca sĩ, value là list nhạc của ca sĩ đó
-  Map<String, List<SongMetadata>> ListSongsOfAlbum = new HashMap<>();
-  // key là tên album, value là list nhạc của album đó
+  private ObservableList<SongMetadata> allSongsList = FXCollections.observableArrayList();
+  private ObservableList<SongMetadata> albumsList = FXCollections.observableArrayList();
+  private ObservableList<SongMetadata> artistsList = FXCollections.observableArrayList();
+  Map<String, List<SongMetadata>> artistSongsMap = new HashMap<String, List<SongMetadata>>();
+  Map<String, List<SongMetadata>> albumSongsMap = new HashMap<String, List<SongMetadata>>();
 
   public void initialize(URL arg0, ResourceBundle arg1) {
-    List<ChoiceBox<String>> choiceBoxes = new ArrayList<ChoiceBox<String>>(
+    choiceBoxes = new ArrayList<ChoiceBox<String>>(
         List.of(allSongsFilterChoiceBox, albumsFilterChoiceBox, artistsFilterChoiceBox));
     for (ChoiceBox<String> choiceBox : choiceBoxes) {
-      choiceBox.getItems().setAll("title", "artist", "album");
-      choiceBox.setValue("title");
+      choiceBox.getItems().setAll("title asc. ⌄", "title des. ⌃", "artist asc. ⌄", "artist des. ⌃", "album asc. ⌄",
+          "album des. ⌃", "date asc. ⌄", "date des. ⌃");
+      choiceBox.setValue("title asc. ⌄");
       choiceBox.showingProperty().addListener((obs, wasShowing, isShowing) -> {
         if (!isShowing) {
           filterChoiceBoxValues(choiceBox);
@@ -84,16 +81,41 @@ public class MusicLibraryController implements Initializable {
       return;
     }
     switch (selectedValue) {
-      case "title":
-        FXCollections.sort(LSong, Comparator.comparing(song -> song.getTitle().toLowerCase()));
+      case "title asc. ⌄":
+        FXCollections.sort(allSongsList, Comparator.comparing(SongMetadata::getTitle, String.CASE_INSENSITIVE_ORDER));
         break;
 
-      case "artist":
-        FXCollections.sort(LSong, Comparator.comparing(song -> song.getArtist().toLowerCase()));
+      case "title des. ⌃":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getTitle, String.CASE_INSENSITIVE_ORDER).reversed());
         break;
 
-      case "album":
-        FXCollections.sort(LSong, Comparator.comparing(song -> song.getAlbum().toLowerCase()));
+      case "artist asc. ⌄":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getArtist, String.CASE_INSENSITIVE_ORDER));
+        break;
+
+      case "artist des. ⌃":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getArtist, String.CASE_INSENSITIVE_ORDER).reversed());
+        break;
+
+      case "album asc. ⌄":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getAlbum, String.CASE_INSENSITIVE_ORDER));
+        break;
+
+      case "album des. ⌃":
+        FXCollections.sort(allSongsList,
+            Comparator.comparing(SongMetadata::getAlbum, String.CASE_INSENSITIVE_ORDER).reversed());
+        break;
+
+      case "date asc. ⌄":
+        FXCollections.sort(allSongsList, Comparator.comparing(SongMetadata::getLastModified));
+        break;
+
+      case "date des. ⌃":
+        FXCollections.sort(allSongsList, Comparator.comparing(SongMetadata::getLastModified).reversed());
         break;
 
       default:
@@ -103,100 +125,144 @@ public class MusicLibraryController implements Initializable {
 
   @FXML
   void addFolder(MouseEvent event) {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Add Music Files");
-    fileChooser.getExtensionFilters()
-        .add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.m4a", "*.aac", "*.flac", "*.ogg"));
-    List<File> files = fileChooser.showOpenMultipleDialog(null);
-    if (files == null || files.isEmpty()) {
+    DirectoryChooser directoryChooser = new DirectoryChooser();
+    directoryChooser.setTitle("Add Music Files");
+    directoryChooser
+        .setInitialDirectory(new File(System.getProperty("user.dir") + "/src/assets/audios"));
+    File selectedDirectory = directoryChooser.showDialog(null);
+    if (selectedDirectory == null) {
       return;
     }
-    for (File file : files) {
-      String selectedFile = file.toURI().toString();
-      Media media = new Media(selectedFile);
+    selectedAudioDirectories.add(selectedDirectory);
+    List<File> tempAudioFilesList = new ArrayList<File>();
+    for (File directory : selectedAudioDirectories) {
+      Helpers.findFilesRecursively(directory, tempAudioFilesList, "audio");
+    }
+    audioFilesList = tempAudioFilesList;
+
+    for (File file : audioFilesList) {
+      Media media = new Media(file.toURI().toString());
       mediaPlayer = new MediaPlayer(media);
-      mediaList.add(media);
-      String artist = media.getMetadata().get("artist") != null ? media.getMetadata().get("artist").toString()
-          : "Unknown Artist";
+
       String title = media.getMetadata().get("title") != null ? media.getMetadata().get("title").toString()
           : file.getName();
-      String durationString = Helpers.formatTime(media.getDuration());
+      String artist = media.getMetadata().get("artist") != null ? media.getMetadata().get("artist").toString()
+          : "Unknown Artist";
       String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
           : "Unknown Album";
-      long dateModified = file.lastModified();
+      String notReadyDurationString = Helpers.formatTime(media.getDuration());
+      long notReadryLastModified = file.lastModified();
+      String pathname = file.getAbsolutePath();
+      SongMetadata notReadySongMetadata = new SongMetadata(title, artist, album, notReadyDurationString,
+          notReadryLastModified,
+          pathname);
 
-      SongMetadata songMetadata = new SongMetadata(title, artist, durationString, album, dateModified);
+      allSongsList.add(notReadySongMetadata);
+      mediaPlayer.setOnReady(
+          () -> {
+            String durationString = Helpers.formatTime(media.getDuration());
+            long lastModified = file.lastModified();
+            SongMetadata songMetadata = new SongMetadata(title, artist, album, durationString, lastModified, pathname);
 
-      LSong.add(songMetadata);
-
-      ListSongsOfAlbum.computeIfAbsent(album, k -> new ArrayList<>()).add(songMetadata);
-      ListSongsOfArtist.computeIfAbsent(artist, k -> new ArrayList<>()).add(songMetadata);
-      updateTable();
+            allSongsList.add(songMetadata);
+            albumSongsMap.computeIfAbsent(album, k -> new ArrayList<SongMetadata>()).add(songMetadata);
+            artistSongsMap.computeIfAbsent(artist, k -> new ArrayList<SongMetadata>()).add(songMetadata);
+            updateTable();
+            for (ChoiceBox<String> choiceBox : choiceBoxes) {
+              filterChoiceBoxValues(choiceBox);
+            }
+          });
+    }
+    updateTable();
+    for (ChoiceBox<String> choiceBox : choiceBoxes) {
+      filterChoiceBoxValues(choiceBox);
     }
   }
 
-  private void GetAllArtist() {
-    LArtists.clear(); // Clear the existing list of artists
-    for (String artistsNameColumn : ListSongsOfArtist.keySet()) {
-      LArtists.add(ListSongsOfArtist.get(artistsNameColumn).get(0));
+  private void updateTableAllSongs() {
+    Map<String, SongMetadata> longestDurationMap = new HashMap<>();
+    for (SongMetadata song : allSongsList) {
+      longestDurationMap.merge(
+          song.getTitle(),
+          song,
+          (oldSong, newSong) -> Helpers.formatTime(newSong.getDuration())
+              .compareTo(Helpers.formatTime(oldSong.getDuration())) > 0 ? newSong : oldSong);
     }
-    artistsTable.setItems(LArtists);
+    Set<String> tempTitleSet = new HashSet<>();
+    List<SongMetadata> tempSongsList = longestDurationMap.values().stream()
+        .filter(song -> tempTitleSet.add(song.getTitle()))
+        .collect(Collectors.toList());
+
+    System.out.println("Longest Duration Map:");
+    for (Map.Entry<String, SongMetadata> entry : longestDurationMap.entrySet()) {
+      System.out.println(entry.getKey() + ": " + entry.getValue().getDuration());
+    }
+    allSongsList = FXCollections.observableArrayList(tempSongsList);
+
+    allSongsTable.setItems(allSongsList);
+    allSongsTitleColumn.setCellValueFactory(
+        cellData -> new SimpleStringProperty(cellData.getValue().getTitle()));
+    allSongsArtistColumn.setCellValueFactory(
+        cellData -> new SimpleStringProperty(cellData.getValue().getArtist()));
+    allSongsAlbumColumn.setCellValueFactory(
+        cellData -> new SimpleStringProperty(cellData.getValue().getAlbum()));
+    allSongsDurationColumn.setCellValueFactory(
+        cellData -> new SimpleStringProperty(cellData.getValue().getDuration()));
+  }
+
+  private void updateTableAllArtists() {
+    artistsList.clear();
+    for (String artistsNameColumn : artistSongsMap.keySet()) {
+      artistsList.add(artistSongsMap.get(artistsNameColumn).get(0));
+    }
+    artistsTable.setItems(artistsList);
     artistsNameColumn.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
+        cellData -> new SimpleStringProperty(cellData.getValue().getArtist()));
   }
 
-  private void GetAllAlbum() {
-    LAlbums.clear(); // Clear the existing list of artists
-    for (String albumsNameColumne : ListSongsOfAlbum.keySet()) {
-      LAlbums.add(ListSongsOfAlbum.get(albumsNameColumne).get(0));
+  private void updateTableAllAlbums() {
+    albumsList.clear();
+    for (String albumsNameColumne : albumSongsMap.keySet()) {
+      albumsList.add(albumSongsMap.get(albumsNameColumne).get(0));
     }
-    albumsTable.setItems(LAlbums);
+    albumsTable.setItems(albumsList);
     albumsNameColumn.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAlbum()));
+        cellData -> new SimpleStringProperty(cellData.getValue().getAlbum()));
   }
 
   private void updateTable() {
-    allSongsTable.setItems(LSong);
-    allSongsTitleColumn.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
-    allSongsArtistColumn.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
-    allSongsAlbumColumn.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAlbum()));
-    allSongsDurationColumn.setCellValueFactory(
-        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDuration()));
-    GetAllArtist();
-    GetAllAlbum();
+    updateTableAllSongs();
+    updateTableAllArtists();
+    updateTableAllAlbums();
   }
 
   @FXML
   void playAllSongs(MouseEvent event) {
-    if (LSong.isEmpty()) {
+    if (allSongsList.isEmpty()) {
       return;
     }
     mediaPlayer.stop();
-    playNextMedia(mediaList, 0);
+    playNextMedia(audioFilesList, 0);
   }
 
   @FXML
   void shuffleAndPlayAllSongs(MouseEvent event) {
-    if (LSong.isEmpty()) {
+    if (allSongsList.isEmpty()) {
       return;
     }
-    List<Media> shuffledMediaList = new ArrayList<>(mediaList);
-    java.util.Collections.shuffle(shuffledMediaList);
+    List<File> shuffledAudioFilesList = new ArrayList<File>(audioFilesList);
+    java.util.Collections.shuffle(shuffledAudioFilesList);
     mediaPlayer.stop();
-    playNextMedia(shuffledMediaList, 0);
+    playNextMedia(shuffledAudioFilesList, 0);
   }
 
-  private void playNextMedia(List<Media> mediaList, int currentMediaIndex) {
-    System.out.println(mediaList + "\n" + mediaList.size());
-    System.out.println("Runnin" + currentMediaIndex);
-    if (currentMediaIndex >= mediaList.size()) {
+  private void playNextMedia(List<File> filesList, int currentIndex) {
+    if (currentIndex >= filesList.size()) {
       System.out.println("Reached the end of the playlist.");
       return;
     }
-    mediaPlayer = new MediaPlayer(mediaList.get(currentMediaIndex));
+    Media tempMedia = new Media(filesList.get(currentIndex).toURI().toString());
+    mediaPlayer = new MediaPlayer(tempMedia);
     mediaPlayer.play();
     try {
       Thread.sleep(1000);
@@ -205,10 +271,20 @@ public class MusicLibraryController implements Initializable {
 
     mediaPlayer.setOnEndOfMedia(new Runnable() {
       public void run() {
-        playNextMedia(mediaList, currentMediaIndex + 1);
+        playNextMedia(filesList, currentIndex + 1);
       }
     });
-
   }
 
+  @FXML
+  void playMediaOnRowClick(MouseEvent event) {
+    SongMetadata selectedSong = allSongsTable.getSelectionModel().getSelectedItem();
+    if (selectedSong == null) {
+      return;
+    }
+    mediaPlayer.stop();
+    Media media = new Media(new File(selectedSong.getPathname()).toURI().toString());
+    mediaPlayer = new MediaPlayer(media);
+    mediaPlayer.play();
+  }
 }

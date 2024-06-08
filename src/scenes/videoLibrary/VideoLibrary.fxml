@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -18,11 +19,11 @@
          <children>
             <HBox alignment="CENTER">
                <children>
-                    <Label fx:id="musicLibraryLabel" prefHeight="22.0" text="Video Library" textFill="#f3f3f3">
-                        <font>
-                            <Font name="Ebrima Bold" size="20.0" />
-                        </font>
-                    </Label>
+                  <Label fx:id="videoLibraryLabel" prefHeight="52.0" prefWidth="277.0" text="Video Library" textFill="#f3f3f3">
+                     <font>
+                        <Font name="Ebrima Bold" size="40.0" />
+                     </font>
+                  </Label>
                   <HBox prefWidth="200.0" HBox.hgrow="ALWAYS" />
                     <Button fx:id="addFolderButton" mnemonicParsing="false" onMouseClicked="#addFolder" styleClass="addFolderButton" text="Add folder" textFill="#2880e8">
                         <font>
@@ -52,7 +53,7 @@
                   <Insets left="20.0" right="20.0" />
                </padding>
             </HBox>
-            <TableView fx:id="videoLibraryTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="noheader">
+            <TableView fx:id="videoLibraryTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#playMediaOnRowClick">
                <placeholder>
                   <Label text="" />
                </placeholder>
@@ -68,6 +69,10 @@
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
+               <styleClass>
+                  <String fx:value="noheader" />
+                  <String fx:value="table" />
+               </styleClass>
             </TableView>
          </children>
          <padding>

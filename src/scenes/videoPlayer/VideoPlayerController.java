@@ -31,7 +31,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import utils.Utils;
+import utils.Helpers;
 
 public class VideoPlayerController implements Initializable {
 
@@ -165,19 +165,18 @@ public class VideoPlayerController implements Initializable {
             mediaPlayer.statusProperty().addListener((obs, oldStatus, newStatus) -> {
               if (newStatus == MediaPlayer.Status.READY) {
                 totalMediaDuration = mediaPlayer.getTotalDuration();
-                mediaDurationLabel.setText(Utils.formatTime(totalMediaDuration));
-                System.out.println(Utils.formatTime(mediaPlayer.getTotalDuration()));
+                mediaDurationLabel.setText(Helpers.formatTime(totalMediaDuration));
+                System.out.println(Helpers.formatTime(mediaPlayer.getTotalDuration()));
               }
             });
           } else {
             totalMediaDuration = mediaPlayer.getTotalDuration();
-            mediaDurationLabel.setText(Utils.formatTime(totalMediaDuration));
-            System.out.println(Utils.formatTime(mediaPlayer.getTotalDuration()));
+            mediaDurationLabel.setText(Helpers.formatTime(totalMediaDuration));
+            System.out.println(Helpers.formatTime(mediaPlayer.getTotalDuration()));
           }
 
           // Seek the video when the slider is dragged
           progressSlider.valueProperty().addListener(new InvalidationListener() {
-            @Override
             public void invalidated(Observable observable) {
               if (progressSlider.isValueChanging() && totalMediaDuration != null
                   && totalMediaDuration.greaterThan(Duration.ZERO)) {
@@ -201,7 +200,7 @@ public class VideoPlayerController implements Initializable {
           });
           // Update label according to slider
           progressSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
-            currentTimeLabel.setText(Utils.formatTime(totalMediaDuration.toMillis() * (double) newValue / 100.0));
+            currentTimeLabel.setText(Helpers.formatTime(totalMediaDuration.toMillis() * (double) newValue / 100.0));
           });
 
           // Update the slider as the video plays
@@ -209,7 +208,7 @@ public class VideoPlayerController implements Initializable {
             if (totalMediaDuration != null
                 && totalMediaDuration.greaterThan(Duration.ZERO)) {
               progressSlider.setValue(newValue.toMillis() / totalMediaDuration.toMillis() * 100);
-              currentTimeLabel.setText(Utils.formatTime(newValue));
+              currentTimeLabel.setText(Helpers.formatTime(newValue));
             }
           });
 
@@ -221,7 +220,6 @@ public class VideoPlayerController implements Initializable {
     progressSlider.setMax(100);
     progressSlider.setValue(0);
     progressSlider.valueProperty().addListener(new ChangeListener<Number>() {
-      @Override
       public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
         StackPane trackPane = (StackPane) progressSlider.lookup(".track");
         String style = String.format("-fx-background-color: linear-gradient(to right, #2880E8 %d%%, white %d%%);",
@@ -231,7 +229,6 @@ public class VideoPlayerController implements Initializable {
     });
 
     volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-      @Override
       public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
         prevVolume = old_val.doubleValue();
         volume = new_val.doubleValue();
