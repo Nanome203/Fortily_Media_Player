@@ -34,64 +34,62 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
-
 public class FavoriteController implements Initializable {
 	private MediaLoader mediaLoader;
-	
+
 	private FavoriteDAO favoriteDAO = new FavoriteDAO();
-	
+
 	@FXML
 	private ChoiceBox<String> mediaTypeSelection;
-	private String[] mediaType = {"Video", "Audio"};
-	
+	private String[] mediaType = { "Video", "Audio" };
+
 	@FXML
 	private TableView<SongMetadata> mediaTableView;
-	
+
 	private TableViewSelectionModel<SongMetadata> selectionModel;
-	
+
 	@FXML
 	private TableColumn<SongMetadata, String> mediaName;
-	
+
 	@FXML
 	private TableColumn<SongMetadata, String> artistName;
-	
+
 	@FXML
 	private TableColumn<SongMetadata, String> mediaDuration;
-	
+
 	@FXML
 	private Button btnPlayAll;
-	
+
 	@FXML
 	private Button btnAddFile;
-	
+
 	@FXML
 	private Button btnClearFile;
-	
+
 	@FXML
 	private BorderPane favoriteContainer;
-	
+
 	private MediaPlayer mediaPlayer;
 	private SongMetadata getCurrentMediaPlaying;
-	
+
 	@FXML
 	private ObservableList<SongMetadata> LAudio = FXCollections.observableArrayList();
 	private ObservableList<SongMetadata> LVideo = FXCollections.observableArrayList();
 
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		//Create selection menu for type of media
+		// Create selection menu for type of media
 		mediaTypeSelection.getItems().addAll(mediaType);
 		mediaTypeSelection.getSelectionModel().select("Video");
 		mediaTypeSelection.setOnAction(this::mediaSelectionAction);
 		selectionModel = mediaTableView.getSelectionModel();
 		selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
 		mediaLoader = MediaLoader.getMediaLoader();
-	
+
 		favoriteContainer.setOnKeyReleased(evt -> {
 			// Ctrl + O Event to open file
-			if(evt.getCode().equals(KeyCode.O)) {
-				if(evt.isControlDown()) {
+			if (evt.getCode().equals(KeyCode.O)) {
+				if (evt.isControlDown()) {
 					try {
 						addFile(null);
 					} catch (SQLException e) {
@@ -100,16 +98,16 @@ public class FavoriteController implements Initializable {
 				}
 			}
 			// Delete Event to clear file
-			if(evt.getCode().equals(KeyCode.DELETE)) {
+			if (evt.getCode().equals(KeyCode.DELETE)) {
 				try {
 					clearFile(null);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
-			
-			//Refresh table
-			if(evt.getCode().equals(KeyCode.F5)) {
+
+			// Refresh table
+			if (evt.getCode().equals(KeyCode.F5)) {
 				try {
 					updateAllTable();
 				} catch (SQLException e) {
@@ -118,110 +116,105 @@ public class FavoriteController implements Initializable {
 				}
 			}
 		});
-		
-		
-		//Double click event to play file
+
+		// Double click event to play file
 		mediaTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent evt) {
-				if(evt.getButton().equals(MouseButton.PRIMARY)) {
-					if(evt.getClickCount() == 2) {
+				if (evt.getButton().equals(MouseButton.PRIMARY)) {
+					if (evt.getClickCount() == 2) {
 						playSingleMedia(selectionModel.getSelectedItem());
 					}
 				}
 			}
 		});
-		
+
 		try {
 			updateAllTable();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@FXML
 	public void addFile(MouseEvent evt) throws SQLException {
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Add Media Files");
-		if(mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
+		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video File", "*.mp4"));
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac"));
-		}
-		else if(mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Audio")) {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac"));
+			chooser.getExtensionFilters()
+					.add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac"));
+		} else if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Audio")) {
+			chooser.getExtensionFilters()
+					.add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac"));
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video File", "*.mp4"));
 		}
-		
+
 		List<File> files = chooser.showOpenMultipleDialog(null);
-		if(files != null && !files.isEmpty()) {
-			//List<MediaPlayer> mediaPlayers = new ArrayList<>();
-			for(File file : files) {
-				//Insert file path into database
+		if (files != null && !files.isEmpty()) {
+			// List<MediaPlayer> mediaPlayers = new ArrayList<>();
+			for (File file : files) {
+				// Insert file path into database
 				favoriteDAO.insertMedia(file);
 			}
-			//Then update the table
+			// Then update the table
 			updateAllTable();
 		}
 	}
-	
-	public void updateAllTable() throws SQLException 
-	{
-		//Get all the paths file for both audio and video
+
+	public void updateAllTable() throws SQLException {
+		// Get all the paths file for both audio and video
 		List<File> listFilePath = favoriteDAO.getMediaList();
-		
-		for(File filePath : listFilePath) {
-			if(filePath != null)
-			{
+
+		for (File filePath : listFilePath) {
+			if (filePath != null) {
 				Media media = new Media(filePath.toURI().toString());
 				MediaPlayer mediaPlayer = new MediaPlayer(media);
 				mediaPlayer.setOnReady(() -> {
-					String title = media.getMetadata().get("title") != null ? media.getMetadata().get("title").toString() :
-						filePath.getName();
-					String artist = media.getMetadata().get("artist") != null ? media.getMetadata().get("artist").toString() :
-						"Unknown artist";
-					String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString() :
-						"Unknown album";
+					String title = media.getMetadata().get("title") != null
+							? media.getMetadata().get("title").toString()
+							: filePath.getName();
+					String artist = media.getMetadata().get("artist") != null
+							? media.getMetadata().get("artist").toString()
+							: "Unknown artist";
+					String album = media.getMetadata().get("album") != null
+							? media.getMetadata().get("album").toString()
+							: "Unknown album";
 					double duration = media.getDuration().toMillis();
 					String formatDuration = convertDurationMillis((int) duration);
-					
-					SongMetadata getIndex = new SongMetadata(title, artist, formatDuration, album, 0);
-					getIndex.setFilePath(filePath.getAbsolutePath());
-					
-					//Check for audio or video type
+
+					SongMetadata getIndex = new SongMetadata(title, artist, formatDuration, album, 0,
+							filePath.getAbsolutePath());
+
+					// Check for audio or video type
 					String strPath = filePath.getAbsolutePath();
 					int getExtension = filePath.getAbsolutePath().lastIndexOf(".");
-					if(getExtension > 0)
-					{
+					if (getExtension > 0) {
 						// Audio file
-						if(strPath.substring(getExtension).equals(".mp3") ||
+						if (strPath.substring(getExtension).equals(".mp3") ||
 								strPath.substring(getExtension).equals(".wav") ||
 								strPath.substring(getExtension).equals(".aac")) {
-							//Check if the path exists on Audio list
+							// Check if the path exists on Audio list
 							int tag = 0;
-							for(SongMetadata i : LAudio)
-							{
-								if(i.getFilePath().equals(getIndex.getFilePath()))
-								{
+							for (SongMetadata i : LAudio) {
+								if (i.getPathname().equals(getIndex.getPathname())) {
 									tag = 1;
 									break;
 								}
 							}
-							if(tag == 0)
+							if (tag == 0)
 								LAudio.add(getIndex);
 						}
 						// Video file
-						else if(strPath.substring(getExtension).equals(".mp4"))
-						{
+						else if (strPath.substring(getExtension).equals(".mp4")) {
 							int tag = 0;
-							for(SongMetadata i : LVideo)
-							{
-								if(i.getFilePath().equals(getIndex.getFilePath()))
-								{
+							for (SongMetadata i : LVideo) {
+								if (i.getPathname().equals(getIndex.getPathname())) {
 									tag = 1;
 									break;
 								}
 							}
-							if(tag == 0)
+							if (tag == 0)
 								LVideo.add(getIndex);
 						}
 					}
@@ -229,137 +222,127 @@ public class FavoriteController implements Initializable {
 			}
 		}
 	}
-	
+
 	@FXML
 	public void clearFile(MouseEvent evt) throws SQLException {
-		ObservableList<SongMetadata> selectedItems = selectionModel.getSelectedItems(); //Selected Item
+		ObservableList<SongMetadata> selectedItems = selectionModel.getSelectedItems(); // Selected Item
 		ObservableList<SongMetadata> remainingItems = FXCollections.observableArrayList();
 		int tag;
-		if(selectedItems.isEmpty())
+		if (selectedItems.isEmpty())
 			return;
-		for(SongMetadata getPath : selectedItems) {
-			if(getPath.equals(getCurrentMediaPlaying)) {
+		for (SongMetadata getPath : selectedItems) {
+			if (getPath.equals(getCurrentMediaPlaying)) {
 				stopPlaying();
 			}
-			favoriteDAO.deleteMedia(getPath.getFilePath());
+			favoriteDAO.deleteMedia(getPath.getPathname());
 		}
-		
-		//Refresh the table
-		if(mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video"))
-		{
-			for(SongMetadata getIndex1 : LVideo)
-			{
+
+		// Refresh the table
+		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
+			for (SongMetadata getIndex1 : LVideo) {
 				tag = 0;
-				for(SongMetadata getIndex2 : selectedItems)
-				{
-					if(getIndex1.equals(getIndex2))
-					{
+				for (SongMetadata getIndex2 : selectedItems) {
+					if (getIndex1.equals(getIndex2)) {
 						tag = 1;
 						break;
 					}
 				}
-				if(tag == 0)
-				{
+				if (tag == 0) {
 					remainingItems.add(getIndex1);
 				}
 			}
 			LVideo.clear();
-			for(SongMetadata getIndex : remainingItems) {
+			for (SongMetadata getIndex : remainingItems) {
 				LVideo.add(getIndex);
 			}
-		}
-		else {
-			for(SongMetadata getIndex1 : LAudio)
-			{
+		} else {
+			for (SongMetadata getIndex1 : LAudio) {
 				tag = 0;
-				for(SongMetadata getIndex2 : selectedItems)
-				{
-					if(getIndex1.equals(getIndex2))
-					{
+				for (SongMetadata getIndex2 : selectedItems) {
+					if (getIndex1.equals(getIndex2)) {
 						tag = 1;
 						break;
 					}
 				}
-				if(tag == 0)
-				{
+				if (tag == 0) {
 					remainingItems.add(getIndex1);
 				}
 			}
 			LAudio.clear();
-			for(SongMetadata getIndex : remainingItems) {
+			for (SongMetadata getIndex : remainingItems) {
 				LAudio.add(getIndex);
 			}
 		}
 	}
-	
+
 	@FXML
 	public void playFile(MouseEvent evt) {
-		if(mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
-			if(LVideo.isEmpty()) {
+		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
+			if (LVideo.isEmpty()) {
 				return;
 			}
 			stopPlaying();
-			//playNextMedia(LVideo, 0);
-		}
-		else //Audio 
+			// playNextMedia(LVideo, 0);
+		} else // Audio
 		{
-			if(LAudio.isEmpty()) {
+			if (LAudio.isEmpty()) {
 				return;
 			}
 			stopPlaying();
-			//playNextMedia(LAudio, 0);
+			// playNextMedia(LAudio, 0);
 		}
 	}
-	
-//	private void playNextMedia(List<SongMetadata> mediaList, int currentMediaIndex) {
-//	    System.out.println(mediaList + "\n" + mediaList.size());
-//	    System.out.println("Runnin" + currentMediaIndex);
-//	    if (currentMediaIndex >= mediaList.size()) {
-//	      System.out.println("Reached the end of the playlist.");
-//	      return;
-//	    }
-//	    getCurrentMediaPlaying = mediaList.get(currentMediaIndex);
-//	    mediaPlayer = new MediaPlayer(new Media(new File(mediaList.get(currentMediaIndex).getFilePath()).toURI().toString()));
-//	    mediaPlayer.play();
-//	    try {
-//	      Thread.sleep(1000);
-//	    } catch (InterruptedException e) {
-//	    }
-//
-//	    mediaPlayer.setOnEndOfMedia(new Runnable() {
-//	      public void run() {
-//	        playNextMedia(mediaList, currentMediaIndex + 1);
-//	      }
-//	    });
-//
-//	  }
-	
+
+	// private void playNextMedia(List<SongMetadata> mediaList, int
+	// currentMediaIndex) {
+	// System.out.println(mediaList + "\n" + mediaList.size());
+	// System.out.println("Runnin" + currentMediaIndex);
+	// if (currentMediaIndex >= mediaList.size()) {
+	// System.out.println("Reached the end of the playlist.");
+	// return;
+	// }
+	// getCurrentMediaPlaying = mediaList.get(currentMediaIndex);
+	// mediaPlayer = new MediaPlayer(new Media(new
+	// File(mediaList.get(currentMediaIndex).getPathname()).toURI().toString()));
+	// mediaPlayer.play();
+	// try {
+	// Thread.sleep(1000);
+	// } catch (InterruptedException e) {
+	// }
+	//
+	// mediaPlayer.setOnEndOfMedia(new Runnable() {
+	// public void run() {
+	// playNextMedia(mediaList, currentMediaIndex + 1);
+	// }
+	// });
+	//
+	// }
+
 	private void playSingleMedia(SongMetadata getSongMetadata) {
 		stopPlaying();
 		getCurrentMediaPlaying = getSongMetadata;
 		System.out.println("Currently playing: " + getSongMetadata.getTitle() + " - " + getSongMetadata.getArtist());
-		//mediaPlayer.play();
-		mediaLoader.playNewMediaFile(new File(getSongMetadata.getFilePath()));
+		// mediaPlayer.play();
+		mediaLoader.playNewMediaFile(new File(getSongMetadata.getPathname()));
 	}
-	
-	public void mediaSelectionAction(ActionEvent evt)
-	{
-		//Video List
-		if(mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
+
+	public void mediaSelectionAction(ActionEvent evt) {
+		// Video List
+		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
 			mediaTableView.setItems(LVideo);
 			mediaName.setCellValueFactory(
-				cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
+					cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
 			artistName.setCellValueFactory(
 					cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
 			mediaDuration.setCellValueFactory(
 					cellData -> new javafx.beans.property.SimpleStringProperty(
 							cellData.getValue().getDuration()));
 		}
-		//Audio List
+		// Audio List
 		else {
 			mediaTableView.setItems(LAudio);
 			mediaName.setCellValueFactory(
-				cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
+					cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
 			artistName.setCellValueFactory(
 					cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
 			mediaDuration.setCellValueFactory(
@@ -367,30 +350,27 @@ public class FavoriteController implements Initializable {
 							cellData.getValue().getDuration()));
 		}
 	}
-	
-	public String convertDurationMillis(Integer getDurationInMillis){
-	    int getDurationMillis = getDurationInMillis;
 
-	    String convertHours = String.format("%02d", TimeUnit.MILLISECONDS.toHours(getDurationMillis)); 
-	    String convertMinutes = String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(getDurationMillis) -
-	            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(getDurationMillis))); 
-	    String convertSeconds = String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(getDurationMillis) -
-	            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(getDurationMillis)));
+	public String convertDurationMillis(Integer getDurationInMillis) {
+		int getDurationMillis = getDurationInMillis;
 
+		String convertHours = String.format("%02d", TimeUnit.MILLISECONDS.toHours(getDurationMillis));
+		String convertMinutes = String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(getDurationMillis) -
+				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(getDurationMillis)));
+		String convertSeconds = String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(getDurationMillis) -
+				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(getDurationMillis)));
 
-	    String getDuration = convertHours + ":" + convertMinutes + ":" + convertSeconds;
+		String getDuration = convertHours + ":" + convertMinutes + ":" + convertSeconds;
 
-	    return getDuration;
+		return getDuration;
 
 	}
-	
-	private void stopPlaying()
-	{
-		if(mediaPlayer != null)
-		{
+
+	private void stopPlaying() {
+		if (mediaPlayer != null) {
 			mediaPlayer.stop();
 		}
 		getCurrentMediaPlaying = null;
 	}
-	
+
 }

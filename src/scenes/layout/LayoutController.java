@@ -67,7 +67,7 @@ public class LayoutController implements Initializable {
   private static double prevVolume = 100, volume = 100;
 
   private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
-      musicFullScreenScene, prevScene;
+      musicFullScreenScene, prevScene, favoriteScene;
 
   private MediaLoader mediaLoader;
 
@@ -78,6 +78,7 @@ public class LayoutController implements Initializable {
       recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
       musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
       videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
+      favoriteScene = FXMLLoader.load(getClass().getResource("/scenes/favorite/Favorite.fxml"));
       videoFullScreenScene = FXMLLoader
           .load(getClass().getResource("/scenes/mediaFullScreen/VideoFullScreen.fxml"));
       musicFullScreenScene = FXMLLoader
@@ -191,6 +192,10 @@ public class LayoutController implements Initializable {
     if (event.getSource() == sideBarVideoLib) {
       mainContainer.setCenter(videoLibScene);
       prevScene = videoLibScene;
+    }
+    if(event.getSource() == sideBarFav){
+      mainContainer.setCenter(favoriteScene);
+      prevScene = favoriteScene;
     }
   }
 
