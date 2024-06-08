@@ -26,6 +26,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import model.SongMetadata;
 import utils.Helpers;
+import utils.MediaLoader;
 
 public class MusicLibraryController implements Initializable {
 
@@ -59,6 +60,7 @@ public class MusicLibraryController implements Initializable {
   private ObservableList<SongMetadata> artistsList = FXCollections.observableArrayList();
   Map<String, List<SongMetadata>> artistSongsMap = new HashMap<String, List<SongMetadata>>();
   Map<String, List<SongMetadata>> albumSongsMap = new HashMap<String, List<SongMetadata>>();
+  MediaLoader mediaLoader = MediaLoader.getMediaLoader();
 
   public void initialize(URL arg0, ResourceBundle arg1) {
     choiceBoxes = new ArrayList<ChoiceBox<String>>(
@@ -242,7 +244,9 @@ public class MusicLibraryController implements Initializable {
       return;
     }
     mediaPlayer.stop();
-    playNextMedia(audioFilesList, 0);
+    mediaLoader.receiveListOfMediaFiles(audioFilesList);
+    mediaLoader.playReceivedList();
+    // playNextMedia(audioFilesList, 0);
   }
 
   @FXML
@@ -253,7 +257,9 @@ public class MusicLibraryController implements Initializable {
     List<File> shuffledAudioFilesList = new ArrayList<File>(audioFilesList);
     java.util.Collections.shuffle(shuffledAudioFilesList);
     mediaPlayer.stop();
-    playNextMedia(shuffledAudioFilesList, 0);
+    mediaLoader.receiveListOfMediaFiles(audioFilesList);
+    mediaLoader.playReceivedList();
+    // playNextMedia(shuffledAudioFilesList, 0);
   }
 
   private void playNextMedia(List<File> filesList, int currentIndex) {
@@ -278,13 +284,15 @@ public class MusicLibraryController implements Initializable {
 
   @FXML
   void playMediaOnRowClick(MouseEvent event) {
-    SongMetadata selectedSong = allSongsTable.getSelectionModel().getSelectedItem();
-    if (selectedSong == null) {
+    SongMetadata selectedMedia = allSongsTable.getSelectionModel().getSelectedItem();
+    if (selectedMedia == null) {
       return;
     }
     mediaPlayer.stop();
-    Media media = new Media(new File(selectedSong.getPathname()).toURI().toString());
-    mediaPlayer = new MediaPlayer(media);
-    mediaPlayer.play();
+    List<File> tempFilesList = new ArrayList<File>();
+    tempFilesList.add(new File(selectedMedia.getPathname()));
+
+    mediaLoader.receiveListOfMediaFiles(tempFilesList);
+    mediaLoader.playReceivedList();
   }
 }

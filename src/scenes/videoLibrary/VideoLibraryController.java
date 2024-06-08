@@ -26,6 +26,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import model.SongMetadata;
 import utils.Helpers;
+import utils.MediaLoader;
 
 public class VideoLibraryController implements Initializable {
   @FXML
@@ -57,6 +58,7 @@ public class VideoLibraryController implements Initializable {
   private ObservableList<SongMetadata> artistsList = FXCollections.observableArrayList();
   Map<String, List<SongMetadata>> artistSongsMap = new HashMap<String, List<SongMetadata>>();
   Map<String, List<SongMetadata>> albumSongsMap = new HashMap<String, List<SongMetadata>>();
+  MediaLoader mediaLoader = MediaLoader.getMediaLoader();
 
   public void initialize(URL arg0, ResourceBundle arg1) {
     filterChoiceBox.getItems().setAll("title asc. ⌄", "title des. ⌃", "artist asc. ⌄", "artist des. ⌃", "album asc. ⌄",
@@ -226,7 +228,9 @@ public class VideoLibraryController implements Initializable {
       return;
     }
     mediaPlayer.stop();
-    playNextMedia(videoFilesList, 0);
+    mediaLoader.receiveListOfMediaFiles(videoFilesList);
+    mediaLoader.playReceivedList();
+    // playNextMedia(videoFilesList, 0);
   }
 
   @FXML
@@ -237,7 +241,9 @@ public class VideoLibraryController implements Initializable {
     List<File> shuffledVideoFilesList = new ArrayList<File>(videoFilesList);
     java.util.Collections.shuffle(shuffledVideoFilesList);
     mediaPlayer.stop();
-    playNextMedia(shuffledVideoFilesList, 0);
+    mediaLoader.receiveListOfMediaFiles(videoFilesList);
+    mediaLoader.playReceivedList();
+    // playNextMedia(shuffledVideoFilesList, 0);
   }
 
   private void playNextMedia(List<File> filesList, int currentIndex) {
@@ -267,8 +273,10 @@ public class VideoLibraryController implements Initializable {
       return;
     }
     mediaPlayer.stop();
-    Media media = new Media(new File(selectedMedia.getPathname()).toURI().toString());
-    mediaPlayer = new MediaPlayer(media);
-    mediaPlayer.play();
+    List<File> tempFilesList = new ArrayList<File>();
+    tempFilesList.add(new File(selectedMedia.getPathname()));
+    
+    mediaLoader.receiveListOfMediaFiles(tempFilesList);
+    mediaLoader.playReceivedList();
   }
 }
