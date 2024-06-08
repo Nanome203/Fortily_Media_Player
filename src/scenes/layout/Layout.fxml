@@ -339,7 +339,7 @@
                         </Tooltip>
                      </tooltip>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#handleStopButton" styleClass="button-style">
+                  <Button mnemonicParsing="false" onAction="#handleReplayButton" styleClass="button-style">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
