@@ -70,20 +70,7 @@ public class MediaLoader {
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
-        if (Helpers.isVideoFile(selectedFile)) {
-            layoutController.setVideoFullScreenScene();
-            vfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
-            LayoutController.isVideoFile = true;
-            LayoutController.isAudioFile = false;
-        } else if (Helpers.isAudioFile(selectedFile)) {
-            layoutController.setMusicFullScreenScene();
-            LayoutController.isAudioFile = true;
-            LayoutController.isVideoFile = false;
-            mfsController.startRotation();
-        }
-
-        layoutController.setPauseButtonImage();
-        synchronizeWithLayout(selectedFile.getName());
+        synchronizeWithLayout(selectedFile);
 
         mediaPlayer.setOnEndOfMedia(() -> {
             if (currentMediaIndex < MediaFiles.size() - 1) {
@@ -106,15 +93,27 @@ public class MediaLoader {
         mediaPlayer.play();
     }
 
-    private void synchronizeWithLayout(String name) {
+    private void synchronizeWithLayout(File selectedFile) {
         if (LayoutController.isMuted) {
             mediaPlayer.setMute(LayoutController.isMuted);
         }
         mediaPlayer.setOnReady(() -> {
+            if (Helpers.isVideoFile(selectedFile)) {
+                layoutController.setVideoFullScreenScene();
+                vfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
+                LayoutController.isVideoFile = true;
+                LayoutController.isAudioFile = false;
+            } else if (Helpers.isAudioFile(selectedFile)) {
+                layoutController.setMusicFullScreenScene();
+                LayoutController.isAudioFile = true;
+                LayoutController.isVideoFile = false;
+                mfsController.startRotation();
+            }
+            layoutController.setPauseButtonImage();
             layoutController.setTotalDuration(mediaPlayer.getTotalDuration());
             layoutController.getCurrentTimeLabel().setText(Helpers.formatTime(mediaPlayer.getCurrentTime()));
             layoutController.getProgressSlider().setValue(0);
-            layoutController.setSongName(name.replaceFirst("[.].+$", ""));
+            layoutController.setSongName(selectedFile.getName().replaceFirst("[.].+$", ""));
         });
 
         // Update label according to slider
