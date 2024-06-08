@@ -334,10 +334,13 @@ public class LayoutController implements Initializable {
     }
   }
 
-  public void handleStopButton(ActionEvent event) {
-    if (mediaLoader.getMediaPlayer() != null) {
-      mediaLoader.getMediaPlayer().stop();
-      setPlayButtonImage();
-    }
-  }
+	public void handleStopButton(ActionEvent event) {
+		if (mediaLoader.getMediaPlayer() != null) {
+			mediaLoader.getMediaPlayer().seek(Duration.ZERO);
+			setPauseButtonImage();
+		}
+		if (isAudioFile) {
+			mediaLoader.startRotationFromLayout();
+		}
+	}
 }
