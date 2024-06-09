@@ -81,7 +81,6 @@ public class MediaLoader {
         }
 
         mediaPlayer.play();
-        layoutController.setPauseButtonImage();
     }
 
     private void setAutoPlayNextMediaOf(File selectedFile) {
@@ -95,7 +94,7 @@ public class MediaLoader {
             } else {
                 currentMediaIndex = 0;
                 playNewMediaFile(MediaFiles.get(currentMediaIndex));
-                mediaPlayer.pause();
+                mediaPlayer.stop();
                 layoutController.setPlayButtonImage();
                 if (Helpers.isAudioFile(selectedFile)) {
                     mfsController.toStartPosition();
@@ -108,6 +107,7 @@ public class MediaLoader {
         if (LayoutController.isMuted) {
             mediaPlayer.setMute(LayoutController.isMuted);
         }
+        layoutController.setPauseButtonImage();
         mediaPlayer.setOnReady(() -> {
             if (Helpers.isVideoFile(selectedFile)) {
                 layoutController.setVideoFullScreenScene();
