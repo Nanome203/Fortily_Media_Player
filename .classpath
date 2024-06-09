@@ -13,5 +13,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="E:/Program/Jar sqlite/slf4j-api-1.7.36.jar"/>
 	<classpathentry kind="lib" path="E:/Program/Jar sqlite/sqlite-jdbc-3.46.0.0.jar"/>
+	<classpathentry kind="lib" path="E:/Program/Jar sqlite/slf4j-jdk14-1.7.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

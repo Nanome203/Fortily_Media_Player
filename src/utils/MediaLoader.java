@@ -4,6 +4,7 @@ import javafx.util.Duration;
 import scenes.layout.LayoutController;
 import scenes.mediaFullScreen.MusicFullScreenController;
 import scenes.mediaFullScreen.VideoFullScreenController;
+import scenes.recentMedia.RecentMediaController;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -26,7 +27,8 @@ public class MediaLoader {
     private LayoutController layoutController = null;
     private VideoFullScreenController vfsController = null;
     private MusicFullScreenController mfsController = null;
-
+    
+    private RecentMediaController recentMediaController = null; 
      
     
     private ArrayList<File> MediaFiles = null;
@@ -63,6 +65,10 @@ public class MediaLoader {
     public void receiveMusicFullScreenController(MusicFullScreenController controller) {
         mfsController = controller;
     }
+    
+    public void receiveRecentMediaController(RecentMediaController recentMedia) {
+    	this.recentMediaController = recentMedia;
+    }
 
     // this function plays the media files in the received list
     public void playReceivedList() {
@@ -97,10 +103,31 @@ public class MediaLoader {
             }
         });
         
-        //        	if(songDAO.checkExist(selectedFile) == false)
-//        		songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
-//        	else 
-		songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+//                	if(songDAO.checkExist(selectedFile) == false)
+//						try {
+							try {
+								
+								if(songDAO.checkExist(selectedFile) == true) {
+									
+									songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
+									recentMediaController.showRecentMedia();
+								}
+								else {
+									songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+									recentMediaController.showRecentMedia();
+//									recentMediaController.mediaSelectionAction();
+								}
+									
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+//						} catch (SQLException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					else 
+//						songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
         
         mediaPlayer.play();
     }

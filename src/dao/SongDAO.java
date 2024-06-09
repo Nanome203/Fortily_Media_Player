@@ -72,11 +72,8 @@ public class SongDAO {
 	    try {
 	        conn = DriverManager.getConnection(urlDB);
 
-	       
 	        String getMediaPath = getFile.getAbsolutePath();
-	       
 
-	   
 	        preStmt = conn.prepareStatement(sqlInsert);
 	        preStmt.setString(1, getMediaPath);
 	        preStmt.setString(2, dateTime);
@@ -98,7 +95,7 @@ public class SongDAO {
 	public int deleteMedia(String getPath) throws SQLException {
 		Connection conn = null;
 		PreparedStatement preStmt = null;
-		String sqlDelete = "DELETE FROM Recent_Media WHERE PathMedia=?;";
+		String sqlDelete = "DELETE FROM Recent_Media WHERE PathMedia = ?;";
 
 		try {
 			conn = DriverManager.getConnection(urlDB);
@@ -118,13 +115,12 @@ public class SongDAO {
 	}
 
 
-	public boolean checkExist(File selectedFile) {
+	public boolean checkExist(File selectedFile) throws SQLException {
 
 		Connection conn = null;
 		PreparedStatement checkStmt = null;
 		String sqlCheck = "SELECT COUNT(*) FROM Recent_Media WHERE PathMedia = ?;";
 
-		    
 	    try {
 			conn = DriverManager.getConnection(sqlCheck);
 			 checkStmt = conn.prepareStatement(sqlCheck);
@@ -139,13 +135,19 @@ public class SongDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	    finally {
+	    	if (conn != null)
+				conn.close();
+			if (checkStmt != null)
+				checkStmt.close();
+	    }
 	   
 		return true;
 	}
 
 
 
-	public void updateDate(File selectedFile, String currentDateTime) {
+	public void updateDate(File selectedFile, String currentDateTime) throws SQLException {
 		Connection conn = null;
 		PreparedStatement checkStmt = null;
 		String sqlCheck = "UPDATE Recent_Media SET LastDateOpened = ? WHERE PathMedia = ?;";
@@ -164,6 +166,12 @@ public class SongDAO {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			finally {
+		    	if (conn != null)
+					conn.close();
+				if (checkStmt != null)
+					checkStmt.close();
+		    }
 			
 	 
 		

@@ -30,6 +30,7 @@ import utils.MediaLoader;
 
 public class RecentMediaController implements Initializable {
 
+	
 	private MediaLoader mediaLoader;
 	
 	private SongDAO songDAO = new SongDAO();
@@ -51,7 +52,8 @@ public class RecentMediaController implements Initializable {
 	@FXML
 	private Button btnClearFile;
 	
-	
+	@FXML
+	private Button btnPlaySingleMedia;
 	
 	@FXML
 	private Button btnPlayAll;
@@ -63,6 +65,34 @@ public class RecentMediaController implements Initializable {
 	
 	
 	private ObservableList<SongMetadata> LSong = FXCollections.observableArrayList();
+	
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		selectionModel = recentMediaTable.getSelectionModel();
+		selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
+		mediaLoader = MediaLoader.getMediaLoader();
+		mediaLoader.receiveRecentMediaController(this);
+		//Double click event to play file
+		recentMediaTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent evt) {
+						if(evt.getButton().equals(MouseButton.PRIMARY)) {
+							if(evt.getClickCount() == 2) {
+								playSingleMedia(selectionModel.getSelectedItem());
+							}
+						}
+					}				
+		});
+		
+		try {
+			showRecentMedia();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 	public String convertDurationMillis(Integer getDurationInMillis){
@@ -83,7 +113,12 @@ public class RecentMediaController implements Initializable {
 	
 	
 	@FXML
-	public void playFile(MouseEvent evt) {
+	public void playSingleFile(ActionEvent evt) throws SQLException {
+		playSingleMedia(selectionModel.getSelectedItem());
+	}
+	
+	@FXML
+	public void playAllFile(ActionEvent evt) {
 		List<File> getList = new ArrayList<>();
 		
 			if (LSong.isEmpty()) {
@@ -101,19 +136,7 @@ public class RecentMediaController implements Initializable {
 		}
 	}
 	
-	public void mediaSelectionAction()
-	{
-			recentMediaTable.setItems(LSong);
-			allMediaTitleColumn.setCellValueFactory(
-				cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
-			allMediaLastDateOpenedColumn.setCellValueFactory(
-					cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getLastDayOpened()));
-			allMediaDurationColumn.setCellValueFactory(
-					cellData -> new javafx.beans.property.SimpleStringProperty(
-							cellData.getValue().getDuration()));
-		
-		
-	}
+	
 	
 	public void showRecentMedia() throws SQLException {
 		if(!LSong.isEmpty())
@@ -145,35 +168,19 @@ public class RecentMediaController implements Initializable {
 				});
 			}
 		}
+		
+		recentMediaTable.setItems(LSong);
+		allMediaTitleColumn.setCellValueFactory(
+			cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
+		allMediaLastDateOpenedColumn.setCellValueFactory(
+				cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getLastDayOpened()));
+		allMediaDurationColumn.setCellValueFactory(
+				cellData -> new javafx.beans.property.SimpleStringProperty(
+						cellData.getValue().getDuration()));
+	
 	}
 	
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		selectionModel = recentMediaTable.getSelectionModel();
-		selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
-		mediaLoader = MediaLoader.getMediaLoader();
-		
-		//Double click event to play file
-		recentMediaTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
-					@Override
-					public void handle(MouseEvent evt) {
-						if(evt.getButton().equals(MouseButton.PRIMARY)) {
-							if(evt.getClickCount() == 2) {
-								playSingleMedia(selectionModel.getSelectedItem());
-							}
-						}
-					}				
-		});
-		
-		try {
-			showRecentMedia();
-			mediaSelectionAction();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	@FXML
 	public void clearFile(ActionEvent evt) throws SQLException {
@@ -188,11 +195,10 @@ public class RecentMediaController implements Initializable {
 		}
 
 		showRecentMedia();
-		mediaSelectionAction();
+		
 			
 		
 	}
-	
 	
 	private void playSingleMedia(SongMetadata selectedItem) {
 		stopPlaying();
