@@ -23,7 +23,7 @@
                         <Font name="Ebrima Bold" size="40.0" />
                      </font>
                      <VBox.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                   </Label>
                   <HBox>
@@ -71,7 +71,7 @@
                   </HBox>
                </children>
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="30.0" />
+                  <Insets bottom="10.0" left="35.0" right="10.0" top="30.0" />
                </HBox.margin>
             </VBox>
             <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
@@ -84,7 +84,7 @@
                   <ChoiceBox fx:id="mediaTypeSelection" style="-fx-background-color: #1D2128; -fx-border-color: #2880E8; -fx-border-radius: 5px;" stylesheets="@Favorite.css" />
                </children>
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="30.0" />
+                  <Insets bottom="10.0" left="10.0" right="30.0" top="30.0" />
                </HBox.margin>
             </VBox>
          </children>
