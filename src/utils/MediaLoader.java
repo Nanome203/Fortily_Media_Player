@@ -68,16 +68,20 @@ public class MediaLoader {
             mediaPlayer.stop();
         }
 
+        // disabling next/prev buttons
         if (currentMediaIndex == 0) {
             layoutController.getPrevButton().setDisable(true);
             if (MediaFiles.size() == 1)
                 layoutController.getNextButton().setDisable(true);
+            else
+                layoutController.getNextButton().setDisable(false);
         } else if (currentMediaIndex == MediaFiles.size() - 1) {
             layoutController.getNextButton().setDisable(true);
         } else {
             layoutController.getPrevButton().setDisable(false);
             layoutController.getNextButton().setDisable(false);
         }
+
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
@@ -123,7 +127,6 @@ public class MediaLoader {
         mediaPlayer.setOnReady(() -> {
             if (Helpers.isVideoFile(selectedFile)) {
                 layoutController.setVideoFullScreenScene();
-                vfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
                 LayoutController.isVideoFile = true;
                 LayoutController.isAudioFile = false;
             } else if (Helpers.isAudioFile(selectedFile)) {
@@ -279,5 +282,33 @@ public class MediaLoader {
         layoutController.getProgressSlider().setValue(0);
         layoutController.setSongName("SONG NAME");
         layoutController.setPlayButtonImage();
+    }
+
+    // this is to check whether the current media is video or not so that the mini
+    // mediaview can appear
+    public boolean isVideoFile() {
+        return Helpers.isVideoFile(MediaFiles.get(currentMediaIndex));
+    }
+
+    public void vfsControllerRemoveVideo() {
+        if (vfsController.getVideoContainer() != null)
+            vfsController.getVideoContainer().setMediaPlayer(null);
+    }
+
+    public void vfsControllerSetVideo() {
+        layoutControllerRemoveVideo();
+        if (vfsController.getVideoContainer() != null)
+            vfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
+    }
+
+    public void layoutControllerRemoveVideo() {
+        if (layoutController.getSmallMediaView() != null)
+            layoutController.getSmallMediaView().setMediaPlayer(null);
+    }
+
+    public void layoutControllerSetVideo() {
+        vfsControllerRemoveVideo();
+        if (layoutController.getSmallMediaView() != null)
+            layoutController.getSmallMediaView().setMediaPlayer(mediaPlayer);
     }
 }

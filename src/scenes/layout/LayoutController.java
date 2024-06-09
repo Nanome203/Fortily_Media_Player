@@ -30,6 +30,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import utils.MediaLoader;
@@ -67,6 +68,8 @@ public class LayoutController implements Initializable {
 	@FXML
 	private ComboBox<String> speedBox;
 
+	private MediaView smallMediaView;
+
 	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false,
 			isFullScreen = false, isAudioFile = false, isVideoFile = false, isLooped = false;
 
@@ -95,16 +98,26 @@ public class LayoutController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		smallMediaView = new MediaView();
+		smallMediaView.setFitWidth(140);
+		smallMediaView.setFitHeight(70);
 		imageSongContainer.setOnMouseClicked(event -> {
 			if (!isFullScreen && isAudioFile) {
 				mainContainer.setCenter(musicFullScreenScene);
 				isFullScreen = true;
+				imageSongContainer.getChildren().set(0, songImageView);
 			}
 
 			else if (!isFullScreen && isVideoFile) {
-				mainContainer.setCenter(videoFullScreenScene);
-				isFullScreen = true;
+				setVideoFullScreenScene();
 			} else {
+				if (mediaLoader.getMediaPlayer() != null && mediaLoader.isVideoFile()) {
+					smallMediaView.setVisible(true);
+					mediaLoader.layoutControllerSetVideo();
+					imageSongContainer.getChildren().set(0, smallMediaView);
+				} else if (mediaLoader.getMediaPlayer() != null && !mediaLoader.isVideoFile()) {
+					imageSongContainer.getChildren().set(0, songImageView);
+				}
 				mainContainer.setCenter(prevScene);
 				isFullScreen = false;
 			}
@@ -274,12 +287,17 @@ public class LayoutController implements Initializable {
 
 	public void setVideoFullScreenScene() {
 		isFullScreen = true;
+		mediaLoader.vfsControllerSetVideo();
+		imageSongContainer.getChildren().set(0, songImageView);
 		mainContainer.setCenter(videoFullScreenScene);
 	}
 
 	public void setMusicFullScreenScene() {
 		isFullScreen = true;
 		mainContainer.setCenter(musicFullScreenScene);
+		mediaLoader.vfsControllerRemoveVideo();
+		mediaLoader.layoutControllerRemoveVideo();
+		imageSongContainer.getChildren().set(0, songImageView);
 	}
 
 	public Label getTotalDuration() {
@@ -317,6 +335,10 @@ public class LayoutController implements Initializable {
 			volumeSlider.setValue(0.0);
 			isMuted = true;
 		}
+	}
+
+	public MediaView getSmallMediaView() {
+		return smallMediaView;
 	}
 
 	// public void handlePlaylistBtn(ActionEvent event) {

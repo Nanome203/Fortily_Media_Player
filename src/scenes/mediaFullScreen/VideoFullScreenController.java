@@ -37,9 +37,6 @@ public class VideoFullScreenController implements Initializable {
                 videoContainer.setFitHeight(new_val.doubleValue() * 0.9);
             }
         });
-        // videoContainer.setMediaPlayer(mediaLoader.getMediaPlayer());
-        // videoContainer.fitWidthProperty().bind(musicVideoContainer.widthProperty());
-        // videoContainer.fitHeightProperty().bind(musicVideoContainer.heightProperty());
         videoContainer.setPreserveRatio(true);
     }
 
