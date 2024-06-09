@@ -80,6 +80,17 @@ public class MediaLoader {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
+
+        if (currentMediaIndex == 0) {
+            layoutController.getPrevButton().setDisable(true);
+            if (MediaFiles.size() == 1)
+                layoutController.getNextButton().setDisable(true);
+        } else if (currentMediaIndex == MediaFiles.size() - 1) {
+            layoutController.getNextButton().setDisable(true);
+        } else {
+            layoutController.getPrevButton().setDisable(false);
+            layoutController.getNextButton().setDisable(false);
+        }
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
@@ -92,9 +103,9 @@ public class MediaLoader {
         } else {
             setAutoPlayNextMediaOf(selectedFile);
         }
-
+        mediaPlayer.setRate(LayoutController.speed);
+        changeDiskRotateRate();
         mediaPlayer.play();
-        layoutController.setPauseButtonImage();
     }
 
     private void setAutoPlayNextMediaOf(File selectedFile) {
@@ -108,7 +119,7 @@ public class MediaLoader {
             } else {
                 currentMediaIndex = 0;
                 playNewMediaFile(MediaFiles.get(currentMediaIndex));
-                mediaPlayer.pause();
+                mediaPlayer.stop();
                 layoutController.setPlayButtonImage();
                 if (Helpers.isAudioFile(selectedFile)) {
                     mfsController.toStartPosition();
@@ -161,6 +172,7 @@ public class MediaLoader {
         if (LayoutController.isMuted) {
             mediaPlayer.setMute(LayoutController.isMuted);
         }
+        layoutController.setPauseButtonImage();
         mediaPlayer.setOnReady(() -> {
             if (Helpers.isVideoFile(selectedFile)) {
                 layoutController.setVideoFullScreenScene();
@@ -289,5 +301,36 @@ public class MediaLoader {
             mediaPlayer.setOnEndOfMedia(null);
             setAutoPlayNextMediaOf(MediaFiles.get(currentMediaIndex));
         }
+    }
+
+    public void changeDiskRotateRate() {
+        if (LayoutController.speed == 0.25)
+            mfsController.changeRotationDuration(20000);
+        else if (LayoutController.speed == 0.5)
+            mfsController.changeRotationDuration(15000);
+        else if (LayoutController.speed == 0.75)
+            mfsController.changeRotationDuration(10000);
+        else if (LayoutController.speed == 1)
+            mfsController.changeRotationDuration(5000);
+        else if (LayoutController.speed == 1.25)
+            mfsController.changeRotationDuration(2500);
+        else if (LayoutController.speed == 1.5)
+            mfsController.changeRotationDuration(1000);
+        else if (LayoutController.speed == 1.75)
+            mfsController.changeRotationDuration(500);
+        else
+            mfsController.changeRotationDuration(100);
+    }
+
+    // only call this function when you remove a song from a list/database
+    public void removeDeletedMediaFileFromLayout() {
+        if (mediaPlayer != null) {
+            mediaPlayer = null;
+        }
+        layoutController.getCurrentTimeLabel().setText("00:00:00");
+        layoutController.getTotalDuration().setText("00:00:00");
+        layoutController.getProgressSlider().setValue(0);
+        layoutController.setSongName("SONG NAME");
+        layoutController.setPlayButtonImage();
     }
 }

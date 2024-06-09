@@ -51,4 +51,10 @@ public class MusicFullScreenController implements Initializable {
         rotate.stop();
         diskImage.setRotate(0);
     }
+
+    public void changeRotationDuration(double duration) {
+        rotate.stop();
+        rotate.setDuration(Duration.millis(duration));
+        rotate.play();
+    }
 }

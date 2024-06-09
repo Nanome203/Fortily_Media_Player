@@ -1,11 +1,14 @@
 package scenes.favorite;
 
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -24,6 +27,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import utils.ReusableFileChooser;
@@ -60,6 +64,9 @@ public class FavoriteController implements Initializable {
 	private TableColumn<SongMetadata, String> mediaDuration;
 
 	@FXML
+	private TableColumn<SongMetadata, String> mediaAlbum;
+
+	@FXML
 	private Button btnPlayAll;
 
 	@FXML
@@ -71,7 +78,6 @@ public class FavoriteController implements Initializable {
 	@FXML
 	private BorderPane favoriteContainer;
 
-	private MediaPlayer mediaPlayer;
 	private SongMetadata getCurrentMediaPlaying;
 
 	@FXML
@@ -133,6 +139,7 @@ public class FavoriteController implements Initializable {
 
 		try {
 			updateAllTable();
+			mediaSelectionAction(null);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -141,13 +148,24 @@ public class FavoriteController implements Initializable {
 	@FXML
 	public void addFile(MouseEvent evt) throws SQLException {
 		ReusableFileChooser chooser = ReusableFileChooser.getFileChooser();
-
+		int success = 0;
+		int global_success = 0;
 		List<File> files = chooser.showOpenMultipleDialog();
 		if (files != null && !files.isEmpty()) {
 			// List<MediaPlayer> mediaPlayers = new ArrayList<>();
 			for (File file : files) {
 				// Insert file path into database
-				favoriteDAO.insertMedia(file);
+				success = favoriteDAO.insertMedia(file);
+				if (success == 1) // Duplicated primary key/ File in the same directory
+				{
+					global_success = 1;
+				}
+			}
+			if (global_success == 1) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("File duplication");
+				alert.setHeaderText("Some media file has been added before!");
+				alert.show();
 			}
 			// Then update the table
 			updateAllTable();
@@ -224,7 +242,6 @@ public class FavoriteController implements Initializable {
 			return;
 		for (SongMetadata getPath : selectedItems) {
 			if (getPath.equals(getCurrentMediaPlaying)) {
-				stopPlaying();
 			}
 			favoriteDAO.deleteMedia(getPath.getPathname());
 		}
@@ -297,11 +314,16 @@ public class FavoriteController implements Initializable {
 	}
 
 	private void playSingleMedia(SongMetadata getSongMetadata) {
-		stopPlaying();
+		List<File> singleFile = new ArrayList<>();
 		getCurrentMediaPlaying = getSongMetadata;
-		System.out.println("Currently playing: " + getSongMetadata.getTitle() + " - " + getSongMetadata.getArtist());
-		// mediaPlayer.play();
-		mediaLoader.playNewMediaFile(new File(getSongMetadata.getPathname()));
+		if (getSongMetadata != null) {
+			File file = new File(getSongMetadata.getPathname());
+			if (file.exists() && file != null) {
+				singleFile.add(file);
+				mediaLoader.receiveListOfMediaFiles(singleFile);
+				mediaLoader.playReceivedList();
+			}
+		}
 	}
 
 	public void mediaSelectionAction(ActionEvent evt) {
@@ -315,6 +337,9 @@ public class FavoriteController implements Initializable {
 			mediaDuration.setCellValueFactory(
 					cellData -> new javafx.beans.property.SimpleStringProperty(
 							cellData.getValue().getDuration()));
+			mediaAlbum.setCellValueFactory(
+					cellData -> new javafx.beans.property.SimpleStringProperty(
+							cellData.getValue().getAlbum()));
 		}
 		// Audio List
 		else {
@@ -326,6 +351,9 @@ public class FavoriteController implements Initializable {
 			mediaDuration.setCellValueFactory(
 					cellData -> new javafx.beans.property.SimpleStringProperty(
 							cellData.getValue().getDuration()));
+			mediaAlbum.setCellValueFactory(
+					cellData -> new javafx.beans.property.SimpleStringProperty(
+							cellData.getValue().getAlbum()));
 		}
 	}
 
@@ -341,14 +369,6 @@ public class FavoriteController implements Initializable {
 		String getDuration = convertHours + ":" + convertMinutes + ":" + convertSeconds;
 
 		return getDuration;
-
-	}
-
-	private void stopPlaying() {
-		if (mediaPlayer != null) {
-			mediaPlayer.stop();
-		}
-		getCurrentMediaPlaying = null;
 	}
 
 }

@@ -4,5 +4,4 @@ bin
 .settings/
 .vscode/*
 .classpath
-
-.classpath
+*.db

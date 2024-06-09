@@ -102,6 +102,7 @@
             <TableColumn fx:id="mediaName" prefWidth="75.0" styleClass="column" text="Name" />
             <TableColumn fx:id="artistName" prefWidth="75.0" styleClass="column" text="Artist" />
             <TableColumn fx:id="mediaDuration" prefWidth="75.0" styleClass="column" text="Duration" />
+            <TableColumn fx:id="mediaAlbum" prefWidth="75.0" styleClass="column" text="Album" />
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

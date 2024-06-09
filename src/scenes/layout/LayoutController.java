@@ -23,7 +23,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -68,10 +70,14 @@ public class LayoutController implements Initializable {
 	@FXML
 	private Tooltip playPauseTooltip, loopTooltip;
 
+	@FXML
+	private ComboBox<String> speedBox;
+
 	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false,
 			isFullScreen = false, isAudioFile = false, isVideoFile = false, isLooped = false;
 
 	private static double prevVolume = 100, volume = 100;
+	public static double speed = 1;
 
 	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
 			musicFullScreenScene, prevScene, favoriteScene;
@@ -122,6 +128,32 @@ public class LayoutController implements Initializable {
 		WritableImage image = songImageView.snapshot(parameters, null);
 		songImageView.setClip(null);
 		songImageView.setImage(image);
+
+		// adding color to speedBox prompt text
+
+		speedBox.getItems().addAll("0.25", "0.5", "0.75", "1", "1.25", "1.5", "1.75", "2");
+		speedBox.getSelectionModel().select("1");
+		speedBox.setButtonCell(new ListCell<String>() {
+
+			@Override
+			protected void updateItem(String item, boolean empty) {
+				super.updateItem(item, empty);
+				if (empty || item == null) {
+					// styled like -fx-prompt-text-fill:
+					setStyle("-fx-text-fill: white;" +
+							" -fx-alignment: center;" +
+							" -fx-border-color: #2880E8;" +
+							" -fx-border-width: 0 2 0 0;");
+				} else {
+					setStyle("-fx-text-fill: white;" +
+							" -fx-alignment: center;" +
+							" -fx-border-color: #2880E8;" +
+							" -fx-border-width: 0 2 0 0;");
+					setText(item.toString());
+				}
+			}
+
+		});
 
 		// adding color to progress slider's left trackpane
 		progressSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -215,6 +247,7 @@ public class LayoutController implements Initializable {
 		if (isPlayButton && mediaLoader.mediaPlayerExists()) {
 			setPauseButtonImage();
 			mediaLoader.playCurrentMediaFile();
+			mediaLoader.changeDiskRotateRate();
 		} else if (!isPlayButton && mediaLoader.mediaPlayerExists()) {
 			setPlayButtonImage();
 			mediaLoader.pauseCurrentMediaFile();
@@ -255,12 +288,24 @@ public class LayoutController implements Initializable {
 		mainContainer.setCenter(musicFullScreenScene);
 	}
 
+	public Label getTotalDuration() {
+		return mediaDurationLabel;
+	}
+
 	public Slider getProgressSlider() {
 		return progressSlider;
 	}
 
 	public Label getCurrentTimeLabel() {
 		return currentTimeLabel;
+	}
+
+	public Button getPrevButton() {
+		return prevButton;
+	}
+
+	public Button getNextButton() {
+		return nextButton;
 	}
 
 	public void handleVolumeBtn(ActionEvent event) {
@@ -280,19 +325,19 @@ public class LayoutController implements Initializable {
 		}
 	}
 
-	public void handlePlaylistBtn(ActionEvent event) {
-		if (isInPlaylist) {
-			File file = new File("src/assets/images/icons8-playlist-100.png");
-			Image image = new Image(file.toURI().toString());
-			playlistBtnImgView.setImage(image);
-			isInPlaylist = false;
-		} else {
-			File file = new File("src/assets/images/icons8-blue-playlist-100.png");
-			Image image = new Image(file.toURI().toString());
-			playlistBtnImgView.setImage(image);
-			isInPlaylist = true;
-		}
-	}
+	// public void handlePlaylistBtn(ActionEvent event) {
+	// if (isInPlaylist) {
+	// File file = new File("src/assets/images/icons8-playlist-100.png");
+	// Image image = new Image(file.toURI().toString());
+	// playlistBtnImgView.setImage(image);
+	// isInPlaylist = false;
+	// } else {
+	// File file = new File("src/assets/images/icons8-blue-playlist-100.png");
+	// Image image = new Image(file.toURI().toString());
+	// playlistBtnImgView.setImage(image);
+	// isInPlaylist = true;
+	// }
+	// }
 
 	public void handleFavoriteBtn(ActionEvent event) {
 		if (isFavorite) {
@@ -354,7 +399,10 @@ public class LayoutController implements Initializable {
 	public void handleReplayButton(ActionEvent event) {
 		if (mediaLoader.getMediaPlayer() != null) {
 			mediaLoader.getMediaPlayer().seek(Duration.ZERO);
-			setPauseButtonImage();
+			if (isPlayButton) {
+				mediaLoader.getMediaPlayer().play();
+				setPauseButtonImage();
+			}
 		}
 		if (isAudioFile) {
 			mediaLoader.startRotationFromLayout();
@@ -377,5 +425,14 @@ public class LayoutController implements Initializable {
 			mediaLoader.setLoop();
 			isLooped = true;
 		}
+	}
+
+	public void handleChangeSpeedButton(ActionEvent event) {
+		speed = Double.parseDouble(speedBox.getValue());
+		if (!isPlayButton)
+			mediaLoader.changeDiskRotateRate();
+		if (mediaLoader.getMediaPlayer() != null)
+			mediaLoader.getMediaPlayer().setRate(speed);
+
 	}
 }
