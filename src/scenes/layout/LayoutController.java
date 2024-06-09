@@ -241,6 +241,7 @@ public class LayoutController implements Initializable {
 		if (isPlayButton && mediaLoader.mediaPlayerExists()) {
 			setPauseButtonImage();
 			mediaLoader.playCurrentMediaFile();
+			mediaLoader.changeDiskRotateRate();
 		} else if (!isPlayButton && mediaLoader.mediaPlayerExists()) {
 			setPlayButtonImage();
 			mediaLoader.pauseCurrentMediaFile();
@@ -318,19 +319,19 @@ public class LayoutController implements Initializable {
 		}
 	}
 
-	public void handlePlaylistBtn(ActionEvent event) {
-		if (isInPlaylist) {
-			File file = new File("src/assets/images/icons8-playlist-100.png");
-			Image image = new Image(file.toURI().toString());
-			playlistBtnImgView.setImage(image);
-			isInPlaylist = false;
-		} else {
-			File file = new File("src/assets/images/icons8-blue-playlist-100.png");
-			Image image = new Image(file.toURI().toString());
-			playlistBtnImgView.setImage(image);
-			isInPlaylist = true;
-		}
-	}
+	// public void handlePlaylistBtn(ActionEvent event) {
+	// if (isInPlaylist) {
+	// File file = new File("src/assets/images/icons8-playlist-100.png");
+	// Image image = new Image(file.toURI().toString());
+	// playlistBtnImgView.setImage(image);
+	// isInPlaylist = false;
+	// } else {
+	// File file = new File("src/assets/images/icons8-blue-playlist-100.png");
+	// Image image = new Image(file.toURI().toString());
+	// playlistBtnImgView.setImage(image);
+	// isInPlaylist = true;
+	// }
+	// }
 
 	public void handleFavoriteBtn(ActionEvent event) {
 		if (isFavorite) {
@@ -420,7 +421,8 @@ public class LayoutController implements Initializable {
 
 	public void handleChangeSpeedButton(ActionEvent event) {
 		speed = Double.parseDouble(speedBox.getValue());
-		mediaLoader.changeDiskRotateRate();
+		if (!isPlayButton)
+			mediaLoader.changeDiskRotateRate();
 		if (mediaLoader.getMediaPlayer() != null)
 			mediaLoader.getMediaPlayer().setRate(speed);
 
