@@ -281,6 +281,10 @@ public class LayoutController implements Initializable {
 		mainContainer.setCenter(musicFullScreenScene);
 	}
 
+	public Label getTotalDuration() {
+		return mediaDurationLabel;
+	}
+
 	public Slider getProgressSlider() {
 		return progressSlider;
 	}
@@ -387,7 +391,8 @@ public class LayoutController implements Initializable {
 
 	public void handleReplayButton(ActionEvent event) {
 		if (mediaLoader.getMediaPlayer() != null) {
-			mediaLoader.getMediaPlayer().seek(Duration.ZERO);
+			mediaLoader.getMediaPlayer().stop();
+			mediaLoader.getMediaPlayer().play();
 			setPauseButtonImage();
 		}
 		if (isAudioFile) {

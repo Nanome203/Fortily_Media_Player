@@ -70,6 +70,8 @@ public class MediaLoader {
 
         if (currentMediaIndex == 0) {
             layoutController.getPrevButton().setDisable(true);
+            if (MediaFiles.size() == 1)
+                layoutController.getNextButton().setDisable(true);
         } else if (currentMediaIndex == MediaFiles.size() - 1) {
             layoutController.getNextButton().setDisable(true);
         } else {
@@ -265,5 +267,17 @@ public class MediaLoader {
             mfsController.changeRotationDuration(500);
         else
             mfsController.changeRotationDuration(100);
+    }
+
+    // only call this function when you remove a song from a list/database
+    public void removeDeletedMediaFileFromLayout() {
+        if (mediaPlayer != null) {
+            mediaPlayer = null;
+        }
+        layoutController.getCurrentTimeLabel().setText("00:00:00");
+        layoutController.getTotalDuration().setText("00:00:00");
+        layoutController.getProgressSlider().setValue(0);
+        layoutController.setSongName("SONG NAME");
+        layoutController.setPlayButtonImage();
     }
 }
