@@ -140,7 +140,19 @@ public class MediaLoader {
 //							e.printStackTrace();
 //						}
 //					else 
-//						songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+						try {
+							if(songDAO.checkExist(selectedFile) == false) {
+								songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());								
+							}
+						
+							else {								
+								songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+							}
+								recentMediaController.showRecentMedia();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
         
         mediaPlayer.play();
     }

@@ -15,12 +15,13 @@ import model.SongMetadata;
 public class SongDAO {
 	public final String urlDB = "jdbc:sqlite:"
 			+ (new File("").getAbsolutePath().concat("\\src\\database\\media_player.db"));
-	Connection connection = null;
-	Statement stmt = null;
-	ResultSet rs = null;
+	
 
 	public List<SongMetadata> getAllMedia() throws SQLException {
 		List<SongMetadata> listSongs = new ArrayList<SongMetadata>();
+		Connection connection = null;
+		Statement stmt = null;
+		ResultSet rs = null;
 		String sql = "select * from Recent_Media order by LastDateOpened DESC";
 		try {
 			connection = DriverManager.getConnection(urlDB);
@@ -59,13 +60,17 @@ public class SongDAO {
 
 			// Trong trường hợp file kiểm tra tồn tại trong csdl nhưng không tồn tại trên
 			// máy
+			
 			// thì xoá thông tin file khỏi csdl
 
 			// Trong trường hợp có tồn tại trên máy, kiểm tra có thông tin file trong csdl
 			// hay không
+			
 			// Nếu có thì cập nhật lại path (trong trường hợp path của file mình kiểm tra và
 			// path trong csdl khác nhau)
+			
 			// Rồi load thông tin file lên
+			
 			return -1;
 		}
 
@@ -136,7 +141,7 @@ public class SongDAO {
 			rs = checkStmt.executeQuery();
 
 			if (rs.next() && rs.getInt(1) > 0) {
-				return false;
+				return true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -147,7 +152,7 @@ public class SongDAO {
 				checkStmt.close();
 		}
 
-		return true;
+		return false;
 	}
 
 	public void updateDate(File selectedFile, String currentDateTime) throws SQLException {

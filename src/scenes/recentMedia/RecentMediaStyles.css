@@ -17,6 +17,12 @@
   -fx-text-fill: #F3F3F3;
 }
 
+.table-view .column-header,
+.table-view .column-header .label {
+    -fx-text-fill: #f3f3f3;
+    -fx-font: 16px "Ebrima";
+    -fx-background-color: #1D2129;
+}
 
 .scroll-pane .viewport {
   -fx-background-color: transparent;
