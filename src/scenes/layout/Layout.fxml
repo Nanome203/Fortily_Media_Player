@@ -130,7 +130,7 @@
                         <Insets bottom="10.0" left="10.0" top="10.0" />
                      </padding>
                   </Button>
-                  <Button fx:id="sideBarPlaylist" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="Playlists" textFill="#fffefe">
+                  <!-- <Button fx:id="sideBarPlaylist" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="Playlists" textFill="#fffefe">
                      <font>
                         <Font name="Ebrima Bold" size="18.0" />
                      </font>
@@ -147,7 +147,7 @@
                      <padding>
                         <Insets bottom="10.0" left="10.0" top="10.0" />
                      </padding>
-                  </Button>
+                  </Button> -->
                   <Button fx:id="sideBarFav" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="Favorites" textFill="#fffefe">
                      <font>
                         <Font name="Ebrima Bold" size="18.0" />
@@ -414,7 +414,7 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#handlePlaylistBtn" styleClass="button-style">
+                  <!-- <Button mnemonicParsing="false" onAction="#handlePlaylistBtn" styleClass="button-style">
                      <graphic>
                         <ImageView fx:id="playlistBtnImgView" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -432,7 +432,7 @@
                            </font>
                         </Tooltip>
                      </tooltip>
-                  </Button>
+                  </Button> -->
                   <Button mnemonicParsing="false" onAction="#handleFavoriteBtn" styleClass="button-style">
                      <graphic>
                         <ImageView fx:id="favoriteBtnImgView" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
