@@ -60,7 +60,7 @@ public class RecentMediaController implements Initializable {
 
 	
 	
-	private MediaPlayer mediaPlayer;
+	
 	private SongMetadata getCurrentMediaPlaying;
 	
 	
@@ -189,7 +189,8 @@ public class RecentMediaController implements Initializable {
 			return;
 		for (SongMetadata getPath : selectedItems) {
 			if (getPath.equals(getCurrentMediaPlaying)) {
-				stopPlaying();
+//				stopPlaying();
+				mediaLoader.pauseCurrentMediaFile();
 			}
 			songDAO.deleteMedia(getPath.getPathname());
 		}
@@ -201,18 +202,19 @@ public class RecentMediaController implements Initializable {
 	}
 	
 	private void playSingleMedia(SongMetadata selectedItem) {
-		stopPlaying();
+//		stopPlaying();
+		mediaLoader.pauseCurrentMediaFile();
 		getCurrentMediaPlaying = selectedItem;
 		mediaLoader.playNewMediaFile(new File(selectedItem.getPathname()));
 	}
 
-	private void stopPlaying() {
-		if(mediaPlayer != null)
-		{
-			mediaPlayer.stop();
-		}
-		getCurrentMediaPlaying = null;
-		
-	}	
+//	private void stopPlaying() {
+//		if(mediaPlayer != null)
+//		{
+//			mediaPlayer.stop();
+//		}
+//		getCurrentMediaPlaying = null;
+//		
+//	}	
 	
 }

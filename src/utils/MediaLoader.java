@@ -114,30 +114,33 @@ public class MediaLoader {
                 }
             }
         });
-
-        // if(songDAO.checkExist(selectedFile) == false)
-        // try {
-        try {
-
-            if (songDAO.checkExist(selectedFile) == true) {
-
-                songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
-                recentMediaController.showRecentMedia();
-            } else {
-                songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
-                recentMediaController.showRecentMedia();
-                // recentMediaController.mediaSelectionAction();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        // } catch (SQLException e) {
-        // e.printStackTrace();
-        // }
-        // else
-        // songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
-
+        
+//                	if(songDAO.checkExist(selectedFile) == false)
+//						try {
+							try {
+								
+								if(songDAO.checkExist(selectedFile) == false) {
+									
+									songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
+									recentMediaController.showRecentMedia();
+								}
+								else {
+									songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+									recentMediaController.showRecentMedia();
+//									
+								}
+									
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+//						} catch (SQLException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					else 
+//						songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+        
         mediaPlayer.play();
     }
 

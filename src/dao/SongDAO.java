@@ -125,6 +125,7 @@ public class SongDAO {
 
 		Connection conn = null;
 		PreparedStatement checkStmt = null;
+		ResultSet rs = null;
 		String sqlCheck = "SELECT COUNT(*) FROM Recent_Media WHERE PathMedia = ?;";
 
 		try {
