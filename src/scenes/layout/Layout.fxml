@@ -413,6 +413,9 @@
                            </font>
                         </Tooltip>
                      </tooltip>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
                   </Button>
                   <Slider fx:id="volumeSlider" prefHeight="14.0" prefWidth="111.0" style="-fx-cursor: hand;" stylesheets="@../../css/styles.css" value="100.0" />
                   <Label fx:id="volumeLabel" prefWidth="25.0" text="100" textFill="WHITE">

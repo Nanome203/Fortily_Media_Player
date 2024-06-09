@@ -392,9 +392,11 @@ public class LayoutController implements Initializable {
 
 	public void handleReplayButton(ActionEvent event) {
 		if (mediaLoader.getMediaPlayer() != null) {
-			mediaLoader.getMediaPlayer().stop();
-			mediaLoader.getMediaPlayer().play();
-			setPauseButtonImage();
+			mediaLoader.getMediaPlayer().seek(Duration.ZERO);
+			if (isPlayButton) {
+				mediaLoader.getMediaPlayer().play();
+				setPauseButtonImage();
+			}
 		}
 		if (isAudioFile) {
 			mediaLoader.startRotationFromLayout();
