@@ -18,19 +18,18 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class MediaLoader {
-	
+
     private SongDAO songDAO = new SongDAO();
-	
+
     private static MediaLoader INSTANCE = null;
     private Media media = null;
     private MediaPlayer mediaPlayer = null;
     private LayoutController layoutController = null;
     private VideoFullScreenController vfsController = null;
     private MusicFullScreenController mfsController = null;
-    
-    private RecentMediaController recentMediaController = null; 
-     
-    
+
+    private RecentMediaController recentMediaController = null;
+
     private ArrayList<File> MediaFiles = null;
     private int currentMediaIndex;
 
@@ -65,9 +64,9 @@ public class MediaLoader {
     public void receiveMusicFullScreenController(MusicFullScreenController controller) {
         mfsController = controller;
     }
-    
+
     public void receiveRecentMediaController(RecentMediaController recentMedia) {
-    	this.recentMediaController = recentMedia;
+        this.recentMediaController = recentMedia;
     }
 
     // this function plays the media files in the received list
@@ -85,6 +84,19 @@ public class MediaLoader {
 
         synchronizeWithLayout(selectedFile);
 
+        if (LayoutController.isLooped) {
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.seek(Duration.ZERO);
+            });
+        } else {
+            setAutoPlayNextMediaOf(selectedFile);
+        }
+
+        mediaPlayer.play();
+        layoutController.setPauseButtonImage();
+    }
+
+    private void setAutoPlayNextMediaOf(File selectedFile) {
         mediaPlayer.setOnEndOfMedia(() -> {
             if (currentMediaIndex < MediaFiles.size() - 1) {
                 ++currentMediaIndex;
@@ -102,33 +114,32 @@ public class MediaLoader {
                 }
             }
         });
-        
-//                	if(songDAO.checkExist(selectedFile) == false)
-//						try {
-							try {
-								
-								if(songDAO.checkExist(selectedFile) == true) {
-									
-									songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
-									recentMediaController.showRecentMedia();
-								}
-								else {
-									songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
-									recentMediaController.showRecentMedia();
-//									recentMediaController.mediaSelectionAction();
-								}
-									
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-//						} catch (SQLException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//					else 
-//						songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
-        
+
+        // if(songDAO.checkExist(selectedFile) == false)
+        // try {
+        try {
+
+            if (songDAO.checkExist(selectedFile) == true) {
+
+                songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
+                recentMediaController.showRecentMedia();
+            } else {
+                songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+                recentMediaController.showRecentMedia();
+                // recentMediaController.mediaSelectionAction();
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // } catch (SQLException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // else
+        // songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+
         mediaPlayer.play();
     }
 
@@ -148,7 +159,6 @@ public class MediaLoader {
                 LayoutController.isVideoFile = false;
                 mfsController.startRotation();
             }
-            layoutController.setPauseButtonImage();
             layoutController.setTotalDuration(mediaPlayer.getTotalDuration());
             layoutController.getCurrentTimeLabel().setText(Helpers.formatTime(mediaPlayer.getCurrentTime()));
             layoutController.getProgressSlider().setValue(0);
@@ -248,5 +258,22 @@ public class MediaLoader {
 
     public void setCurrentMediaIndex(int newIndex) {
         currentMediaIndex = newIndex;
+    }
+
+    public void setLoop() {
+        if (mediaPlayer != null) {
+            mediaPlayer.setOnEndOfMedia(null);
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.seek(Duration.ZERO);
+            });
+
+        }
+    }
+
+    public void setNoLoop() {
+        if (mediaPlayer != null) {
+            mediaPlayer.setOnEndOfMedia(null);
+            setAutoPlayNextMediaOf(MediaFiles.get(currentMediaIndex));
+        }
     }
 }
