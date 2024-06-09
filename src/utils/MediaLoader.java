@@ -67,6 +67,15 @@ public class MediaLoader {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
+
+        if (currentMediaIndex == 0) {
+            layoutController.getPrevButton().setDisable(true);
+        } else if (currentMediaIndex == MediaFiles.size() - 1) {
+            layoutController.getNextButton().setDisable(true);
+        } else {
+            layoutController.getPrevButton().setDisable(false);
+            layoutController.getNextButton().setDisable(false);
+        }
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
@@ -79,7 +88,8 @@ public class MediaLoader {
         } else {
             setAutoPlayNextMediaOf(selectedFile);
         }
-
+        mediaPlayer.setRate(LayoutController.speed);
+        changeDiskRotateRate();
         mediaPlayer.play();
     }
 
@@ -236,5 +246,24 @@ public class MediaLoader {
             mediaPlayer.setOnEndOfMedia(null);
             setAutoPlayNextMediaOf(MediaFiles.get(currentMediaIndex));
         }
+    }
+
+    public void changeDiskRotateRate() {
+        if (LayoutController.speed == 0.25)
+            mfsController.changeRotationDuration(20000);
+        else if (LayoutController.speed == 0.5)
+            mfsController.changeRotationDuration(15000);
+        else if (LayoutController.speed == 0.75)
+            mfsController.changeRotationDuration(10000);
+        else if (LayoutController.speed == 1)
+            mfsController.changeRotationDuration(5000);
+        else if (LayoutController.speed == 1.25)
+            mfsController.changeRotationDuration(2500);
+        else if (LayoutController.speed == 1.5)
+            mfsController.changeRotationDuration(1000);
+        else if (LayoutController.speed == 1.75)
+            mfsController.changeRotationDuration(500);
+        else
+            mfsController.changeRotationDuration(100);
     }
 }

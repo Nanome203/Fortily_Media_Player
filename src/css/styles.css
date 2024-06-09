@@ -45,6 +45,36 @@
   -fx-background-color: #2880E8;
 }
 
+.combo-box {
+  -fx-background-color: transparent;
+  -fx-border-color: #2880E8;
+  -fx-border-radius: 8;
+  -fx-border-width: 2;
+  -fx-font-size: 17;
+}
+
+
+.combo-box .combo-box-popup .list-view {
+  -fx-background-color: rgba(0, 0, 0, 0.7);
+  -fx-border-color: #2880E8;
+  -fx-border-width: 2;
+}
+
+.combo-box .combo-box-popup .list-cell {
+  -fx-background-color: transparent;
+  -fx-text-fill: white;
+  -fx-alignment: center
+}
+
+.combo-box .combo-box-popup .list-cell:hover {
+  -fx-text-fill: #2880E8;
+}
+
+.combo-box .combo-box-popup .list-cell:selected {
+  -fx-text-fill: #2880E8;
+}
+
+
 .backgroundColor {
   -fx-background-color: linear-gradient(to bottom, #14171D, #1D5EAB);
 }
@@ -76,7 +106,7 @@
   -fx-text-fill: #2880E8;
 }
 
-.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+.tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator {
   -fx-border-color: transparent;
 }
 
