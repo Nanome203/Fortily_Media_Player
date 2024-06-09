@@ -64,6 +64,9 @@ public class FavoriteController implements Initializable {
 	private TableColumn<SongMetadata, String> mediaDuration;
 
 	@FXML
+	private TableColumn<SongMetadata, String> mediaAlbum;
+
+	@FXML
 	private Button btnPlayAll;
 
 	@FXML
@@ -334,6 +337,9 @@ public class FavoriteController implements Initializable {
 			mediaDuration.setCellValueFactory(
 					cellData -> new javafx.beans.property.SimpleStringProperty(
 							cellData.getValue().getDuration()));
+			mediaAlbum.setCellValueFactory(
+					cellData -> new javafx.beans.property.SimpleStringProperty(
+							cellData.getValue().getAlbum()));
 		}
 		// Audio List
 		else {
@@ -345,6 +351,9 @@ public class FavoriteController implements Initializable {
 			mediaDuration.setCellValueFactory(
 					cellData -> new javafx.beans.property.SimpleStringProperty(
 							cellData.getValue().getDuration()));
+			mediaAlbum.setCellValueFactory(
+					cellData -> new javafx.beans.property.SimpleStringProperty(
+							cellData.getValue().getAlbum()));
 		}
 	}
 
