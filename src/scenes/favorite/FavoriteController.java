@@ -1,11 +1,14 @@
 package scenes.favorite;
 
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -24,6 +27,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import utils.ReusableFileChooser;
@@ -71,7 +75,6 @@ public class FavoriteController implements Initializable {
 	@FXML
 	private BorderPane favoriteContainer;
 
-	private MediaPlayer mediaPlayer;
 	private SongMetadata getCurrentMediaPlaying;
 
 	@FXML
@@ -224,7 +227,6 @@ public class FavoriteController implements Initializable {
 			return;
 		for (SongMetadata getPath : selectedItems) {
 			if (getPath.equals(getCurrentMediaPlaying)) {
-				stopPlaying();
 			}
 			favoriteDAO.deleteMedia(getPath.getPathname());
 		}
@@ -297,11 +299,10 @@ public class FavoriteController implements Initializable {
 	}
 
 	private void playSingleMedia(SongMetadata getSongMetadata) {
-		stopPlaying();
 		getCurrentMediaPlaying = getSongMetadata;
-		System.out.println("Currently playing: " + getSongMetadata.getTitle() + " - " + getSongMetadata.getArtist());
-		// mediaPlayer.play();
-		mediaLoader.playNewMediaFile(new File(getSongMetadata.getPathname()));
+		File file = new File(getSongMetadata.getPathname());
+		if (file.exists())
+			mediaLoader.playNewMediaFile(file);
 	}
 
 	public void mediaSelectionAction(ActionEvent evt) {
@@ -341,14 +342,6 @@ public class FavoriteController implements Initializable {
 		String getDuration = convertHours + ":" + convertMinutes + ":" + convertSeconds;
 
 		return getDuration;
-
-	}
-
-	private void stopPlaying() {
-		if (mediaPlayer != null) {
-			mediaPlayer.stop();
-		}
-		getCurrentMediaPlaying = null;
 	}
 
 }
