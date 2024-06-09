@@ -313,11 +313,13 @@ public class FavoriteController implements Initializable {
 	private void playSingleMedia(SongMetadata getSongMetadata) {
 		List<File> singleFile = new ArrayList<>();
 		getCurrentMediaPlaying = getSongMetadata;
-		File file = new File(getSongMetadata.getPathname());
-		if (file.exists()) {
-			singleFile.add(file);
-			mediaLoader.receiveListOfMediaFiles(singleFile);
-			mediaLoader.playReceivedList();
+		if (getSongMetadata != null) {
+			File file = new File(getSongMetadata.getPathname());
+			if (file.exists() && file != null) {
+				singleFile.add(file);
+				mediaLoader.receiveListOfMediaFiles(singleFile);
+				mediaLoader.playReceivedList();
+			}
 		}
 	}
 
