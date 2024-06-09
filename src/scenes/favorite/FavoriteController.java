@@ -286,6 +286,8 @@ public class FavoriteController implements Initializable {
 
 	@FXML
 	public void playFile(MouseEvent evt) {
+		if (mediaLoader.getReceivedList() != null)
+			mediaLoader.getReceivedList().clear();
 		List<File> getList = new ArrayList<>();
 		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
 			if (LVideo.isEmpty()) {
@@ -309,18 +311,24 @@ public class FavoriteController implements Initializable {
 		}
 		if (!getList.isEmpty()) {
 			mediaLoader.receiveListOfMediaFiles(getList);
+			for (File i : mediaLoader.getReceivedList()) {
+				System.out.println(i);
+			}
 			mediaLoader.playReceivedList();
 		}
 	}
 
 	private void playSingleMedia(SongMetadata getSongMetadata) {
-		List<File> singleFile = new ArrayList<>();
+		if (mediaLoader.getReceivedList() != null)
+			mediaLoader.getReceivedList().clear();
 		getCurrentMediaPlaying = getSongMetadata;
 		if (getSongMetadata != null) {
 			File file = new File(getSongMetadata.getPathname());
-			if (file.exists() && file != null) {
-				singleFile.add(file);
-				mediaLoader.receiveListOfMediaFiles(singleFile);
+			if (file.exists()) {
+				// Empty the media loader playlist
+				List<File> playSingleFile = new ArrayList<>();
+				playSingleFile.add(file);
+				mediaLoader.receiveListOfMediaFiles(playSingleFile);
 				mediaLoader.playReceivedList();
 			}
 		}

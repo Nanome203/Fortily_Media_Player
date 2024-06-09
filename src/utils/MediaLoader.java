@@ -72,6 +72,8 @@ public class MediaLoader {
             layoutController.getPrevButton().setDisable(true);
             if (MediaFiles.size() == 1)
                 layoutController.getNextButton().setDisable(true);
+            else
+                layoutController.getNextButton().setDisable(false);
         } else if (currentMediaIndex == MediaFiles.size() - 1) {
             layoutController.getNextButton().setDisable(true);
         } else {
