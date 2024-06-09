@@ -84,7 +84,9 @@
 }
 
 .tab-header-background {
-  -fx-background-color: #1D2129;
+  -fx-background-color:
+    /*#1D2129*/
+    transparent;
 
 }
 

@@ -1,9 +1,10 @@
 #videoLibraryContainer {
-  -fx-background-color: #1D2129;
+  -fx-background-color: transparent;
   -fx-background-radius: 10;
 }
 
-.tab, .column {
+.tab,
+.column {
   -fx-background-color: #1D2129;
   -fx-text-fill: #F3F3F3;
 }
@@ -13,16 +14,21 @@
   -fx-background-radius: 5;
 }
 
-.shuffleAndPlayButton, .filterChoiceBox {
+.shuffleAndPlayButton,
+.filterChoiceBox {
   -fx-background-color: #1D2129;
   -fx-border-color: #2880E8;
   -fx-border-radius: 5;
 }
 
 .addFolderButton {
-  -fx-background-color: #1D2129;
+  -fx-background-color: transparent;
 }
 
-.table, .addFolderButton, .playAllButton, .shuffleAndPlayButton, .filterChoiceBox {
+.table,
+.addFolderButton,
+.playAllButton,
+.shuffleAndPlayButton,
+.filterChoiceBox {
   -fx-cursor: hand;
 }
