@@ -144,13 +144,24 @@ public class FavoriteController implements Initializable {
 	@FXML
 	public void addFile(MouseEvent evt) throws SQLException {
 		ReusableFileChooser chooser = ReusableFileChooser.getFileChooser();
-
+		int success = 0;
+		int global_success = 0;
 		List<File> files = chooser.showOpenMultipleDialog();
 		if (files != null && !files.isEmpty()) {
 			// List<MediaPlayer> mediaPlayers = new ArrayList<>();
 			for (File file : files) {
 				// Insert file path into database
-				favoriteDAO.insertMedia(file);
+				success = favoriteDAO.insertMedia(file);
+				if (success == 1) // Duplicated primary key/ File in the same directory
+				{
+					global_success = 1;
+				}
+			}
+			if (global_success == 1) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("File duplication");
+				alert.setHeaderText("Some media file has been added before!");
+				alert.show();
 			}
 			// Then update the table
 			updateAllTable();
