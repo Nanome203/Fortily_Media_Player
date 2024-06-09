@@ -136,6 +136,7 @@ public class FavoriteController implements Initializable {
 
 		try {
 			updateAllTable();
+			mediaSelectionAction(null);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -310,10 +311,14 @@ public class FavoriteController implements Initializable {
 	}
 
 	private void playSingleMedia(SongMetadata getSongMetadata) {
+		List<File> singleFile = new ArrayList<>();
 		getCurrentMediaPlaying = getSongMetadata;
 		File file = new File(getSongMetadata.getPathname());
-		if (file.exists())
-			mediaLoader.playNewMediaFile(file);
+		if (file.exists()) {
+			singleFile.add(file);
+			mediaLoader.receiveListOfMediaFiles(singleFile);
+			mediaLoader.playReceivedList();
+		}
 	}
 
 	public void mediaSelectionAction(ActionEvent evt) {
