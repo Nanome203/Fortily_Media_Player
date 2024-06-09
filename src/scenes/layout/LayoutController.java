@@ -111,15 +111,7 @@ public class LayoutController implements Initializable {
 			else if (!isFullScreen && isVideoFile) {
 				setVideoFullScreenScene();
 			} else {
-				if (mediaLoader.getMediaPlayer() != null && mediaLoader.isVideoFile()) {
-					smallMediaView.setVisible(true);
-					mediaLoader.layoutControllerSetVideo();
-					imageSongContainer.getChildren().set(0, smallMediaView);
-				} else if (mediaLoader.getMediaPlayer() != null && !mediaLoader.isVideoFile()) {
-					imageSongContainer.getChildren().set(0, songImageView);
-				}
-				mainContainer.setCenter(prevScene);
-				isFullScreen = false;
+				switchToSmallMediaView();
 			}
 		});
 		mediaLoader = MediaLoader.getMediaLoader();
@@ -224,29 +216,29 @@ public class LayoutController implements Initializable {
 		// Add 'selected' class to the clicked item
 		((Button) event.getSource()).getStyleClass().add("active");
 		if (event.getSource() == sideBarHome) {
-			mainContainer.setCenter(homeScene);
 			prevScene = homeScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 		if (event.getSource() == sideBarMusicLib) {
-			mainContainer.setCenter(musicLibScene);
 			prevScene = musicLibScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 		if (event.getSource() == sideBarRecentMedia) {
-			mainContainer.setCenter(recentMediaScene);
 			prevScene = recentMediaScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 		if (event.getSource() == sideBarVideoLib) {
-			mainContainer.setCenter(videoLibScene);
 			prevScene = videoLibScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 		if (event.getSource() == sideBarFav) {
-			mainContainer.setCenter(favoriteScene);
 			prevScene = favoriteScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 	}
 
@@ -283,6 +275,18 @@ public class LayoutController implements Initializable {
 
 	public void setTotalDuration(Duration duration) {
 		mediaDurationLabel.setText(Helpers.formatTime(duration));
+	}
+
+	private void switchToSmallMediaView() {
+		if (mediaLoader.getMediaPlayer() != null && mediaLoader.isVideoFile()) {
+			smallMediaView.setVisible(true);
+			mediaLoader.layoutControllerSetVideo();
+			imageSongContainer.getChildren().set(0, smallMediaView);
+		} else if (mediaLoader.getMediaPlayer() != null && !mediaLoader.isVideoFile()) {
+			imageSongContainer.getChildren().set(0, songImageView);
+		}
+		mainContainer.setCenter(prevScene);
+		isFullScreen = false;
 	}
 
 	public void setVideoFullScreenScene() {
