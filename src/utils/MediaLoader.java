@@ -75,7 +75,7 @@ public class MediaLoader {
     }
 
     // this function plays the media file received from the file chooser
-    public void playNewMediaFile(File selectedFile) {
+    private void playNewMediaFile(File selectedFile) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
