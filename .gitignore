@@ -1,7 +1,5 @@
 /bin
-/*.class
 /.project
 /.settings
 /.vscode
-.classpath
-/database/*.db
+/src/database/*.db
