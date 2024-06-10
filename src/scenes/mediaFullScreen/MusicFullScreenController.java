@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import scenes.layout.LayoutController;
 
 public class MusicFullScreenController implements Initializable {
 
@@ -21,6 +22,7 @@ public class MusicFullScreenController implements Initializable {
 
     private MediaLoader mediaLoader;
     private RotateTransition rotate;
+    private LayoutController layoutController;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -34,6 +36,21 @@ public class MusicFullScreenController implements Initializable {
         rotate.setCycleCount(TranslateTransition.INDEFINITE);
         rotate.setInterpolator(Interpolator.LINEAR);
         rotate.setByAngle(-360);
+        diskImage.setOnMousePressed(e -> {
+            rotate.stop();
+            layoutController.setPlayButtonImage();
+            mediaLoader.pauseCurrentMediaFile();
+        });
+        diskImage.setOnMouseReleased(e -> {
+            rotate.play();
+            layoutController.setPauseButtonImage();
+            mediaLoader.playCurrentMediaFile();
+            mediaLoader.changeDiskRotateRate();
+        });
+    }
+
+    public void receiveLayoutController(LayoutController controller) {
+        layoutController = controller;
     }
 
     public void startRotation() {

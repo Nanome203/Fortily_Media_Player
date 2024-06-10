@@ -5,6 +5,6 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scenes.mediaFullScreen.MusicFullScreenController">
    <center>
-      <Circle fx:id="diskImage" fill="DODGERBLUE" radius="250.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" BorderPane.alignment="CENTER" />
+      <Circle fx:id="diskImage" fill="DODGERBLUE" radius="250.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

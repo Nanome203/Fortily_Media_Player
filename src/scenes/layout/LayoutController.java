@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import model.PlayListItem;
 import scenes.favorite.FavoriteController;
+import scenes.mediaFullScreen.MusicFullScreenController;
 
 import java.util.ResourceBundle;
 
@@ -114,8 +115,10 @@ public class LayoutController implements Initializable {
 			favoriteController = loader.getController();
 			videoFullScreenScene = FXMLLoader
 					.load(getClass().getResource("/scenes/mediaFullScreen/VideoFullScreen.fxml"));
-			musicFullScreenScene = FXMLLoader
-					.load(getClass().getResource("/scenes/mediaFullScreen/MusicFullScreen.fxml"));
+			loader = null;
+			loader = new FXMLLoader(getClass().getResource("/scenes/mediaFullScreen/MusicFullScreen.fxml"));
+			musicFullScreenScene = loader.load();
+			loader.<MusicFullScreenController>getController().receiveLayoutController(this);
 			mainContainer.setCenter(homeScene);
 			prevScene = homeScene;
 		} catch (IOException e) {

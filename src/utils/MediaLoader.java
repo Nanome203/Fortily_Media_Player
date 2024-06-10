@@ -277,9 +277,7 @@ public class MediaLoader {
     }
 
     public boolean mediaPlayerExists() {
-        if (mediaPlayer != null)
-            return true;
-        return false;
+        return mediaPlayer != null;
     }
 
     public MediaPlayer getMediaPlayer() {
