@@ -19,19 +19,19 @@
                   <Font name="Ebrima Bold" size="40.0" />
                </font>
             </Label>
-            <Button fx:id="btnPlayAll" layoutX="40.0" layoutY="114.0" mnemonicParsing="false" onAction="#playAllFile" prefHeight="37.0" prefWidth="111.0" style="-fx-background-color: #2880E8; -fx-text-fill: #ffffff; -fx-border-radius: 5;" styleClass="btn" text="Play all">
+            <Button fx:id="btnPlayAll" layoutX="40.0" layoutY="114.0" mnemonicParsing="false" onAction="#playAllFile" prefWidth="85.0" style="-fx-background-color: #2880E8; -fx-text-fill: #ffffff; -fx-border-radius: 5;" styleClass="btn" text="Play all">
                <font>
-                  <Font name="Ebrima" size="14.0" />
+                  <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnClearFile" layoutX="297.0" layoutY="114.0" mnemonicParsing="false" onAction="#clearFile" prefHeight="37.0" prefWidth="111.0" style="-fx-background-color: #1D2129; -fx-border-color: #2880E8; -fx-text-fill: #2880E8; -fx-border-radius: 5;" styleClass="btn" text="Delete" textFill="WHITE">
+            <Button fx:id="btnClearFile" layoutX="297.0" layoutY="114.0" mnemonicParsing="false" onAction="#clearFile" prefWidth="85.0" style="-fx-background-color: #1D2129; -fx-border-color: #2880E8; -fx-border-radius: 5;" styleClass="btn" text="Delete" textFill="WHITE">
                <font>
-                  <Font name="Ebrima" size="14.0" />
+                  <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnPlaySingleMedia" layoutX="169.0" layoutY="114.0" mnemonicParsing="false" onAction="#playSingleFile" prefHeight="37.0" prefWidth="111.0" style="-fx-border-color: #2880E8; -fx-background-color: #1D2129; -fx-border-radius: 5;" styleClass="btn" text="Play" textFill="#2880e8">
+            <Button fx:id="btnPlaySingleMedia" layoutX="169.0" layoutY="114.0" mnemonicParsing="false" onAction="#playSingleFile" prefWidth="85.0" style="-fx-border-color: #2880E8; -fx-background-color: #1D2129; -fx-border-radius: 5;" styleClass="btn" text="Play" textFill="WHITE">
                <font>
-                  <Font name="Ebrima" size="14.0" />
+                  <Font size="14.0" />
                </font>
             </Button>
          </children>

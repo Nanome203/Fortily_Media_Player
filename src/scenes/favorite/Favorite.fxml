@@ -28,31 +28,31 @@
                   </Label>
                   <HBox>
                      <children>
-                        <Button fx:id="btnPlayAll" mnemonicParsing="false" onMouseClicked="#playFile" style="-fx-border-radius: 5px; -fx-background-color: #2880E8; -fx-border-color: #2880E8;" text="Play All" textFill="#f3f3f3">
+                        <Button fx:id="btnPlayAll" mnemonicParsing="false" onMouseClicked="#playFile" prefWidth="85.0" style="-fx-border-radius: 5px; -fx-background-color: #2880E8; -fx-border-color: #2880E8;" text="Play All" textFill="#f3f3f3">
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="Ebrima" size="15.0" />
+                              <Font size="15.0" />
                            </font>
                            <styleClass>
                               <String fx:value="button-hover" />
                               <String fx:value="button" />
                            </styleClass>
                         </Button>
-                        <Button fx:id="btnAddFile" mnemonicParsing="false" onMouseClicked="#addFile" style="-fx-border-radius: 5px; -fx-background-color: #1D2129; -fx-border-color: #2880E8;" text="Add" textFill="#f3f3f3">
+                        <Button fx:id="btnAddFile" mnemonicParsing="false" onMouseClicked="#addFile" prefWidth="85.0" style="-fx-border-radius: 5px; -fx-background-color: #1D2129; -fx-border-color: #2880E8;" text="Add" textFill="#f3f3f3">
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="Ebrima" size="15.0" />
+                              <Font size="15.0" />
                            </font>
                            <styleClass>
                               <String fx:value="button-hover" />
                               <String fx:value="button" />
                            </styleClass>
                         </Button>
-                        <Button fx:id="btnClearFile" mnemonicParsing="false" onMouseClicked="#clearFile" style="-fx-border-radius: 5px; -fx-background-color: #1D2129; -fx-border-color: #2880E8;" text="Clear" textFill="#f3f3f3">
+                        <Button fx:id="btnClearFile" mnemonicParsing="false" onMouseClicked="#clearFile" prefWidth="85.0" style="-fx-border-radius: 5px; -fx-background-color: #1D2129; -fx-border-color: #2880E8;" text="Clear" textFill="#f3f3f3">
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>

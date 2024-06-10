@@ -32,9 +32,9 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="40.0">
                <children>
-                          <Button fx:id="playAllButton" mnemonicParsing="false" onMouseClicked="#playAllVideos" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
+                          <Button fx:id="playAllButton" mnemonicParsing="false" onMouseClicked="#playAllVideos" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
                               <font>
-                                  <Font name="Ebrima" size="14.0" />
+                                  <Font size="14.0" />
                               </font>
                           </Button>
                   <Button fx:id="playSelectedButton" mnemonicParsing="false" onMouseClicked="#playSelectedSongs" styleClass="playSelectedButton" text="Play selected" textFill="#f3f3f3">
@@ -42,17 +42,17 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="shuffleButton" mnemonicParsing="false" onMouseClicked="#shuffleAllVideos" styleClass="shuffleButton" text="Shuffle" textFill="#f3f3f3">
+                  <Button fx:id="shuffleButton" mnemonicParsing="false" onMouseClicked="#shuffleAllVideos" prefWidth="85.0" styleClass="shuffleButton" text="Shuffle" textFill="#f3f3f3">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#deleteSongs" prefHeight="30.0" prefWidth="85.0" styleClass="deleteButton" text="Delete" textFill="#f3f3f3">
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#deleteSongs" prefWidth="85.0" styleClass="deleteButton" text="Delete" textFill="#f3f3f3">
                      <font>
-                        <Font name="Ebrima" size="14.0" />
+                        <Font size="14.0" />
                      </font>
                   </Button>
-                          <ChoiceBox fx:id="filterChoiceBox" maxHeight="31.2" minHeight="31.2" prefHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
+                          <ChoiceBox fx:id="filterChoiceBox" maxHeight="31.2" minHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
                </children>
             </HBox>
             <TableView fx:id="videoLibraryTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">

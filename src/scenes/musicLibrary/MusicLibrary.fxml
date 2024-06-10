@@ -40,9 +40,9 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="55.0" spacing="20.0">
                <children>
-          <Button fx:id="allSongsPlayAllButton" mnemonicParsing="false" onMouseClicked="#playAllSongs" prefHeight="30.0" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
+          <Button fx:id="allSongsPlayAllButton" mnemonicParsing="false" onMouseClicked="#playAllSongs" prefWidth="85.0" styleClass="playAllButton" text="Play all" textFill="#f3f3f3">
             <font>
-              <Font name="Ebrima" size="14.0" />
+              <Font size="14.0" />
             </font>
           </Button>
           <Button fx:id="allSongsPlaySelectedButton" mnemonicParsing="false" onMouseClicked="#playSelectedSongs" styleClass="playSelectedButton" text="Play selected" textFill="#f3f3f3">
@@ -50,14 +50,14 @@
               <Font size="14.0" />
             </font>
           </Button>
-                  <Button fx:id="allSongsShuffleButton" mnemonicParsing="false" onMouseClicked="#shuffleAllSongs" styleClass="shuffleButton" text="Shuffle" textFill="#f3f3f3">
+                  <Button fx:id="allSongsShuffleButton" mnemonicParsing="false" onMouseClicked="#shuffleAllSongs" prefWidth="85.0" styleClass="shuffleButton" text="Shuffle" textFill="#f3f3f3">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="allSongsDeleteButton" mnemonicParsing="false" onMouseClicked="#deleteSongs" prefHeight="30.0" prefWidth="85.0" styleClass="deleteButton" text="Delete" textFill="#f3f3f3">
+                  <Button fx:id="allSongsDeleteButton" mnemonicParsing="false" onMouseClicked="#deleteSongs" prefWidth="85.0" styleClass="deleteButton" text="Delete" textFill="#f3f3f3">
                      <font>
-                        <Font name="Ebrima" size="14.0" />
+                        <Font size="14.0" />
                      </font>
                   </Button>
                </children>
