@@ -1,19 +1,9 @@
-#musicLibraryContainer {
-  -fx-background-color: #1D2129;
-  -fx-background-radius: 10;
-}
-
-.tab, .column {
-  -fx-background-color: #1D2129;
-  -fx-text-fill: #F3F3F3;
-}
-
 .playAllButton {
   -fx-background-color: #2880E8;
   -fx-background-radius: 5;
 }
 
-.shuffleAndPlayButton, .filterChoiceBox {
+.playSelectedButton, .shuffleButton, .filterChoiceBox {
   -fx-background-color: #1D2129;
   -fx-border-color: #2880E8;
   -fx-border-radius: 5;
@@ -23,6 +13,11 @@
   -fx-background-color: #1D2129;
 }
 
-.addFolderButton, .playAllButton, .shuffleAndPlayButton, .filterChoiceBox {
+.deleteButton {
+  -fx-background-color: #e24545;
+  -fx-background-radius: 5;
+}
+
+.addFolderButton, .playAllButton, .playSelectedButton, .shuffleButton, .filterChoiceBox, .deleteButton, .tab {
   -fx-cursor: hand;
 }
