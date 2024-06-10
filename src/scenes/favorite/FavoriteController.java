@@ -370,7 +370,7 @@ public class FavoriteController implements Initializable {
         if (file != null)
           getList.add(file);
       }
-    } else if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video"))// Audio
+    } else if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Audio"))// Audio
     {
       if (LAudio.isEmpty()) {
         return;
