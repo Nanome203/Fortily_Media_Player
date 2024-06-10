@@ -15,13 +15,15 @@ public class AboutController implements Initializable {
   private BorderPane mainAboutContainer;
 
   public void initialize(URL arg0, ResourceBundle arg1) {
+    if (mainAboutContainer == null) {
+      return;
+    }
     Alert alert = new Alert(Alert.AlertType.WARNING);
     alert.setTitle("You Trial Has Ended");
     alert.setHeaderText(null);
-    alert.setContentText("Your free trial has ended. Please pay 23.000VND for full access to WinRAR.");
-
+    alert.setContentText("Your free trial has ended. Please pay 23.000VND for full access to Fortily.");
     ButtonType payButton = new ButtonType("Pay");
-    ButtonType cancelButton = new ButtonType("I'll use 7-Zip instead");
+    ButtonType cancelButton = new ButtonType("I'll use Spotify instead");
     alert.getButtonTypes().setAll(payButton, cancelButton);
     alert.showAndWait().ifPresent(buttonType -> {
       if (buttonType == payButton) {
@@ -30,6 +32,5 @@ public class AboutController implements Initializable {
         return;
       }
     });
-    mainAboutContainer.setCenter(alert.getDialogPane());
   }
 }
