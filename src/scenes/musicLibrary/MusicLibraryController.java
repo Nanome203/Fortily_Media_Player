@@ -147,6 +147,7 @@ public class MusicLibraryController implements Initializable {
       });
       return row;
     });
+    allSongsTitleColumn.setStyle("-fx-alignment: center-left;");
   }
 
   void filterChoiceBoxValues(ChoiceBox<String> choiceBox) {
@@ -265,6 +266,7 @@ public class MusicLibraryController implements Initializable {
           : "Unknown Artist";
       String album = media.getMetadata().get("album") != null ? media.getMetadata().get("album").toString()
           : "Unknown Album";
+
       String notReadyDurationString = Helpers.formatTime(media.getDuration());
       long notReadryLastModified = file.lastModified();
       String pathname = file.getAbsolutePath();
@@ -276,6 +278,7 @@ public class MusicLibraryController implements Initializable {
           .noneMatch(songPathname -> songPathname.equals(file.getAbsolutePath()))) {
         insertToDatabase(file);
       }
+
       allSongsList.add(notReadySongMetadata);
       mediaPlayer.setOnReady(
           () -> {
@@ -294,6 +297,14 @@ public class MusicLibraryController implements Initializable {
     updateTable();
     for (ChoiceBox<String> choiceBox : choiceBoxes) {
       filterChoiceBoxValues(choiceBox);
+    }
+  }
+
+  private void insertToDatabase(File file) {
+    try {
+      musicDAO.insertMedia(file);
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
@@ -349,14 +360,6 @@ public class MusicLibraryController implements Initializable {
     updateTableAllSongs();
     updateTableAllArtists();
     updateTableAllAlbums();
-  }
-
-  private void insertToDatabase(File file) {
-    try {
-      musicDAO.insertMedia(file);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
   }
 
   @FXML

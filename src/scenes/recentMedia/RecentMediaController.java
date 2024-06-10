@@ -138,8 +138,6 @@ public class RecentMediaController implements Initializable {
 	public void showRecentMedia() throws SQLException {
 	    LSong.clear();
 	    List<SongMetadata> listMedia = songDAO.getAllMedia();
-	    System.out.println(listMedia);
-	    System.out.println(1);
 	    
 	    List<SongMetadata> tempList = new ArrayList<>();
 //	    final int[] count = {0};
