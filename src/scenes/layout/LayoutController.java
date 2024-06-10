@@ -388,6 +388,8 @@ public class LayoutController implements Initializable {
 		if (isFavorite) {
 			favoriteDAO.deleteMedia(
 					mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()).getAbsolutePath());
+			favoriteController.clearFileFavButton(
+					mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()).getAbsolutePath());
 			setWhiteFavoriteHeartImage();
 		} else {
 			favoriteDAO.insertMedia(mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()));

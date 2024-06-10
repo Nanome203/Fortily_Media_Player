@@ -237,6 +237,24 @@ public class FavoriteController implements Initializable {
 		}
 	}
 
+	public void clearFileFavButton(String getPathname) {
+		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
+			for (SongMetadata i : LVideo) {
+				if (i.getPathname().equals(getPathname)) {
+					LVideo.remove(i);
+					break;
+				}
+			}
+		} else {
+			for (SongMetadata i : LAudio) {
+				if (i.getPathname().equals(getPathname)) {
+					LAudio.remove(i);
+					break;
+				}
+			}
+		}
+	}
+
 	@FXML
 	public void clearFile(MouseEvent evt) throws SQLException {
 		ObservableList<SongMetadata> selectedItems = selectionModel.getSelectedItems(); // Selected Item
