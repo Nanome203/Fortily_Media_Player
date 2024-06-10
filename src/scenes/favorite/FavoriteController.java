@@ -42,7 +42,7 @@ public class FavoriteController implements Initializable {
 
   @FXML
   private ChoiceBox<String> mediaTypeSelection;
-  private String[] mediaType = { "Video", "Audio" };
+  private String[] mediaType = { "All", "Video", "Audio" };
 
   @FXML
   private TableView<SongMetadata> mediaTableView;
@@ -78,12 +78,13 @@ public class FavoriteController implements Initializable {
   @FXML
   private ObservableList<SongMetadata> LAudio = FXCollections.observableArrayList();
   private ObservableList<SongMetadata> LVideo = FXCollections.observableArrayList();
+  private ObservableList<SongMetadata> LAll = FXCollections.observableArrayList();
 
   @Override
   public void initialize(URL arg0, ResourceBundle arg1) {
     // Create selection menu for type of media
     mediaTypeSelection.getItems().addAll(mediaType);
-    mediaTypeSelection.getSelectionModel().select("Video");
+    mediaTypeSelection.getSelectionModel().select("All");
     mediaTypeSelection.setOnAction(this::mediaSelectionAction);
     selectionModel = mediaTableView.getSelectionModel();
     selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
@@ -226,6 +227,7 @@ public class FavoriteController implements Initializable {
               if (tag == 0)
                 LVideo.add(getIndex);
             }
+            LAll.add(getIndex);
           }
         });
       }
@@ -240,10 +242,17 @@ public class FavoriteController implements Initializable {
           break;
         }
       }
-    } else {
+    } else if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Audio")) {
       for (SongMetadata i : LAudio) {
         if (i.getPathname().equals(getPathname)) {
           LAudio.remove(i);
+          break;
+        }
+      }
+    } else {
+      for (SongMetadata i : LAudio) {
+        if (i.getPathname().equals(getPathname)) {
+          LAll.remove(i);
           break;
         }
       }
@@ -299,6 +308,13 @@ public class FavoriteController implements Initializable {
         LAudio.add(getIndex);
       }
     }
+    LAll.clear();
+    for (SongMetadata i : LVideo) {
+      LAll.add(i);
+    }
+    for (SongMetadata i : LAudio) {
+      LAll.add(i);
+    }
   }
 
   @FXML
@@ -315,12 +331,20 @@ public class FavoriteController implements Initializable {
         if (file != null)
           getList.add(file);
       }
-    } else // Audio
+    } else if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video"))// Audio
     {
       if (LAudio.isEmpty()) {
         return;
       }
       for (SongMetadata i : LAudio) {
+        File file = new File(i.getPathname());
+        if (file != null)
+          getList.add(file);
+      }
+    } else {
+      if (LAll.isEmpty())
+        return;
+      for (SongMetadata i : LAll) {
         File file = new File(i.getPathname());
         if (file != null)
           getList.add(file);
@@ -367,8 +391,20 @@ public class FavoriteController implements Initializable {
               cellData.getValue().getAlbum()));
     }
     // Audio List
-    else {
+    else if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Audio")) {
       mediaTableView.setItems(LAudio);
+      mediaName.setCellValueFactory(
+          cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
+      artistName.setCellValueFactory(
+          cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
+      mediaDuration.setCellValueFactory(
+          cellData -> new javafx.beans.property.SimpleStringProperty(
+              cellData.getValue().getDuration()));
+      mediaAlbum.setCellValueFactory(
+          cellData -> new javafx.beans.property.SimpleStringProperty(
+              cellData.getValue().getAlbum()));
+    } else {
+      mediaTableView.setItems(LAll);
       mediaName.setCellValueFactory(
           cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
       artistName.setCellValueFactory(

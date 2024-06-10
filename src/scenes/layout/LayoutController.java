@@ -89,8 +89,8 @@ public class LayoutController implements Initializable {
   public static double prevVolume = 100, volume = 100;
   public static double speed = 1;
 
-  private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
-      musicFullScreenScene, prevScene, favoriteScene;
+	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
+			musicFullScreenScene, prevScene, favoriteScene, aboutScene;
 
   private MediaLoader mediaLoader;
   private FavoriteController favoriteController;
@@ -111,36 +111,37 @@ public class LayoutController implements Initializable {
       statement.execute(recentMediaTable);
       statement.execute(favoriteTable);
 
-      // load media screens
-      homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
-      recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
-      musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
-      videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/favorite/Favorite.fxml"));
-      favoriteScene = loader.load();
-      favoriteController = loader.getController();
-      videoFullScreenScene = FXMLLoader
-          .load(getClass().getResource("/scenes/mediaFullScreen/VideoFullScreen.fxml"));
-      loader = null;
-      loader = new FXMLLoader(getClass().getResource("/scenes/mediaFullScreen/MusicFullScreen.fxml"));
-      musicFullScreenScene = loader.load();
-      loader.<MusicFullScreenController>getController().receiveLayoutController(this);
-      mainContainer.setCenter(homeScene);
-      prevScene = homeScene;
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    smallMediaView = new MediaView();
-    smallMediaView.setFitWidth(140);
-    smallMediaView.setFitHeight(70);
-    imageSongContainer.setOnMouseClicked(event -> {
-      if (!isFullScreen && isAudioFile) {
-        mainContainer.setCenter(musicFullScreenScene);
-        isFullScreen = true;
-        replaceMediaViewWithImageView();
-      }
+			// load media screens
+			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
+			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
+			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
+			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
+			aboutScene = FXMLLoader.load(getClass().getResource("/scenes/about/about.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/favorite/Favorite.fxml"));
+			favoriteScene = loader.load();
+			favoriteController = loader.getController();
+			videoFullScreenScene = FXMLLoader
+					.load(getClass().getResource("/scenes/mediaFullScreen/VideoFullScreen.fxml"));
+			loader = null;
+			loader = new FXMLLoader(getClass().getResource("/scenes/mediaFullScreen/MusicFullScreen.fxml"));
+			musicFullScreenScene = loader.load();
+			loader.<MusicFullScreenController>getController().receiveLayoutController(this);
+			mainContainer.setCenter(homeScene);
+			prevScene = homeScene;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		smallMediaView = new MediaView();
+		smallMediaView.setFitWidth(140);
+		smallMediaView.setFitHeight(70);
+		imageSongContainer.setOnMouseClicked(event -> {
+			if (!isFullScreen && isAudioFile) {
+				mainContainer.setCenter(musicFullScreenScene);
+				isFullScreen = true;
+				replaceMediaViewWithImageView();
+			}
 
       else if (!isFullScreen && isVideoFile) {
         setVideoFullScreenScene();
@@ -252,34 +253,39 @@ public class LayoutController implements Initializable {
 
     settings.getStyleClass().remove("active");
 
-    // Add 'selected' class to the clicked item
-    ((Button) event.getSource()).getStyleClass().add("active");
-    if (event.getSource() == sideBarHome) {
-      prevScene = homeScene;
-      isFullScreen = false;
-      switchToSmallMediaView();
-    }
-    if (event.getSource() == sideBarMusicLib) {
-      prevScene = musicLibScene;
-      isFullScreen = false;
-      switchToSmallMediaView();
-    }
-    if (event.getSource() == sideBarRecentMedia) {
-      prevScene = recentMediaScene;
-      isFullScreen = false;
-      switchToSmallMediaView();
-    }
-    if (event.getSource() == sideBarVideoLib) {
-      prevScene = videoLibScene;
-      isFullScreen = false;
-      switchToSmallMediaView();
-    }
-    if (event.getSource() == sideBarFav) {
-      prevScene = favoriteScene;
-      isFullScreen = false;
-      switchToSmallMediaView();
-    }
-  }
+		// Add 'selected' class to the clicked item
+		((Button) event.getSource()).getStyleClass().add("active");
+		if (event.getSource() == sideBarHome) {
+			prevScene = homeScene;
+			isFullScreen = false;
+			switchToSmallMediaView();
+		}
+		if (event.getSource() == sideBarMusicLib) {
+			prevScene = musicLibScene;
+			isFullScreen = false;
+			switchToSmallMediaView();
+		}
+		if (event.getSource() == sideBarRecentMedia) {
+			prevScene = recentMediaScene;
+			isFullScreen = false;
+			switchToSmallMediaView();
+		}
+		if (event.getSource() == sideBarVideoLib) {
+			prevScene = videoLibScene;
+			isFullScreen = false;
+			switchToSmallMediaView();
+		}
+		if (event.getSource() == sideBarFav) {
+			prevScene = favoriteScene;
+			isFullScreen = false;
+			switchToSmallMediaView();
+		}
+		if (event.getSource() == settings) {
+			prevScene = aboutScene;
+			isFullScreen = false;
+			switchToSmallMediaView();
+		}
+	}
 
   public void handlePlayPauseBtn(ActionEvent event) {
     if (isPlayButton && mediaLoader.mediaPlayerExists()) {

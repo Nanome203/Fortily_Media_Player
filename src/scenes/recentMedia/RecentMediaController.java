@@ -109,6 +109,7 @@ public class RecentMediaController implements Initializable {
 
   @FXML
   public void playSingleFile(ActionEvent evt) throws SQLException {
+	  if (selectionModel.getSelectedItem() == null) return;
     playSingleMedia(selectionModel.getSelectedItem());
   }
 
@@ -191,6 +192,7 @@ public class RecentMediaController implements Initializable {
   }
 
   private void playSingleMedia(SongMetadata selectedItem) {
+	 if(selectedItem == null) return;
     // stopPlaying();
     mediaLoader.pauseCurrentMediaFile();
     getCurrentMediaPlaying = selectedItem;
