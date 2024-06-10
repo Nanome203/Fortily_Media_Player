@@ -192,6 +192,10 @@ public class MediaLoader {
                 if (fullScreenFlag == 0) {
                     layoutController.setVideoFullScreenScene();
                     ++fullScreenFlag;
+                } else if (LayoutController.isFullScreen) {
+                    vfsControllerSetVideo();
+                } else {
+                    layoutControllerSetVideo();
                 }
                 LayoutController.isVideoFile = true;
                 LayoutController.isAudioFile = false;
