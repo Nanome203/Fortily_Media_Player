@@ -10,55 +10,46 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import javafx.application.Platform;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import model.SongMetadata;
-
-
 
 public class SongDAO {
 	public static final String urlDB = "jdbc:sqlite:"
 			+ (new File("").getAbsolutePath().concat("\\src\\database\\media_player.db"));
-	
 
 	public static Connection getConnection() throws SQLException {
 		Connection conn = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
 			conn = DriverManager.getConnection(urlDB);
-			
+
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return conn;
 	}
-	
+
 	public List<SongMetadata> getAllMedia() throws SQLException {
-		
+
 		List<SongMetadata> listSongs = new ArrayList<SongMetadata>();
 		Connection connection = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql = "select * from Recent_Media order by LastDateOpened DESC";
-		
+
 		try {
 			connection = getConnection();
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
-				
+
 				SongMetadata song = new SongMetadata();
 				String pathMedia = rs.getString(1);
 				String dateTime = rs.getString(2);
-				
+
 				song.setPathname(pathMedia);
 				song.setLastDayOpened(dateTime);
-				
 
 				listSongs.add(song);
 
@@ -80,18 +71,18 @@ public class SongDAO {
 	}
 
 	// Trong trường hợp file kiểm tra tồn tại trong csdl nhưng không tồn tại trên
-				// máy
-				
-				// thì xoá thông tin file khỏi csdl
+	// máy
 
-				// Trong trường hợp có tồn tại trên máy, kiểm tra có thông tin file trong csdl
-				// hay không
-				
-				// Nếu có thì cập nhật lại path (trong trường hợp path của file mình kiểm tra và
-				// path trong csdl khác nhau)
-				
-				// Rồi load thông tin file lên
-	
+	// thì xoá thông tin file khỏi csdl
+
+	// Trong trường hợp có tồn tại trên máy, kiểm tra có thông tin file trong csdl
+	// hay không
+
+	// Nếu có thì cập nhật lại path (trong trường hợp path của file mình kiểm tra và
+	// path trong csdl khác nhau)
+
+	// Rồi load thông tin file lên
+
 	public String convertDurationMillis(Integer getDurationInMillis) {
 		int getDurationMillis = getDurationInMillis;
 
@@ -107,46 +98,43 @@ public class SongDAO {
 
 	}
 
-	
 	public void addMedia(File getFile, String dateTime) throws SQLException {
 		if (!getFile.exists() || getFile.isDirectory()) {
 			System.out.println("File does not exist!");
 
 			return;
 		}
-		
-		
-        	Connection conn = null;
-    		PreparedStatement preStmt = null;
-    		ResultSet rs = null;
-    		String sqlInsert = "INSERT INTO Recent_Media VALUES(?,?);";
 
-        	try {
-    			conn = getConnection();
+		Connection conn = null;
+		PreparedStatement preStmt = null;
+		ResultSet rs = null;
+		String sqlInsert = "INSERT INTO Recent_Media VALUES(?,?);";
 
-    			String getMediaPath = getFile.getAbsolutePath();
+		try {
+			conn = getConnection();
 
-    			preStmt = conn.prepareStatement(sqlInsert);
-    			preStmt.setString(1, getMediaPath);
-    			preStmt.setString(2, dateTime);
-    			
-    			
-    			preStmt.execute();
-    			
-    		} catch (SQLException e) {
-    			e.printStackTrace();
-    			
-    		} finally {
-    			try {
-					close(conn,preStmt,rs);
-				} catch (SQLException e) {
-					
-					e.printStackTrace();
-				}
-    		}
-        
+			String getMediaPath = getFile.getAbsolutePath();
+
+			preStmt = conn.prepareStatement(sqlInsert);
+			preStmt.setString(1, getMediaPath);
+			preStmt.setString(2, dateTime);
+
+			preStmt.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				close(conn, preStmt, rs);
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+
 	}
-	
+
 	private void close(Connection conn, PreparedStatement preStmt, ResultSet rs) throws SQLException {
 		if (rs != null)
 			rs.close();

@@ -1,7 +1,6 @@
 package utils;
 
 import javafx.util.Duration;
-import model.SongMetadata;
 import scenes.layout.LayoutController;
 import scenes.mediaFullScreen.MusicFullScreenController;
 import scenes.mediaFullScreen.VideoFullScreenController;
@@ -12,11 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.FavoriteDAO;
 import dao.SongDAO;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;

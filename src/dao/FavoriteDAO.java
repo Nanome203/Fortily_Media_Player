@@ -9,11 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import model.SongMetadata;
 
 public class FavoriteDAO {
 	private final String pathdb = "jdbc:sqlite:"

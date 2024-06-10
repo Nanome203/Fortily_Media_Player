@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import dao.SongDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,8 +17,6 @@ import utils.ReusableFileChooser;
 public class HomeEmptyController implements Initializable {
     @FXML
     Circle testCircle;
-    
-
 
     private MediaLoader mediaLoader;
     private ReusableFileChooser fileChooser;

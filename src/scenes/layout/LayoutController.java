@@ -10,7 +10,6 @@ import java.sql.Statement;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import model.PlayListItem;
 import scenes.favorite.FavoriteController;
 import scenes.mediaFullScreen.MusicFullScreenController;
 
@@ -36,7 +35,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
