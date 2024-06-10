@@ -183,7 +183,8 @@ public class MediaLoader {
     private void synchronizeWithLayout(File selectedFile) {
         if (LayoutController.isMuted) {
             mediaPlayer.setMute(LayoutController.isMuted);
-        }
+        } else
+            mediaPlayer.setVolume(LayoutController.volume);
         layoutController.setPauseButtonImage();
         mediaPlayer.setOnReady(() -> {
             if (Helpers.isVideoFile(selectedFile)) {

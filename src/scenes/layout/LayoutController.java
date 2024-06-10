@@ -86,7 +86,7 @@ public class LayoutController implements Initializable {
 	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false,
 			isFullScreen = false, isAudioFile = false, isVideoFile = false, isLooped = false;
 
-	private static double prevVolume = 100, volume = 100;
+	public static double prevVolume = 100, volume = 100;
 	public static double speed = 1;
 
 	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
