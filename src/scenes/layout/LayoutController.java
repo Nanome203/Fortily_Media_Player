@@ -3,16 +3,20 @@ package scenes.layout;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import model.PlayListItem;
-import scenes.playList.PlayListController_2;
-import scenes.playList.PlayListDetailsController;
-import scenes.playList.PlayListItemController;
+import scenes.favorite.FavoriteController;
 
 import java.util.ResourceBundle;
 
+import dao.FavoriteDAO;
+import dao.SongDAO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -86,15 +90,28 @@ public class LayoutController implements Initializable {
 			musicFullScreenScene, prevScene, favoriteScene;
 
 	private MediaLoader mediaLoader;
+	private FavoriteController favoriteController;
+	private FavoriteDAO favoriteDAO = new FavoriteDAO();
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
+			// create tables if not exists
+			String favoriteTable = "CREATE TABLE IF NOT EXISTS Favorite(Media TEXT PRIMARY KEY);";
+			String recentMediaTable = "CREATE TABLE IF NOT EXISTS Recent_Media (PathMedia TEXT primary key, LastDateOpened TEXT);";
+			Connection connection = SongDAO.getConnection();
+			Statement statement = connection.createStatement();
+			statement.execute(favoriteTable);
+			statement.execute(recentMediaTable);
+
+			// load media screens
 			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
 			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
-			favoriteScene = FXMLLoader.load(getClass().getResource("/scenes/favorite/Favorite.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/favorite/Favorite.fxml"));
+			favoriteScene = loader.load();
+			favoriteController = loader.getController();
 			videoFullScreenScene = FXMLLoader
 					.load(getClass().getResource("/scenes/mediaFullScreen/VideoFullScreen.fxml"));
 			musicFullScreenScene = FXMLLoader
@@ -102,6 +119,8 @@ public class LayoutController implements Initializable {
 			mainContainer.setCenter(homeScene);
 			prevScene = homeScene;
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		smallMediaView = new MediaView();
@@ -111,7 +130,7 @@ public class LayoutController implements Initializable {
 			if (!isFullScreen && isAudioFile) {
 				mainContainer.setCenter(musicFullScreenScene);
 				isFullScreen = true;
-				imageSongContainer.getChildren().set(0, songImageView);
+				replaceMediaViewWithImageView();
 			}
 
 			else if (!isFullScreen && isVideoFile) {
@@ -289,7 +308,7 @@ public class LayoutController implements Initializable {
 			mediaLoader.layoutControllerSetVideo();
 			imageSongContainer.getChildren().set(0, smallMediaView);
 		} else if (mediaLoader.getMediaPlayer() != null && !mediaLoader.isVideoFile()) {
-			imageSongContainer.getChildren().set(0, songImageView);
+			replaceMediaViewWithImageView();
 		}
 		mainContainer.setCenter(prevScene);
 		isFullScreen = false;
@@ -298,7 +317,7 @@ public class LayoutController implements Initializable {
 	public void setVideoFullScreenScene() {
 		isFullScreen = true;
 		mediaLoader.vfsControllerSetVideo();
-		imageSongContainer.getChildren().set(0, songImageView);
+		replaceMediaViewWithImageView();
 		mainContainer.setCenter(videoFullScreenScene);
 	}
 
@@ -307,7 +326,7 @@ public class LayoutController implements Initializable {
 		mainContainer.setCenter(musicFullScreenScene);
 		mediaLoader.vfsControllerRemoveVideo();
 		mediaLoader.layoutControllerRemoveVideo();
-		imageSongContainer.getChildren().set(0, songImageView);
+		replaceMediaViewWithImageView();
 	}
 
 	public Label getTotalDuration() {
@@ -365,18 +384,30 @@ public class LayoutController implements Initializable {
 	// }
 	// }
 
-	public void handleFavoriteBtn(ActionEvent event) {
+	public void handleFavoriteBtn(ActionEvent event) throws SQLException {
 		if (isFavorite) {
-			File file = new File("src/assets/images/icons8-heart-100.png");
-			Image image = new Image(file.toURI().toString());
-			favoriteBtnImgView.setImage(image);
-			isFavorite = false;
+			favoriteDAO.deleteMedia(
+					mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()).getAbsolutePath());
+			setWhiteFavoriteHeartImage();
 		} else {
-			File file = new File("src/assets/images/icons8-blue-heart-100.png");
-			Image image = new Image(file.toURI().toString());
-			favoriteBtnImgView.setImage(image);
-			isFavorite = true;
+			favoriteDAO.insertMedia(mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()));
+			setBlueFavoriteHeartImage();
 		}
+		favoriteController.updateAllTable();
+	}
+
+	public void setBlueFavoriteHeartImage() {
+		File file = new File("src/assets/images/icons8-blue-heart-100.png");
+		Image image = new Image(file.toURI().toString());
+		favoriteBtnImgView.setImage(image);
+		isFavorite = true;
+	}
+
+	public void setWhiteFavoriteHeartImage() {
+		File file = new File("src/assets/images/icons8-heart-100.png");
+		Image image = new Image(file.toURI().toString());
+		favoriteBtnImgView.setImage(image);
+		isFavorite = false;
 	}
 
 	public void handleBackSkipButtons(ActionEvent event) {
@@ -404,7 +435,7 @@ public class LayoutController implements Initializable {
 		}
 	}
 
-	public void handleNextPrevButtons(ActionEvent event) {
+	public void handleNextPrevButtons(ActionEvent event) throws SQLException {
 		if (event.getSource() == nextButton
 				&& mediaLoader.getReceivedListSize() >= 2
 				&& mediaLoader.getCurrentMediaIndex() < mediaLoader.getReceivedListSize() - 1) {
@@ -412,6 +443,9 @@ public class LayoutController implements Initializable {
 			int currentMediaIndex = mediaLoader.getCurrentMediaIndex();
 			ArrayList<File> MediaFiles = mediaLoader.getReceivedList();
 			mediaLoader.playNewMediaFile(MediaFiles.get(currentMediaIndex));
+			if (!isFullScreen && !isAudioFile) {
+				mediaLoader.layoutControllerSetVideo();
+			}
 		} else if (event.getSource() == prevButton
 				&& mediaLoader.getReceivedListSize() >= 2
 				&& mediaLoader.getCurrentMediaIndex() > 0) {
@@ -419,6 +453,9 @@ public class LayoutController implements Initializable {
 			int currentMediaIndex = mediaLoader.getCurrentMediaIndex();
 			ArrayList<File> MediaFiles = mediaLoader.getReceivedList();
 			mediaLoader.playNewMediaFile(MediaFiles.get(currentMediaIndex));
+			if (!isFullScreen && !isAudioFile) {
+				mediaLoader.layoutControllerSetVideo();
+			}
 		}
 	}
 
@@ -460,5 +497,9 @@ public class LayoutController implements Initializable {
 		if (mediaLoader.getMediaPlayer() != null)
 			mediaLoader.getMediaPlayer().setRate(speed);
 
+	}
+
+	public void replaceMediaViewWithImageView() {
+		imageSongContainer.getChildren().set(0, songImageView);
 	}
 }

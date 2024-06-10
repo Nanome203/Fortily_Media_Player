@@ -139,14 +139,16 @@
 
 .table-row-cell:odd {
   /* -fx-background-color: #49546A; */
-  -fx-background-color: #333333;
+  /* -fx-background-color: #333333; */
+  -fx-background-color: transparent;
   -fx-background-insets: 0, 0 0 1 0;
   -fx-padding: 0.0em;
 }
 
 .table-row-cell:even {
   /* -fx-background-color: #49546A; */
-  -fx-background-color: #666666;
+  /* -fx-background-color: #666666; */
+  -fx-background-color: transparent;
   -fx-background-insets: 0, 0 0 1 0;
   -fx-padding: 0.0em;
 }

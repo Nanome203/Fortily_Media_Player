@@ -9,19 +9,23 @@ import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public class MusicFullScreenController implements Initializable {
 
     @FXML
-    private ImageView diskImage;
+    private Circle diskImage;
 
     private MediaLoader mediaLoader;
     private RotateTransition rotate;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        Image disk = new Image("/assets/images/R.png");
+        diskImage.setFill(new ImagePattern(disk));
         mediaLoader = MediaLoader.getMediaLoader();
         mediaLoader.receiveMusicFullScreenController(this);
         rotate = new RotateTransition();

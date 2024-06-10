@@ -8,10 +8,15 @@ import scenes.mediaFullScreen.VideoFullScreenController;
 import scenes.recentMedia.RecentMediaController;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.FavoriteDAO;
 import dao.SongDAO;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -32,7 +37,7 @@ public class MediaLoader {
     private RecentMediaController recentMediaController = null;
 
     private ArrayList<File> MediaFiles = null;
-    private int currentMediaIndex;
+    private int currentMediaIndex, fullScreenFlag;
 
     private MediaLoader() {
         MediaFiles = new ArrayList<File>();
@@ -51,6 +56,7 @@ public class MediaLoader {
             MediaFiles.add(file);
         }
         currentMediaIndex = 0;
+        fullScreenFlag = 0;
     }
 
     // This function is only called once
@@ -98,7 +104,35 @@ public class MediaLoader {
 
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
+        String sqlCheck = "SELECT COUNT(*) FROM Favorite WHERE Media = ?;";
+        Connection con = null;
+        PreparedStatement checkStmt = null;
+        ResultSet rs = null;
+        try {
+            con = SongDAO.getConnection();
+            checkStmt = con.prepareStatement(sqlCheck);
+            String getMediaPath = selectedFile.getAbsolutePath();
+            checkStmt.setString(1, getMediaPath);
+            rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                layoutController.setBlueFavoriteHeartImage();
+            } else
+                layoutController.setWhiteFavoriteHeartImage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
 
+            try {
+                if (rs != null)
+                    rs.close();
+                if (checkStmt != null)
+                    checkStmt.close();
+                if (con != null)
+                    con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         synchronizeWithLayout(selectedFile);
 
         if (LayoutController.isLooped) {
@@ -114,8 +148,8 @@ public class MediaLoader {
     }
 
     private void setAutoPlayNextMediaOf(File selectedFile) {
-    	
-    	mediaPlayer.setOnEndOfMedia(() -> {
+
+        mediaPlayer.setOnEndOfMedia(() -> {
             if (currentMediaIndex < MediaFiles.size() - 1) {
                 ++currentMediaIndex;
                 playNewMediaFile(MediaFiles.get(currentMediaIndex));
@@ -131,10 +165,10 @@ public class MediaLoader {
                     mfsController.toStartPosition();
                 }
             }
-           
+
         });
-    	
-    	try {
+
+        try {
             if (!songDAO.checkExist(selectedFile)) {
                 songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
             } else {
@@ -145,8 +179,7 @@ public class MediaLoader {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
-        
+
         mediaPlayer.play();
     }
 
@@ -157,11 +190,17 @@ public class MediaLoader {
         layoutController.setPauseButtonImage();
         mediaPlayer.setOnReady(() -> {
             if (Helpers.isVideoFile(selectedFile)) {
-                layoutController.setVideoFullScreenScene();
+                if (fullScreenFlag == 0) {
+                    layoutController.setVideoFullScreenScene();
+                    ++fullScreenFlag;
+                }
                 LayoutController.isVideoFile = true;
                 LayoutController.isAudioFile = false;
             } else if (Helpers.isAudioFile(selectedFile)) {
-                layoutController.setMusicFullScreenScene();
+                if (fullScreenFlag == 0) {
+                    layoutController.setMusicFullScreenScene();
+                    ++fullScreenFlag;
+                }
                 LayoutController.isAudioFile = true;
                 LayoutController.isVideoFile = false;
                 mfsController.startRotation();
@@ -306,13 +345,15 @@ public class MediaLoader {
     // only call this function when you remove a song from a list/database
     public void removeDeletedMediaFileFromLayout() {
         if (mediaPlayer != null) {
-        	mediaPlayer.pause();
+            mediaPlayer.pause();
+            layoutController.getCurrentTimeLabel().setText("00:00:00");
+            layoutController.getTotalDuration().setText("00:00:00");
+            layoutController.getProgressSlider().setValue(0);
+            layoutController.setSongName("SONG NAME");
+            layoutController.setPlayButtonImage();
+            layoutControllerRemoveVideo();
+            layoutController.replaceMediaViewWithImageView();
             mediaPlayer = null;
-        layoutController.getCurrentTimeLabel().setText("00:00:00");
-        layoutController.getTotalDuration().setText("00:00:00");
-        layoutController.getProgressSlider().setValue(0);
-        layoutController.setSongName("SONG NAME");
-        layoutController.setPlayButtonImage();
         }
     }
 

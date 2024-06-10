@@ -108,7 +108,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
          <BorderPane.margin>
-            <Insets />
+            <Insets left="50.0" right="30.0" />
          </BorderPane.margin>
          <opaqueInsets>
             <Insets />

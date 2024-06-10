@@ -172,6 +172,10 @@ public class FavoriteController implements Initializable {
 		}
 	}
 
+	public FavoriteController getFavoriteController() {
+		return this;
+	}
+
 	public void updateAllTable() throws SQLException {
 		// Get all the paths file for both audio and video
 		List<File> listFilePath = favoriteDAO.getMediaList();
