@@ -468,7 +468,8 @@ public class LayoutController implements Initializable {
           && (mediaLoader.getMediaPlayer().getTotalDuration().toSeconds()
               - mediaLoader.getMediaPlayer().getCurrentTime().toSeconds()) <= 10) {
         mediaLoader.getMediaPlayer().seek(mediaLoader.getMediaPlayer().getTotalDuration());
-        setPlayButtonImage();
+        if (!isLooped)
+          setPlayButtonImage();
         return;
       }
       mediaLoader.getMediaPlayer()
