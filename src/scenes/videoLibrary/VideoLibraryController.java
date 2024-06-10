@@ -405,7 +405,6 @@ public class VideoLibraryController implements Initializable {
     if (result.isPresent() && result.get() == ButtonType.OK) {
       for (SongMetadata song : selectedDeleteSongs) {
         try {
-          System.out.println(song.getPathname());
           videoDAO.deleteMedia(song.getPathname());
         } catch (SQLException e) {
           e.printStackTrace();
@@ -435,19 +434,5 @@ public class VideoLibraryController implements Initializable {
         playNextMedia(filesList, currentIndex + 1);
       }
     });
-  }
-
-  @FXML
-  void playMediaOnRowClick(MouseEvent event) {
-    SongMetadata selectedMedia = videoLibraryTable.getSelectionModel().getSelectedItem();
-    if (selectedMedia == null) {
-      return;
-    }
-    mediaPlayer.stop();
-    List<File> tempFilesList = new ArrayList<File>();
-    tempFilesList.add(new File(selectedMedia.getPathname()));
-
-    mediaLoader.receiveListOfMediaFiles(tempFilesList);
-    mediaLoader.playReceivedList();
   }
 }
