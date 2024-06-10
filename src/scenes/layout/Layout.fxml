@@ -6,7 +6,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -22,17 +21,17 @@
          <children>
             <AnchorPane prefHeight="180.0" prefWidth="260.0">
                <children>
-                  <ImageView fitHeight="58.0" fitWidth="58.0" layoutX="20.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="58.0" fitWidth="58.0" layoutX="15.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../assets/images/Fortily.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="95.0" layoutY="40.0" prefHeight="17.0" prefWidth="143.0" text="FORTILY" textFill="WHITE">
+                  <Label layoutX="90.0" layoutY="40.0" prefHeight="17.0" prefWidth="143.0" text="FORTILY" textFill="WHITE">
                      <font>
                         <Font name="Lucida Sans Demibold Italic" size="25.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER_LEFT" layoutX="6.0" layoutY="108.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="241.0" style="-fx-background-color: #fff; -fx-background-radius: 20;">
+                  <!-- <HBox alignment="CENTER_LEFT" layoutX="6.0" layoutY="108.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="241.0" style="-fx-background-color: #fff; -fx-background-radius: 20;">
                      <children>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -48,7 +47,7 @@
                      <padding>
                         <Insets left="10.0" />
                      </padding>
-                  </HBox>
+                  </HBox> -->
                </children>
                <padding>
                   <Insets bottom="40.0" />
@@ -74,7 +73,7 @@
                         <String fx:value="active" />
                      </styleClass>
                      <VBox.margin>
-                        <Insets />
+                        <Insets left="10.0" />
                      </VBox.margin>
                      <padding>
                         <Insets bottom="10.0" left="10.0" top="10.0" />
@@ -92,7 +91,7 @@
                         </ImageView>
                      </graphic>
                      <VBox.margin>
-                        <Insets />
+                        <Insets left="10.0" />
                      </VBox.margin>
                      <padding>
                         <Insets bottom="10.0" left="10.0" top="10.0" />
@@ -110,7 +109,7 @@
                         </ImageView>
                      </graphic>
                      <VBox.margin>
-                        <Insets />
+                        <Insets left="10.0" />
                      </VBox.margin>
                      <padding>
                         <Insets bottom="10.0" left="10.0" top="10.0" />
@@ -130,6 +129,9 @@
                      <padding>
                         <Insets bottom="10.0" left="10.0" top="10.0" />
                      </padding>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
                   </Button>
                   <!-- <Button fx:id="sideBarPlaylist" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="Playlists" textFill="#fffefe">
                      <font>
@@ -161,7 +163,7 @@
                         </ImageView>
                      </graphic>
                      <VBox.margin>
-                        <Insets />
+                        <Insets left="10.0" />
                      </VBox.margin>
                      <padding>
                         <Insets bottom="10.0" left="10.0" top="10.0" />
@@ -181,7 +183,7 @@
                   </ImageView>
                </graphic>
                <VBox.margin>
-                  <Insets />
+                  <Insets left="10.0" />
                </VBox.margin>
                <padding>
                   <Insets bottom="10.0" left="10.0" top="10.0" />
