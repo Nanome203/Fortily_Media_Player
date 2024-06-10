@@ -35,6 +35,7 @@ public class VideoLibraryController implements Initializable {
   private TableView<SongMetadata> videoLibraryTable;
   @FXML
   private TableColumn<SongMetadata, String> videoLibraryTitleColumn;
+  
   @FXML
   private TableColumn<SongMetadata, String> videoLibraryArtistColumn;
   @FXML

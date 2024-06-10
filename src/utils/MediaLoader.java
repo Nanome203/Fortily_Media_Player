@@ -1,26 +1,35 @@
 package utils;
 
 import javafx.util.Duration;
+import model.SongMetadata;
 import scenes.layout.LayoutController;
 import scenes.mediaFullScreen.MusicFullScreenController;
 import scenes.mediaFullScreen.VideoFullScreenController;
+import scenes.recentMedia.RecentMediaController;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.SongDAO;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class MediaLoader {
+
+    private SongDAO songDAO = new SongDAO();
+
     private static MediaLoader INSTANCE = null;
     private Media media = null;
     private MediaPlayer mediaPlayer = null;
     private LayoutController layoutController = null;
     private VideoFullScreenController vfsController = null;
     private MusicFullScreenController mfsController = null;
+
+    private RecentMediaController recentMediaController = null;
 
     private ArrayList<File> MediaFiles = null;
     private int currentMediaIndex;
@@ -57,12 +66,17 @@ public class MediaLoader {
         mfsController = controller;
     }
 
+    public void receiveRecentMediaController(RecentMediaController recentMedia) {
+        this.recentMediaController = recentMedia;
+    }
+
     // this function plays the media files in the received list
     public void playReceivedList() {
         playNewMediaFile(MediaFiles.get(currentMediaIndex));
     }
 
     // this function plays the media file received from the file chooser
+    // only call this when you are sure that the MediaFiles exists
     public void playNewMediaFile(File selectedFile) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
@@ -100,7 +114,8 @@ public class MediaLoader {
     }
 
     private void setAutoPlayNextMediaOf(File selectedFile) {
-        mediaPlayer.setOnEndOfMedia(() -> {
+    	
+    	mediaPlayer.setOnEndOfMedia(() -> {
             if (currentMediaIndex < MediaFiles.size() - 1) {
                 ++currentMediaIndex;
                 playNewMediaFile(MediaFiles.get(currentMediaIndex));
@@ -116,7 +131,23 @@ public class MediaLoader {
                     mfsController.toStartPosition();
                 }
             }
+           
         });
+    	
+    	try {
+            if (!songDAO.checkExist(selectedFile)) {
+                songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
+            } else {
+                songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+            }
+            recentMediaController.setCurrentFilePlaying(selectedFile);
+            recentMediaController.showRecentMedia();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        
+        mediaPlayer.play();
     }
 
     private void synchronizeWithLayout(File selectedFile) {
@@ -275,8 +306,8 @@ public class MediaLoader {
     // only call this function when you remove a song from a list/database
     public void removeDeletedMediaFileFromLayout() {
         if (mediaPlayer != null) {
+        	mediaPlayer.pause();
             mediaPlayer = null;
-        }
         layoutController.getCurrentTimeLabel().setText("00:00:00");
         layoutController.getTotalDuration().setText("00:00:00");
         layoutController.getProgressSlider().setValue(0);
