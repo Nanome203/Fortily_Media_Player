@@ -420,7 +420,6 @@ public class MusicLibraryController implements Initializable {
     if (result.isPresent() && result.get() == ButtonType.OK) {
       for (SongMetadata song : selectedDeleteSongs) {
         try {
-          System.out.println(song.getPathname());
           musicDAO.deleteMedia(song.getPathname());
         } catch (SQLException e) {
           e.printStackTrace();
