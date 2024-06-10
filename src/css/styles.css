@@ -20,6 +20,8 @@
   -fx-background-color: transparent;
   -fx-text-fill: white;
   -fx-cursor: hand;
+  -fx-border-width: 0 0 0 5;
+  -fx-border-color: transparent;
 }
 
 .sidebar-item:hover,
