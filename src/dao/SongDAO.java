@@ -9,31 +9,56 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import javafx.application.Platform;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import model.SongMetadata;
 
+
+
 public class SongDAO {
-	public final String urlDB = "jdbc:sqlite:"
+	public static final String urlDB = "jdbc:sqlite:"
 			+ (new File("").getAbsolutePath().concat("\\src\\database\\media_player.db"));
 	
 
+	public static Connection getConnection() throws SQLException {
+		Connection conn = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			conn = DriverManager.getConnection(urlDB);
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return conn;
+	}
+	
 	public List<SongMetadata> getAllMedia() throws SQLException {
+		
 		List<SongMetadata> listSongs = new ArrayList<SongMetadata>();
 		Connection connection = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql = "select * from Recent_Media order by LastDateOpened DESC";
+		
 		try {
-			connection = DriverManager.getConnection(urlDB);
+			connection = getConnection();
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
+				
 				SongMetadata song = new SongMetadata();
 				String pathMedia = rs.getString(1);
 				String dateTime = rs.getString(2);
+				
 				song.setPathname(pathMedia);
 				song.setLastDayOpened(dateTime);
+				
 
 				listSongs.add(song);
 
@@ -54,54 +79,81 @@ public class SongDAO {
 
 	}
 
-	public int addMedia(File getFile, String dateTime) throws SQLException {
+	// Trong trường hợp file kiểm tra tồn tại trong csdl nhưng không tồn tại trên
+				// máy
+				
+				// thì xoá thông tin file khỏi csdl
+
+				// Trong trường hợp có tồn tại trên máy, kiểm tra có thông tin file trong csdl
+				// hay không
+				
+				// Nếu có thì cập nhật lại path (trong trường hợp path của file mình kiểm tra và
+				// path trong csdl khác nhau)
+				
+				// Rồi load thông tin file lên
+	
+	public String convertDurationMillis(Integer getDurationInMillis) {
+		int getDurationMillis = getDurationInMillis;
+
+		String convertHours = String.format("%02d", TimeUnit.MILLISECONDS.toHours(getDurationMillis));
+		String convertMinutes = String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(getDurationMillis) -
+				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(getDurationMillis)));
+		String convertSeconds = String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(getDurationMillis) -
+				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(getDurationMillis)));
+
+		String getDuration = convertHours + ":" + convertMinutes + ":" + convertSeconds;
+
+		return getDuration;
+
+	}
+
+	
+	public void addMedia(File getFile, String dateTime) throws SQLException {
 		if (!getFile.exists() || getFile.isDirectory()) {
 			System.out.println("File does not exist!");
 
-			// Trong trường hợp file kiểm tra tồn tại trong csdl nhưng không tồn tại trên
-			// máy
-			
-			// thì xoá thông tin file khỏi csdl
-
-			// Trong trường hợp có tồn tại trên máy, kiểm tra có thông tin file trong csdl
-			// hay không
-			
-			// Nếu có thì cập nhật lại path (trong trường hợp path của file mình kiểm tra và
-			// path trong csdl khác nhau)
-			
-			// Rồi load thông tin file lên
-			
-			return -1;
+			return;
 		}
+		
+		
+        	Connection conn = null;
+    		PreparedStatement preStmt = null;
+    		ResultSet rs = null;
+    		String sqlInsert = "INSERT INTO Recent_Media VALUES(?,?);";
 
-		int success = 0;
-		Connection conn = null;// 2 connection ???
-		PreparedStatement preStmt = null;
-		ResultSet rs = null;
-		String sqlInsert = "INSERT INTO Recent_Media VALUES(?,?);";
+        	try {
+    			conn = getConnection();
 
-		try {
-			conn = DriverManager.getConnection(urlDB);
+    			String getMediaPath = getFile.getAbsolutePath();
 
-			String getMediaPath = getFile.getAbsolutePath();
-
-			preStmt = conn.prepareStatement(sqlInsert);
-			preStmt.setString(1, getMediaPath);
-			preStmt.setString(2, dateTime);
-			preStmt.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			success = 1;
-		} finally {
-			if (rs != null)
-				rs.close();
-			if (preStmt != null)
-				preStmt.close();
-			if (conn != null)
-				conn.close();
-		}
-
-		return success;
+    			preStmt = conn.prepareStatement(sqlInsert);
+    			preStmt.setString(1, getMediaPath);
+    			preStmt.setString(2, dateTime);
+    			
+    			
+    			preStmt.execute();
+    			
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    			
+    		} finally {
+    			try {
+					close(conn,preStmt,rs);
+				} catch (SQLException e) {
+					
+					e.printStackTrace();
+				}
+    		}
+        
+	}
+	
+	private void close(Connection conn, PreparedStatement preStmt, ResultSet rs) throws SQLException {
+		if (rs != null)
+			rs.close();
+		if (preStmt != null)
+			preStmt.close();
+		if (conn != null)
+			conn.close();
 	}
 
 	public int deleteMedia(String getPath) throws SQLException {
@@ -110,7 +162,7 @@ public class SongDAO {
 		String sqlDelete = "DELETE FROM Recent_Media WHERE PathMedia = ?;";
 
 		try {
-			conn = DriverManager.getConnection(urlDB);
+			conn = getConnection();
 			preStmt = conn.prepareStatement(sqlDelete);
 			preStmt.setString(1, getPath);
 			preStmt.execute();
@@ -134,7 +186,7 @@ public class SongDAO {
 		String sqlCheck = "SELECT COUNT(*) FROM Recent_Media WHERE PathMedia = ?;";
 
 		try {
-			conn = DriverManager.getConnection(sqlCheck);
+			conn = getConnection();
 			checkStmt = conn.prepareStatement(sqlCheck);
 			String getMediaPath = selectedFile.getAbsolutePath();
 			checkStmt.setString(1, getMediaPath);
@@ -161,7 +213,7 @@ public class SongDAO {
 		String sqlCheck = "UPDATE Recent_Media SET LastDateOpened = ? WHERE PathMedia = ?;";
 
 		try {
-			conn = DriverManager.getConnection(sqlCheck);
+			conn = getConnection();
 			checkStmt = conn.prepareStatement(sqlCheck);
 			String getMediaPath = selectedFile.getAbsolutePath();
 			checkStmt.setString(1, currentDateTime);

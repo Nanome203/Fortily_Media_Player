@@ -43,8 +43,8 @@ public class RecentMediaController implements Initializable {
 	@FXML
 	private TableColumn<SongMetadata, String> allMediaTitleColumn;
 
-	@FXML
-	private TableColumn<SongMetadata, String> allMediaDurationColumn;
+//	@FXML
+//	private TableColumn<SongMetadata, String> allMediaDurationColumn;
 
 	@FXML
 	private TableColumn<SongMetadata, String> allMediaLastDateOpenedColumn;
@@ -60,9 +60,15 @@ public class RecentMediaController implements Initializable {
 
 //	private MediaPlayer mediaPlayer;
 	private SongMetadata getCurrentMediaPlaying;
+	
+	private File getCurrentFilePlaying;
 
 	private ObservableList<SongMetadata> LSong = FXCollections.observableArrayList();
 
+	
+	public void setCurrentFilePlaying(File file) {
+		this.getCurrentFilePlaying = file;
+	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		selectionModel = recentMediaTable.getSelectionModel();
@@ -90,7 +96,7 @@ public class RecentMediaController implements Initializable {
 		}
 	}
 
-	public String convertDurationMillis(Integer getDurationInMillis) {
+	public static String convertDurationMillis(Integer getDurationInMillis) {
 		int getDurationMillis = getDurationInMillis;
 
 		String convertHours = String.format("%02d", TimeUnit.MILLISECONDS.toHours(getDurationMillis));
@@ -130,80 +136,64 @@ public class RecentMediaController implements Initializable {
 	}
 
 	public void showRecentMedia() throws SQLException {
+	    LSong.clear();
 	    List<SongMetadata> listMedia = songDAO.getAllMedia();
 	    System.out.println(listMedia);
 	    System.out.println(1);
 	    
 	    List<SongMetadata> tempList = new ArrayList<>();
-
-	    
-	    final int[] readyCount = {0};
+//	    final int[] count = {0};
 
 	    for (SongMetadata song : listMedia) {
 	        File filePath = new File(song.getPathname());
 	        if (filePath != null) {
 	            Media media = new Media(filePath.toURI().toString());
-	            System.out.println(filePath.toURI().toString());
 	            MediaPlayer mediaPlayer = new MediaPlayer(media);
+	            String title = filePath.getName();
+	            String formatDuration = song.getDuration(); 
 
-	            mediaPlayer.setOnReady(() -> {
-	                Platform.runLater(() -> {
-	                    String title = media.getMetadata().get("title") != null
-	                            ? media.getMetadata().get("title").toString()
-	                            : filePath.getName();
-
-	                    double duration = media.getDuration().toMillis();
-	                    String formatDuration = convertDurationMillis((int) duration);
-
-	                    SongMetadata getIndex = new SongMetadata(title, null, null, formatDuration, 0,
-	                            filePath.getAbsolutePath());
-	                    getIndex.setLastDayOpened(song.getLastDayOpened());
-
-	                    // Thêm vào danh sách tạm thời
-	                    tempList.add(getIndex);
-
-	                    // Tăng biến đếm
-	                    readyCount[0]++;
-
-	                    // Kiểm tra nếu tất cả các MediaPlayer đã sẵn sàng
-	                    if (readyCount[0] == listMedia.size()) {
-	                        // Cập nhật LSong và TableView một lần duy nhất
-	                        LSong.clear();
-	                        LSong.addAll(tempList);
-	                        recentMediaTable.setItems(LSong);
-	                    }
-	                });
-	            });
+	            
+	            SongMetadata getIndex = new SongMetadata(title, null, null, formatDuration, 0, filePath.getAbsolutePath());
+	            getIndex.setLastDayOpened(song.getLastDayOpened());
+	            tempList.add(getIndex);
 	        }
 	    }
 
-	    Platform.runLater(() -> {
-	        allMediaTitleColumn.setCellValueFactory(
-	                cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
-	        allMediaLastDateOpenedColumn.setCellValueFactory(
-	                cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getLastDayOpened()));
-	        allMediaDurationColumn.setCellValueFactory(
-	                cellData -> new javafx.beans.property.SimpleStringProperty(
-	                        cellData.getValue().getDuration()));
-	    });
+	    LSong.clear();
+	    LSong.addAll(tempList);
+	    recentMediaTable.setItems(LSong);
+
+	    allMediaTitleColumn.setCellValueFactory(
+	            cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
+	    allMediaLastDateOpenedColumn.setCellValueFactory(
+	            cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getLastDayOpened()));
+//	    allMediaDurationColumn.setCellValueFactory(
+//	            cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDuration()));
 	}
 
+	
 	@FXML
 	public void clearFile(ActionEvent evt) throws SQLException {
 		ObservableList<SongMetadata> selectedItems = selectionModel.getSelectedItems(); // Selected Item
 		if (selectedItems.isEmpty())
 			return;
+		
 		for (SongMetadata getPath : selectedItems) {
-			if (getPath.equals(getCurrentMediaPlaying)) {
-//				stopPlaying();
-				mediaLoader.pauseCurrentMediaFile();
+			if (getPath.getPathname().equals(getCurrentFilePlaying.getAbsolutePath())) {				
+//				mediaLoader.deleteCurrentFileInLSong(getPath);
+		
+				mediaLoader.removeDeletedMediaFileFromLayout();
 			}
+			
+			
+//			LSong.remove(getPath);
 			songDAO.deleteMedia(getPath.getPathname());
 		}
 		Platform.runLater(() -> {
 	        LSong.removeAll(selectedItems);
 	        recentMediaTable.refresh();
 	    });
+		
 		showRecentMedia();
 
 	}

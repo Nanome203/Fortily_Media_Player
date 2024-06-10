@@ -1,6 +1,7 @@
 package utils;
 
 import javafx.util.Duration;
+import model.SongMetadata;
 import scenes.layout.LayoutController;
 import scenes.mediaFullScreen.MusicFullScreenController;
 import scenes.mediaFullScreen.VideoFullScreenController;
@@ -109,7 +110,8 @@ public class MediaLoader {
     }
 
     private void setAutoPlayNextMediaOf(File selectedFile) {
-        mediaPlayer.setOnEndOfMedia(() -> {
+    	
+    	mediaPlayer.setOnEndOfMedia(() -> {
             if (currentMediaIndex < MediaFiles.size() - 1) {
                 ++currentMediaIndex;
                 playNewMediaFile(MediaFiles.get(currentMediaIndex));
@@ -125,45 +127,21 @@ public class MediaLoader {
                     mfsController.toStartPosition();
                 }
             }
+           
         });
+    	
+    	try {
+            if (!songDAO.checkExist(selectedFile)) {
+                songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
+            } else {
+                songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+            }
+            recentMediaController.setCurrentFilePlaying(selectedFile);
+            recentMediaController.showRecentMedia();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         
-//                	if(songDAO.checkExist(selectedFile) == false)
-//						try {
-							try {
-								
-								if(songDAO.checkExist(selectedFile) == false) {
-									
-									songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
-									recentMediaController.showRecentMedia();
-								}
-								else {
-									songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
-									recentMediaController.showRecentMedia();
-//									
-								}
-									
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-//						} catch (SQLException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//					else 
-						try {
-							if(songDAO.checkExist(selectedFile) == false) {
-								songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());								
-							}
-						
-							else {								
-								songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
-							}
-								recentMediaController.showRecentMedia();
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
         
         mediaPlayer.play();
     }
@@ -325,12 +303,20 @@ public class MediaLoader {
     // only call this function when you remove a song from a list/database
     public void removeDeletedMediaFileFromLayout() {
         if (mediaPlayer != null) {
+        	mediaPlayer.pause();
             mediaPlayer = null;
-        }
         layoutController.getCurrentTimeLabel().setText("00:00:00");
         layoutController.getTotalDuration().setText("00:00:00");
         layoutController.getProgressSlider().setValue(0);
         layoutController.setSongName("SONG NAME");
         layoutController.setPlayButtonImage();
+        }
     }
+
+	public void deleteCurrentFileInLSong(SongMetadata song) {
+		if(MediaFiles == null) return;
+		MediaFiles.remove(new File(song.getPathname()));
+		removeDeletedMediaFileFromLayout();
+		
+	}
 }
