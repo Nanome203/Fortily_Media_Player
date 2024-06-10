@@ -405,13 +405,13 @@ public class LayoutController implements Initializable {
   // }
 
   public void handleFavoriteBtn(ActionEvent event) throws SQLException {
-    if (isFavorite) {
+    if (isFavorite && mediaLoader.mediaPlayerExists()) {
       favoriteDAO.deleteMedia(
           mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()).getAbsolutePath());
       favoriteController.clearFileFavButton(
           mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()).getAbsolutePath());
       setWhiteFavoriteHeartImage();
-    } else {
+    } else if (!isFavorite && mediaLoader.mediaPlayerExists()) {
       favoriteDAO.insertMedia(mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()));
       setBlueFavoriteHeartImage();
     }
