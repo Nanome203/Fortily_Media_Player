@@ -86,7 +86,7 @@ public class LayoutController implements Initializable {
 	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false,
 			isFullScreen = false, isAudioFile = false, isVideoFile = false, isLooped = false;
 
-	private static double prevVolume = 100, volume = 100;
+	public static double prevVolume = 100, volume = 100;
 	public static double speed = 1;
 
 	private Parent homeScene, musicLibScene, videoLibScene, recentMediaScene, videoFullScreenScene,
@@ -190,7 +190,7 @@ public class LayoutController implements Initializable {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				if (mediaLoader.mediaPlayerExists()) {
 					StackPane trackPane = (StackPane) progressSlider.lookup(".track");
-					String newValString = String.valueOf((int) (new_val.doubleValue() * 100000) / 100000.0);
+					String newValString = String.valueOf((int) (new_val.doubleValue() * 10000) / 10000.0);
 					String style = "-fx-background-color: linear-gradient(to right, #2880E8 " + newValString
 							+ "%, white "
 							+ newValString + "%);";
@@ -206,7 +206,7 @@ public class LayoutController implements Initializable {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				prevVolume = old_val.doubleValue();
 				volume = new_val.doubleValue();
-				String volumeString = String.valueOf((int) (volume * 100000) / 100000.0);
+				String volumeString = String.valueOf((int) (volume * 10000) / 10000.0);
 				StackPane trackPane = (StackPane) volumeSlider.lookup(".track");
 				String style = "-fx-background-color: linear-gradient(to right, #2880E8 " + volumeString
 						+ "%, white " + volumeString
