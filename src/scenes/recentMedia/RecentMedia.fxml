@@ -14,22 +14,22 @@
    <top>
       <AnchorPane prefHeight="186.0" prefWidth="617.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Recent Media" textFill="WHITE" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0">
+            <Label text="Recent Media" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="40.0">
                <font>
                   <Font name="Ebrima Bold" size="40.0" />
                </font>
             </Label>
-            <Button fx:id="btnPlayAll" layoutX="40.0" layoutY="114.0" mnemonicParsing="false" onAction="#playAllFile" prefWidth="85.0" style="-fx-background-color: #2880E8; -fx-text-fill: #ffffff; -fx-border-radius: 5;" styleClass="btn" text="Play all">
+            <Button fx:id="btnPlayAll" layoutX="40.0" layoutY="114.0" mnemonicParsing="false" onAction="#playAllFile" prefWidth="85.0" style="-fx-background-color: #2880E8; -fx-text-fill: #ffffff; -fx-border-radius: 5;" styleClass="btn" text="Play all" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="112.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnClearFile" layoutX="297.0" layoutY="114.0" mnemonicParsing="false" onAction="#clearFile" prefWidth="85.0" style="-fx-background-color: #1D2129; -fx-border-color: #2880E8; -fx-border-radius: 5;" styleClass="btn" text="Delete" textFill="WHITE">
+            <Button fx:id="btnClearFile" layoutX="297.0" layoutY="114.0" mnemonicParsing="false" onAction="#clearFile" prefWidth="85.0" style="-fx-background-color: #1D2129; -fx-border-color: #2880E8; -fx-border-radius: 5;" styleClass="btn" text="Delete" textFill="WHITE" AnchorPane.leftAnchor="210.0" AnchorPane.topAnchor="112.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnPlaySingleMedia" layoutX="169.0" layoutY="114.0" mnemonicParsing="false" onAction="#playSingleFile" prefWidth="85.0" style="-fx-border-color: #2880E8; -fx-background-color: #1D2129; -fx-border-radius: 5;" styleClass="btn" text="Play" textFill="WHITE">
+            <Button fx:id="btnPlaySingleMedia" layoutX="169.0" layoutY="114.0" mnemonicParsing="false" onAction="#playSingleFile" prefWidth="85.0" style="-fx-border-color: #2880E8; -fx-background-color: #1D2129; -fx-border-radius: 5;" styleClass="btn" text="Play" textFill="WHITE" AnchorPane.leftAnchor="105.0" AnchorPane.topAnchor="112.0">
                <font>
                   <Font size="14.0" />
                </font>
@@ -47,7 +47,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
          <BorderPane.margin>
-            <Insets left="40.0" right="40.0" />
+            <Insets />
          </BorderPane.margin>
       </TableView>
    </center>
@@ -55,4 +55,7 @@
       <URL value="@RecentMediaStyles.css" />
       <URL value="@../../css/styles.css" />
    </stylesheets>
+   <padding>
+      <Insets left="20.0" right="20.0" />
+   </padding>
 </BorderPane>

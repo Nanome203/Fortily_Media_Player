@@ -248,6 +248,8 @@ public class LayoutController implements Initializable {
 
   }
 
+  int tempAskToPayCounter = 0;
+
   public void selectItem(ActionEvent event) {
     for (Node node : sidebarNavigator.getChildren()) {
       ((Button) node).getStyleClass().remove("active");
@@ -282,7 +284,6 @@ public class LayoutController implements Initializable {
       isFullScreen = false;
       switchToSmallMediaView();
     }
-    int tempAskToPayCounter = 0;
     if (event.getSource() == settings) {
       if (tempAskToPayCounter == 0) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
