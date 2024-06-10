@@ -25,6 +25,8 @@
 .sidebar-item:hover,
 .active {
   -fx-text-fill: #2880E8;
+  -fx-border-width: 0 0 0 5;
+  -fx-border-color: #2880E8;
 }
 
 .button-style {
@@ -110,7 +112,7 @@
   -fx-text-fill: #2880E8;
 }
 
-.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+.tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator {
   -fx-border-color: transparent;
 }
 
@@ -139,7 +141,8 @@
   -fx-cursor: hand;
 }
 
-.table-row-cell:odd, .table-row-cell:even {
+.table-row-cell:odd,
+.table-row-cell:even {
   -fx-background-insets: 0, 0 0 1 0;
   -fx-padding: 0.0em;
 }
@@ -199,7 +202,9 @@
   -fx-background-radius: 5;
 }
 
-.playSelectedButton, .shuffleButton, .filterChoiceBox {
+.playSelectedButton,
+.shuffleButton,
+.filterChoiceBox {
   -fx-background-color: #1D2129;
   -fx-border-color: #2880E8;
   -fx-border-radius: 5;
@@ -218,6 +223,12 @@
   -fx-background-radius: 5;
 }
 
-.addFolderButton, .playAllButton, .playSelectedButton, .shuffleButton, .filterChoiceBox, .deleteButton, .tab {
+.addFolderButton,
+.playAllButton,
+.playSelectedButton,
+.shuffleButton,
+.filterChoiceBox,
+.deleteButton,
+.tab {
   -fx-cursor: hand;
 }

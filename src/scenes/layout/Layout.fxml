@@ -73,10 +73,10 @@
                         <String fx:value="active" />
                      </styleClass>
                      <VBox.margin>
-                        <Insets left="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <padding>
-                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="20.0" top="10.0" />
                      </padding>
                   </Button>
                   <Button fx:id="sideBarMusicLib" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="Music Library" textFill="#fffefe">
@@ -91,10 +91,10 @@
                         </ImageView>
                      </graphic>
                      <VBox.margin>
-                        <Insets left="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <padding>
-                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="20.0" top="10.0" />
                      </padding>
                   </Button>
                   <Button fx:id="sideBarVideoLib" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="Video Library" textFill="#fffefe">
@@ -109,10 +109,10 @@
                         </ImageView>
                      </graphic>
                      <VBox.margin>
-                        <Insets left="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <padding>
-                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="20.0" top="10.0" />
                      </padding>
                   </Button>
                   <Button fx:id="sideBarRecentMedia" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="Recent Media" textFill="#fffefe">
@@ -127,10 +127,10 @@
                         </ImageView>
                      </graphic>
                      <padding>
-                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="20.0" top="10.0" />
                      </padding>
                      <VBox.margin>
-                        <Insets left="10.0" />
+                        <Insets />
                      </VBox.margin>
                   </Button>
                   <!-- <Button fx:id="sideBarPlaylist" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="Playlists" textFill="#fffefe">
@@ -163,13 +163,16 @@
                         </ImageView>
                      </graphic>
                      <VBox.margin>
-                        <Insets left="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <padding>
-                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="20.0" top="10.0" />
                      </padding>
                   </Button>
                </children>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
             </VBox>
             <Button fx:id="settings" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#selectItem" prefWidth="318.0" styleClass="sidebar-item" text="About" textFill="#fffefe">
                <font>
@@ -183,10 +186,10 @@
                   </ImageView>
                </graphic>
                <VBox.margin>
-                  <Insets left="10.0" />
+                  <Insets />
                </VBox.margin>
                <padding>
-                  <Insets bottom="10.0" left="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="20.0" top="10.0" />
                </padding>
             </Button>
          </children>
