@@ -1,7 +1,7 @@
-bin
-*.class
-.project
-.settings/
-.vscode/*
+/bin
+/*.class
+/.project
+/.settings
+/.vscode
 .classpath
-database/*.db
+/database/*.db
