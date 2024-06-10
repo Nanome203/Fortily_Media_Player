@@ -313,6 +313,7 @@ public class MediaLoader {
         layoutController.getProgressSlider().setValue(0);
         layoutController.setSongName("SONG NAME");
         layoutController.setPlayButtonImage();
+        }
     }
 
     // this is to check whether the current media is video or not so that the mini
