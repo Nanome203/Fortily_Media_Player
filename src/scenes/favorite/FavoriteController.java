@@ -42,7 +42,7 @@ public class FavoriteController implements Initializable {
 
   @FXML
   private ChoiceBox<String> mediaTypeSelection;
-  private String[] mediaType = { "All", "Video", "Audio" };
+  private String[] mediaType = { "Video", "Audio" };
 
   @FXML
   private TableView<SongMetadata> mediaTableView;
@@ -78,13 +78,14 @@ public class FavoriteController implements Initializable {
   @FXML
   private ObservableList<SongMetadata> LAudio = FXCollections.observableArrayList();
   private ObservableList<SongMetadata> LVideo = FXCollections.observableArrayList();
-  private ObservableList<SongMetadata> LAll = FXCollections.observableArrayList();
+  // private ObservableList<SongMetadata> LAll =
+  // FXCollections.observableArrayList();
 
   @Override
   public void initialize(URL arg0, ResourceBundle arg1) {
     // Create selection menu for type of media
     mediaTypeSelection.getItems().addAll(mediaType);
-    mediaTypeSelection.getSelectionModel().select("All");
+    mediaTypeSelection.getSelectionModel().select("Audio");
     mediaTypeSelection.setOnAction(this::mediaSelectionAction);
     selectionModel = mediaTableView.getSelectionModel();
     selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
@@ -175,7 +176,6 @@ public class FavoriteController implements Initializable {
   public void updateAllTable() throws SQLException {
     // Get all the paths file for both audio and video
     List<File> listFilePath = favoriteDAO.getMediaList();
-
     for (File filePath : listFilePath) {
       if (filePath != null) {
         Media media = new Media(filePath.toURI().toString());
@@ -212,8 +212,11 @@ public class FavoriteController implements Initializable {
                   break;
                 }
               }
-              if (tag == 0)
+              if (tag == 0) {
                 LAudio.add(getIndex);
+                // LAll.add(getIndex);
+              }
+
             }
             // Video file
             else if (strPath.substring(getExtension).equals(".mp4")) {
@@ -224,10 +227,11 @@ public class FavoriteController implements Initializable {
                   break;
                 }
               }
-              if (tag == 0)
+              if (tag == 0) {
                 LVideo.add(getIndex);
+                // LAll.add(getIndex);
+              }
             }
-            LAll.add(getIndex);
           }
         });
       }
@@ -249,20 +253,22 @@ public class FavoriteController implements Initializable {
           break;
         }
       }
-    } else {
-      for (SongMetadata i : LAudio) {
-        if (i.getPathname().equals(getPathname)) {
-          LAll.remove(i);
-          break;
-        }
-      }
     }
+    // } else {
+    // for (SongMetadata i : LAudio) {
+    // if (i.getPathname().equals(getPathname)) {
+    // LAll.remove(i);
+    // break;
+    // }
+    // }
+    // }
   }
 
   @FXML
   public void clearFile(MouseEvent evt) throws SQLException {
     ObservableList<SongMetadata> selectedItems = selectionModel.getSelectedItems(); // Selected Item
-    ObservableList<SongMetadata> remainingItems = FXCollections.observableArrayList();
+    ObservableList<SongMetadata> remainingItemAudio = FXCollections.observableArrayList();
+    ObservableList<SongMetadata> remainingItemVideo = FXCollections.observableArrayList();
     int tag;
     if (selectedItems.isEmpty())
       return;
@@ -283,14 +289,14 @@ public class FavoriteController implements Initializable {
           }
         }
         if (tag == 0) {
-          remainingItems.add(getIndex1);
+          remainingItemAudio.add(getIndex1);
         }
       }
       LVideo.clear();
-      for (SongMetadata getIndex : remainingItems) {
+      for (SongMetadata getIndex : remainingItemAudio) {
         LVideo.add(getIndex);
       }
-    } else {
+    } else if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Audio")) {
       for (SongMetadata getIndex1 : LAudio) {
         tag = 0;
         for (SongMetadata getIndex2 : selectedItems) {
@@ -300,21 +306,54 @@ public class FavoriteController implements Initializable {
           }
         }
         if (tag == 0) {
-          remainingItems.add(getIndex1);
+          remainingItemVideo.add(getIndex1);
         }
       }
       LAudio.clear();
-      for (SongMetadata getIndex : remainingItems) {
+      for (SongMetadata getIndex : remainingItemVideo) {
         LAudio.add(getIndex);
       }
     }
-    LAll.clear();
-    for (SongMetadata i : LVideo) {
-      LAll.add(i);
-    }
-    for (SongMetadata i : LAudio) {
-      LAll.add(i);
-    }
+    // else {
+    // LAll.clear();
+    // LVideo.clear();
+    // LAudio.clear();
+    // for (SongMetadata getIndex1 : LVideo) {
+    // tag = 0;
+    // for (SongMetadata getIndex2 : selectedItems) {
+    // if (getIndex1.equals(getIndex2)) {
+    // tag = 1;
+    // break;
+    // }
+    // }
+    // if (tag == 0) {
+    // remainingItemVideo.add(getIndex1);
+    // }
+    // }
+    // for (SongMetadata getIndex : remainingItemVideo) {
+    // LVideo.add(getIndex);
+    // }
+
+    // for (SongMetadata getIndex1 : LAudio) {
+    // tag = 0;
+    // for (SongMetadata getIndex2 : selectedItems) {
+    // if (getIndex1.equals(getIndex2)) {
+    // tag = 1;
+    // break;
+    // }
+    // }
+    // if (tag == 0) {
+    // remainingItemAudio.add(getIndex1);
+    // }
+    // }
+    // for (SongMetadata getIndex : remainingItemAudio) {
+    // LAudio.add(getIndex);
+    // }
+
+    // LAll.addAll(LAudio);
+    // LAll.addAll(LVideo);
+    // updateAllTable();
+    // }
   }
 
   @FXML
@@ -341,15 +380,16 @@ public class FavoriteController implements Initializable {
         if (file != null)
           getList.add(file);
       }
-    } else {
-      if (LAll.isEmpty())
-        return;
-      for (SongMetadata i : LAll) {
-        File file = new File(i.getPathname());
-        if (file != null)
-          getList.add(file);
-      }
     }
+    // else {
+    // if (LAll.isEmpty())
+    // return;
+    // for (SongMetadata i : LAll) {
+    // File file = new File(i.getPathname());
+    // if (file != null)
+    // getList.add(file);
+    // }
+    // }
     if (!getList.isEmpty()) {
       mediaLoader.receiveListOfMediaFiles(getList);
       for (File i : mediaLoader.getReceivedList()) {
@@ -403,19 +443,22 @@ public class FavoriteController implements Initializable {
       mediaAlbum.setCellValueFactory(
           cellData -> new javafx.beans.property.SimpleStringProperty(
               cellData.getValue().getAlbum()));
-    } else {
-      mediaTableView.setItems(LAll);
-      mediaName.setCellValueFactory(
-          cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
-      artistName.setCellValueFactory(
-          cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
-      mediaDuration.setCellValueFactory(
-          cellData -> new javafx.beans.property.SimpleStringProperty(
-              cellData.getValue().getDuration()));
-      mediaAlbum.setCellValueFactory(
-          cellData -> new javafx.beans.property.SimpleStringProperty(
-              cellData.getValue().getAlbum()));
     }
+    // else {
+    // mediaTableView.setItems(LAll);
+    // mediaName.setCellValueFactory(
+    // cellData -> new
+    // javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitle()));
+    // artistName.setCellValueFactory(
+    // cellData -> new
+    // javafx.beans.property.SimpleStringProperty(cellData.getValue().getArtist()));
+    // mediaDuration.setCellValueFactory(
+    // cellData -> new javafx.beans.property.SimpleStringProperty(
+    // cellData.getValue().getDuration()));
+    // mediaAlbum.setCellValueFactory(
+    // cellData -> new javafx.beans.property.SimpleStringProperty(
+    // cellData.getValue().getAlbum()));
+    // }
   }
 
   public String convertDurationMillis(Integer getDurationInMillis) {
