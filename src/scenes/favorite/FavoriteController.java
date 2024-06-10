@@ -3,7 +3,6 @@ package scenes.favorite;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -11,23 +10,19 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.FileChooser;
 import model.SongMetadata;
 import utils.MediaLoader;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import utils.ReusableFileChooser;
@@ -119,7 +114,6 @@ public class FavoriteController implements Initializable {
 				try {
 					updateAllTable();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -170,6 +164,10 @@ public class FavoriteController implements Initializable {
 			// Then update the table
 			updateAllTable();
 		}
+	}
+
+	public FavoriteController getFavoriteController() {
+		return this;
 	}
 
 	public void updateAllTable() throws SQLException {
@@ -233,6 +231,24 @@ public class FavoriteController implements Initializable {
 		}
 	}
 
+	public void clearFileFavButton(String getPathname) {
+		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
+			for (SongMetadata i : LVideo) {
+				if (i.getPathname().equals(getPathname)) {
+					LVideo.remove(i);
+					break;
+				}
+			}
+		} else {
+			for (SongMetadata i : LAudio) {
+				if (i.getPathname().equals(getPathname)) {
+					LAudio.remove(i);
+					break;
+				}
+			}
+		}
+	}
+
 	@FXML
 	public void clearFile(MouseEvent evt) throws SQLException {
 		ObservableList<SongMetadata> selectedItems = selectionModel.getSelectedItems(); // Selected Item
@@ -286,6 +302,8 @@ public class FavoriteController implements Initializable {
 
 	@FXML
 	public void playFile(MouseEvent evt) {
+		if (mediaLoader.getReceivedList() != null)
+			mediaLoader.getReceivedList().clear();
 		List<File> getList = new ArrayList<>();
 		if (mediaTypeSelection.getSelectionModel().getSelectedItem().equals("Video")) {
 			if (LVideo.isEmpty()) {
@@ -309,18 +327,24 @@ public class FavoriteController implements Initializable {
 		}
 		if (!getList.isEmpty()) {
 			mediaLoader.receiveListOfMediaFiles(getList);
+			for (File i : mediaLoader.getReceivedList()) {
+				System.out.println(i);
+			}
 			mediaLoader.playReceivedList();
 		}
 	}
 
 	private void playSingleMedia(SongMetadata getSongMetadata) {
-		List<File> singleFile = new ArrayList<>();
+		if (mediaLoader.getReceivedList() != null)
+			mediaLoader.getReceivedList().clear();
 		getCurrentMediaPlaying = getSongMetadata;
 		if (getSongMetadata != null) {
 			File file = new File(getSongMetadata.getPathname());
-			if (file.exists() && file != null) {
-				singleFile.add(file);
-				mediaLoader.receiveListOfMediaFiles(singleFile);
+			if (file.exists()) {
+				// Empty the media loader playlist
+				List<File> playSingleFile = new ArrayList<>();
+				playSingleFile.add(file);
+				mediaLoader.receiveListOfMediaFiles(playSingleFile);
 				mediaLoader.playReceivedList();
 			}
 		}

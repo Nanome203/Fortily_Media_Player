@@ -4,17 +4,26 @@ import javafx.util.Duration;
 import scenes.layout.LayoutController;
 import scenes.mediaFullScreen.MusicFullScreenController;
 import scenes.mediaFullScreen.VideoFullScreenController;
+import scenes.recentMedia.RecentMediaController;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.SongDAO;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class MediaLoader {
+
+    private SongDAO songDAO = new SongDAO();
+
     private static MediaLoader INSTANCE = null;
     private Media media = null;
     private MediaPlayer mediaPlayer = null;
@@ -22,8 +31,10 @@ public class MediaLoader {
     private VideoFullScreenController vfsController = null;
     private MusicFullScreenController mfsController = null;
 
+    private RecentMediaController recentMediaController = null;
+
     private ArrayList<File> MediaFiles = null;
-    private int currentMediaIndex;
+    private int currentMediaIndex, fullScreenFlag;
 
     private MediaLoader() {
         MediaFiles = new ArrayList<File>();
@@ -42,6 +53,7 @@ public class MediaLoader {
             MediaFiles.add(file);
         }
         currentMediaIndex = 0;
+        fullScreenFlag = 0;
     }
 
     // This function is only called once
@@ -57,30 +69,67 @@ public class MediaLoader {
         mfsController = controller;
     }
 
+    public void receiveRecentMediaController(RecentMediaController recentMedia) {
+        this.recentMediaController = recentMedia;
+    }
+
     // this function plays the media files in the received list
     public void playReceivedList() {
         playNewMediaFile(MediaFiles.get(currentMediaIndex));
     }
 
     // this function plays the media file received from the file chooser
+    // only call this when you are sure that the MediaFiles exists
     public void playNewMediaFile(File selectedFile) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
 
+        // disabling next/prev buttons
         if (currentMediaIndex == 0) {
             layoutController.getPrevButton().setDisable(true);
             if (MediaFiles.size() == 1)
                 layoutController.getNextButton().setDisable(true);
+            else
+                layoutController.getNextButton().setDisable(false);
         } else if (currentMediaIndex == MediaFiles.size() - 1) {
             layoutController.getNextButton().setDisable(true);
         } else {
             layoutController.getPrevButton().setDisable(false);
             layoutController.getNextButton().setDisable(false);
         }
+
         media = new Media(selectedFile.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
+        String sqlCheck = "SELECT COUNT(*) FROM Favorite WHERE Media = ?;";
+        Connection con = null;
+        PreparedStatement checkStmt = null;
+        ResultSet rs = null;
+        try {
+            con = SongDAO.getConnection();
+            checkStmt = con.prepareStatement(sqlCheck);
+            String getMediaPath = selectedFile.getAbsolutePath();
+            checkStmt.setString(1, getMediaPath);
+            rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                layoutController.setBlueFavoriteHeartImage();
+            } else
+                layoutController.setWhiteFavoriteHeartImage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
 
+            try {
+                if (rs != null)
+                    rs.close();
+                if (checkStmt != null)
+                    checkStmt.close();
+                if (con != null)
+                    con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         synchronizeWithLayout(selectedFile);
 
         if (LayoutController.isLooped) {
@@ -96,6 +145,7 @@ public class MediaLoader {
     }
 
     private void setAutoPlayNextMediaOf(File selectedFile) {
+
         mediaPlayer.setOnEndOfMedia(() -> {
             if (currentMediaIndex < MediaFiles.size() - 1) {
                 ++currentMediaIndex;
@@ -112,7 +162,22 @@ public class MediaLoader {
                     mfsController.toStartPosition();
                 }
             }
+
         });
+
+        try {
+            if (!songDAO.checkExist(selectedFile)) {
+                songDAO.addMedia(selectedFile, DateTime.getCurrentDateTime());
+            } else {
+                songDAO.updateDate(selectedFile, DateTime.getCurrentDateTime());
+            }
+            recentMediaController.setCurrentFilePlaying(selectedFile);
+            recentMediaController.showRecentMedia();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        mediaPlayer.play();
     }
 
     private void synchronizeWithLayout(File selectedFile) {
@@ -122,12 +187,17 @@ public class MediaLoader {
         layoutController.setPauseButtonImage();
         mediaPlayer.setOnReady(() -> {
             if (Helpers.isVideoFile(selectedFile)) {
-                layoutController.setVideoFullScreenScene();
-                vfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
+                if (fullScreenFlag == 0) {
+                    layoutController.setVideoFullScreenScene();
+                    ++fullScreenFlag;
+                }
                 LayoutController.isVideoFile = true;
                 LayoutController.isAudioFile = false;
             } else if (Helpers.isAudioFile(selectedFile)) {
-                layoutController.setMusicFullScreenScene();
+                if (fullScreenFlag == 0) {
+                    layoutController.setMusicFullScreenScene();
+                    ++fullScreenFlag;
+                }
                 LayoutController.isAudioFile = true;
                 LayoutController.isVideoFile = false;
                 mfsController.startRotation();
@@ -204,9 +274,7 @@ public class MediaLoader {
     }
 
     public boolean mediaPlayerExists() {
-        if (mediaPlayer != null)
-            return true;
-        return false;
+        return mediaPlayer != null;
     }
 
     public MediaPlayer getMediaPlayer() {
@@ -272,12 +340,43 @@ public class MediaLoader {
     // only call this function when you remove a song from a list/database
     public void removeDeletedMediaFileFromLayout() {
         if (mediaPlayer != null) {
+            mediaPlayer.pause();
+            layoutController.getCurrentTimeLabel().setText("00:00:00");
+            layoutController.getTotalDuration().setText("00:00:00");
+            layoutController.getProgressSlider().setValue(0);
+            layoutController.setSongName("SONG NAME");
+            layoutController.setPlayButtonImage();
+            layoutControllerRemoveVideo();
+            layoutController.replaceMediaViewWithImageView();
             mediaPlayer = null;
         }
-        layoutController.getCurrentTimeLabel().setText("00:00:00");
-        layoutController.getTotalDuration().setText("00:00:00");
-        layoutController.getProgressSlider().setValue(0);
-        layoutController.setSongName("SONG NAME");
-        layoutController.setPlayButtonImage();
+    }
+
+    // this is to check whether the current media is video or not so that the mini
+    // mediaview can appear
+    public boolean isVideoFile() {
+        return Helpers.isVideoFile(MediaFiles.get(currentMediaIndex));
+    }
+
+    public void vfsControllerRemoveVideo() {
+        if (vfsController.getVideoContainer() != null)
+            vfsController.getVideoContainer().setMediaPlayer(null);
+    }
+
+    public void vfsControllerSetVideo() {
+        layoutControllerRemoveVideo();
+        if (vfsController.getVideoContainer() != null)
+            vfsController.getVideoContainer().setMediaPlayer(mediaPlayer);
+    }
+
+    public void layoutControllerRemoveVideo() {
+        if (layoutController.getSmallMediaView() != null)
+            layoutController.getSmallMediaView().setMediaPlayer(null);
+    }
+
+    public void layoutControllerSetVideo() {
+        vfsControllerRemoveVideo();
+        if (layoutController.getSmallMediaView() != null)
+            layoutController.getSmallMediaView().setMediaPlayer(mediaPlayer);
     }
 }

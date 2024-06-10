@@ -3,11 +3,20 @@ package scenes.layout;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import scenes.favorite.FavoriteController;
+import scenes.mediaFullScreen.MusicFullScreenController;
+
 import java.util.ResourceBundle;
 
+import dao.FavoriteDAO;
+import dao.SongDAO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -22,6 +31,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,6 +40,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import utils.MediaLoader;
@@ -67,6 +78,11 @@ public class LayoutController implements Initializable {
 	@FXML
 	private ComboBox<String> speedBox;
 
+	@FXML
+	private TextField searchBox;
+
+	private MediaView smallMediaView;
+
 	public static boolean isPlayButton = true, isMuted = false, isInPlaylist = false, isFavorite = false,
 			isFullScreen = false, isAudioFile = false, isVideoFile = false, isLooped = false;
 
@@ -77,36 +93,55 @@ public class LayoutController implements Initializable {
 			musicFullScreenScene, prevScene, favoriteScene;
 
 	private MediaLoader mediaLoader;
+	private FavoriteController favoriteController;
+	private FavoriteDAO favoriteDAO = new FavoriteDAO();
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
+			// create tables if not exists
+			String favoriteTable = "CREATE TABLE IF NOT EXISTS Favorite(Media TEXT PRIMARY KEY);";
+			String recentMediaTable = "CREATE TABLE IF NOT EXISTS Recent_Media (PathMedia TEXT primary key, LastDateOpened TEXT);";
+			Connection connection = SongDAO.getConnection();
+			Statement statement = connection.createStatement();
+			statement.execute(favoriteTable);
+			statement.execute(recentMediaTable);
+
+			// load media screens
 			homeScene = FXMLLoader.load(getClass().getResource("/scenes/home/HomeEmpty.fxml"));
 			recentMediaScene = FXMLLoader.load(getClass().getResource("/scenes/recentMedia/RecentMedia.fxml"));
 			musicLibScene = FXMLLoader.load(getClass().getResource("/scenes/musicLibrary/MusicLibrary.fxml"));
 			videoLibScene = FXMLLoader.load(getClass().getResource("/scenes/videoLibrary/VideoLibrary.fxml"));
-			favoriteScene = FXMLLoader.load(getClass().getResource("/scenes/favorite/Favorite.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/favorite/Favorite.fxml"));
+			favoriteScene = loader.load();
+			favoriteController = loader.getController();
 			videoFullScreenScene = FXMLLoader
 					.load(getClass().getResource("/scenes/mediaFullScreen/VideoFullScreen.fxml"));
-			musicFullScreenScene = FXMLLoader
-					.load(getClass().getResource("/scenes/mediaFullScreen/MusicFullScreen.fxml"));
+			loader = null;
+			loader = new FXMLLoader(getClass().getResource("/scenes/mediaFullScreen/MusicFullScreen.fxml"));
+			musicFullScreenScene = loader.load();
+			loader.<MusicFullScreenController>getController().receiveLayoutController(this);
 			mainContainer.setCenter(homeScene);
 			prevScene = homeScene;
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		smallMediaView = new MediaView();
+		smallMediaView.setFitWidth(140);
+		smallMediaView.setFitHeight(70);
 		imageSongContainer.setOnMouseClicked(event -> {
 			if (!isFullScreen && isAudioFile) {
 				mainContainer.setCenter(musicFullScreenScene);
 				isFullScreen = true;
+				replaceMediaViewWithImageView();
 			}
 
 			else if (!isFullScreen && isVideoFile) {
-				mainContainer.setCenter(videoFullScreenScene);
-				isFullScreen = true;
+				setVideoFullScreenScene();
 			} else {
-				mainContainer.setCenter(prevScene);
-				isFullScreen = false;
+				switchToSmallMediaView();
 			}
 		});
 		mediaLoader = MediaLoader.getMediaLoader();
@@ -153,11 +188,16 @@ public class LayoutController implements Initializable {
 		progressSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-				StackPane trackPane = (StackPane) progressSlider.lookup(".track");
-				String newValString = String.valueOf((int) (new_val.doubleValue() * 100000) / 100000.0);
-				String style = "-fx-background-color: linear-gradient(to right, #2880E8 " + newValString + "%, white "
-						+ newValString + "%);";
-				trackPane.setStyle(style);
+				if (mediaLoader.mediaPlayerExists()) {
+					StackPane trackPane = (StackPane) progressSlider.lookup(".track");
+					String newValString = String.valueOf((int) (new_val.doubleValue() * 100000) / 100000.0);
+					String style = "-fx-background-color: linear-gradient(to right, #2880E8 " + newValString
+							+ "%, white "
+							+ newValString + "%);";
+					trackPane.setStyle(style);
+				} else {
+					progressSlider.setValue(0);
+				}
 			}
 		});
 
@@ -211,29 +251,29 @@ public class LayoutController implements Initializable {
 		// Add 'selected' class to the clicked item
 		((Button) event.getSource()).getStyleClass().add("active");
 		if (event.getSource() == sideBarHome) {
-			mainContainer.setCenter(homeScene);
 			prevScene = homeScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 		if (event.getSource() == sideBarMusicLib) {
-			mainContainer.setCenter(musicLibScene);
 			prevScene = musicLibScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 		if (event.getSource() == sideBarRecentMedia) {
-			mainContainer.setCenter(recentMediaScene);
 			prevScene = recentMediaScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 		if (event.getSource() == sideBarVideoLib) {
-			mainContainer.setCenter(videoLibScene);
 			prevScene = videoLibScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 		if (event.getSource() == sideBarFav) {
-			mainContainer.setCenter(favoriteScene);
 			prevScene = favoriteScene;
 			isFullScreen = false;
+			switchToSmallMediaView();
 		}
 	}
 
@@ -272,14 +312,31 @@ public class LayoutController implements Initializable {
 		mediaDurationLabel.setText(Helpers.formatTime(duration));
 	}
 
+	private void switchToSmallMediaView() {
+		if (mediaLoader.getMediaPlayer() != null && mediaLoader.isVideoFile()) {
+			smallMediaView.setVisible(true);
+			mediaLoader.layoutControllerSetVideo();
+			imageSongContainer.getChildren().set(0, smallMediaView);
+		} else if (mediaLoader.getMediaPlayer() != null && !mediaLoader.isVideoFile()) {
+			replaceMediaViewWithImageView();
+		}
+		mainContainer.setCenter(prevScene);
+		isFullScreen = false;
+	}
+
 	public void setVideoFullScreenScene() {
 		isFullScreen = true;
+		mediaLoader.vfsControllerSetVideo();
+		replaceMediaViewWithImageView();
 		mainContainer.setCenter(videoFullScreenScene);
 	}
 
 	public void setMusicFullScreenScene() {
 		isFullScreen = true;
 		mainContainer.setCenter(musicFullScreenScene);
+		mediaLoader.vfsControllerRemoveVideo();
+		mediaLoader.layoutControllerRemoveVideo();
+		replaceMediaViewWithImageView();
 	}
 
 	public Label getTotalDuration() {
@@ -319,6 +376,10 @@ public class LayoutController implements Initializable {
 		}
 	}
 
+	public MediaView getSmallMediaView() {
+		return smallMediaView;
+	}
+
 	// public void handlePlaylistBtn(ActionEvent event) {
 	// if (isInPlaylist) {
 	// File file = new File("src/assets/images/icons8-playlist-100.png");
@@ -333,18 +394,32 @@ public class LayoutController implements Initializable {
 	// }
 	// }
 
-	public void handleFavoriteBtn(ActionEvent event) {
+	public void handleFavoriteBtn(ActionEvent event) throws SQLException {
 		if (isFavorite) {
-			File file = new File("src/assets/images/icons8-heart-100.png");
-			Image image = new Image(file.toURI().toString());
-			favoriteBtnImgView.setImage(image);
-			isFavorite = false;
+			favoriteDAO.deleteMedia(
+					mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()).getAbsolutePath());
+			favoriteController.clearFileFavButton(
+					mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()).getAbsolutePath());
+			setWhiteFavoriteHeartImage();
 		} else {
-			File file = new File("src/assets/images/icons8-blue-heart-100.png");
-			Image image = new Image(file.toURI().toString());
-			favoriteBtnImgView.setImage(image);
-			isFavorite = true;
+			favoriteDAO.insertMedia(mediaLoader.getReceivedList().get(mediaLoader.getCurrentMediaIndex()));
+			setBlueFavoriteHeartImage();
 		}
+		favoriteController.updateAllTable();
+	}
+
+	public void setBlueFavoriteHeartImage() {
+		File file = new File("src/assets/images/icons8-blue-heart-100.png");
+		Image image = new Image(file.toURI().toString());
+		favoriteBtnImgView.setImage(image);
+		isFavorite = true;
+	}
+
+	public void setWhiteFavoriteHeartImage() {
+		File file = new File("src/assets/images/icons8-heart-100.png");
+		Image image = new Image(file.toURI().toString());
+		favoriteBtnImgView.setImage(image);
+		isFavorite = false;
 	}
 
 	public void handleBackSkipButtons(ActionEvent event) {
@@ -372,7 +447,7 @@ public class LayoutController implements Initializable {
 		}
 	}
 
-	public void handleNextPrevButtons(ActionEvent event) {
+	public void handleNextPrevButtons(ActionEvent event) throws SQLException {
 		if (event.getSource() == nextButton
 				&& mediaLoader.getReceivedListSize() >= 2
 				&& mediaLoader.getCurrentMediaIndex() < mediaLoader.getReceivedListSize() - 1) {
@@ -380,6 +455,9 @@ public class LayoutController implements Initializable {
 			int currentMediaIndex = mediaLoader.getCurrentMediaIndex();
 			ArrayList<File> MediaFiles = mediaLoader.getReceivedList();
 			mediaLoader.playNewMediaFile(MediaFiles.get(currentMediaIndex));
+			if (!isFullScreen && !isAudioFile) {
+				mediaLoader.layoutControllerSetVideo();
+			}
 		} else if (event.getSource() == prevButton
 				&& mediaLoader.getReceivedListSize() >= 2
 				&& mediaLoader.getCurrentMediaIndex() > 0) {
@@ -387,6 +465,9 @@ public class LayoutController implements Initializable {
 			int currentMediaIndex = mediaLoader.getCurrentMediaIndex();
 			ArrayList<File> MediaFiles = mediaLoader.getReceivedList();
 			mediaLoader.playNewMediaFile(MediaFiles.get(currentMediaIndex));
+			if (!isFullScreen && !isAudioFile) {
+				mediaLoader.layoutControllerSetVideo();
+			}
 		}
 	}
 
@@ -428,5 +509,9 @@ public class LayoutController implements Initializable {
 		if (mediaLoader.getMediaPlayer() != null)
 			mediaLoader.getMediaPlayer().setRate(speed);
 
+	}
+
+	public void replaceMediaViewWithImageView() {
+		imageSongContainer.getChildren().set(0, songImageView);
 	}
 }

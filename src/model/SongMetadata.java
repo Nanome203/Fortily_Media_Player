@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 public class SongMetadata {
@@ -11,8 +7,21 @@ public class SongMetadata {
   private String duration;
   private long lastModified;
   private String pathname;
+  private String lastDayOpened; // Format "yyyy-mm-dd HH:mm:ss"
+  
+  public String getLastDayOpened() {
+	return lastDayOpened;
+}
 
-  public SongMetadata(String title, String artist, String album, String duration, long lastModified, String pathname) {
+  public SongMetadata() {
+	  
+  }
+  
+public void setLastDayOpened(String lastDayOpened) {
+	this.lastDayOpened = lastDayOpened;
+}
+
+public SongMetadata(String title, String artist, String album, String duration, long lastModified, String pathname) {
     this.title = title;
     this.artist = artist;
     this.album = album;

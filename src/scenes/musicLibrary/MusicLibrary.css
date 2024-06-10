@@ -9,8 +9,12 @@
   -fx-border-radius: 5;
 }
 
+.filterChoiceBox {
+  -fx-background-color: transparent;
+}
+
 .addFolderButton {
-  -fx-background-color: #1D2129;
+  -fx-background-color: transparent;
 }
 
 .deleteButton {

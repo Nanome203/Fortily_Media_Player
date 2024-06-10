@@ -39,7 +39,7 @@
                               <Image url="@../../assets/images/icons8-search-100.png" />
                            </image>
                         </ImageView>
-                        <TextField focusTraversable="false" prefHeight="39.0" prefWidth="190.0" promptText="Search" style="-fx-background-color: transparent;">
+                        <TextField fx:id="searchBox" focusTraversable="false" prefHeight="39.0" prefWidth="190.0" promptText="Search" style="-fx-background-color: transparent;">
                            <font>
                               <Font size="15.0" />
                            </font>

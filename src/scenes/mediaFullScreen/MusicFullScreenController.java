@@ -9,19 +9,25 @@ import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import scenes.layout.LayoutController;
 
 public class MusicFullScreenController implements Initializable {
 
     @FXML
-    private ImageView diskImage;
+    private Circle diskImage;
 
     private MediaLoader mediaLoader;
     private RotateTransition rotate;
+    private LayoutController layoutController;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        Image disk = new Image("/assets/images/R.png");
+        diskImage.setFill(new ImagePattern(disk));
         mediaLoader = MediaLoader.getMediaLoader();
         mediaLoader.receiveMusicFullScreenController(this);
         rotate = new RotateTransition();
@@ -30,6 +36,21 @@ public class MusicFullScreenController implements Initializable {
         rotate.setCycleCount(TranslateTransition.INDEFINITE);
         rotate.setInterpolator(Interpolator.LINEAR);
         rotate.setByAngle(-360);
+        diskImage.setOnMousePressed(e -> {
+            rotate.stop();
+            layoutController.setPlayButtonImage();
+            mediaLoader.pauseCurrentMediaFile();
+        });
+        diskImage.setOnMouseReleased(e -> {
+            rotate.play();
+            layoutController.setPauseButtonImage();
+            mediaLoader.playCurrentMediaFile();
+            mediaLoader.changeDiskRotateRate();
+        });
+    }
+
+    public void receiveLayoutController(LayoutController controller) {
+        layoutController = controller;
     }
 
     public void startRotation() {
