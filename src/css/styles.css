@@ -1,135 +1,157 @@
 #imageSongContainer:hover {
-    -fx-background-color: #384154;
-    -fx-background-radius: 10;
-    -fx-cursor: hand;
+  -fx-background-color: rgba(90, 105, 143, 0.5);
+  -fx-background-radius: 10;
+  -fx-cursor: hand;
 }
 
 #imageSongContainer:hover:pressed {
-    -fx-background-color: #46516B;
+  -fx-background-color: rgba(90, 105, 143, 0.7);
 }
 
 #imageSongContainer .label {
-    -fx-text-fill: white;
+  -fx-text-fill: white;
 }
 
 #imageSongContainer .label:hover {
-    -fx-text-fill: #2880E8;
+  -fx-text-fill: #2880E8;
 }
 
 .sidebar-item {
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-cursor: hand;
+  -fx-background-color: transparent;
+  -fx-text-fill: white;
+  -fx-cursor: hand;
+  -fx-border-width: 0 0 0 5;
+  -fx-border-color: transparent;
 }
 
 .sidebar-item:hover,
 .active {
-    -fx-background-color: #202633;
-    -fx-text-fill: #2880E8;
-}
-
-.sidebar-item:pressed {
-    -fx-background-color: #384258;
-}
-
-.active {
-    -fx-text-fill: #2880E8;
-    -fx-border-width: 0 0 0 5;
-    /*-fx-border-color: #2880E8;*/
+  -fx-text-fill: #2880E8;
+  -fx-border-width: 0 0 0 5;
+  -fx-border-color: #2880E8;
 }
 
 .button-style {
-    -fx-background-color: transparent;
-    -fx-cursor: hand;
+  -fx-background-color: transparent;
+  -fx-cursor: hand;
 }
 
 .button-style:hover {
-    -fx-background-color: #49546A;
-    -fx-background-radius: 50;
+  -fx-background-color: rgba(90, 105, 143, 0.5);
+  -fx-background-radius: 50;
 }
 
 .button-style:hover:pressed {
-    -fx-background-color: #46516B;
+  -fx-background-color: rgba(90, 105, 143, 0.7);
 }
 
 #volumeSlider.slider .track {
-    -fx-background-color: #2880E8;
+  -fx-background-color: #2880E8;
 }
 
+.combo-box {
+  -fx-background-color: transparent;
+  -fx-border-color: #2880E8;
+  -fx-border-radius: 8;
+  -fx-border-width: 2;
+  -fx-font-size: 16px;
+}
+
+
+.combo-box .combo-box-popup .list-view {
+  -fx-background-color: rgba(0, 0, 0, 0.7);
+  -fx-border-color: #2880E8;
+  -fx-border-width: 2;
+}
+
+.combo-box .combo-box-popup .list-cell {
+  -fx-background-color: transparent;
+  -fx-text-fill: white;
+  -fx-alignment: center
+}
+
+.combo-box .combo-box-popup .list-cell:hover {
+  -fx-text-fill: #2880E8;
+}
+
+.combo-box .combo-box-popup .list-cell:selected {
+  -fx-text-fill: #2880E8;
+}
+
+
 .backgroundColor {
-    -fx-background-color: linear-gradient(to bottom, #14171D, #1D5EAB);
+  -fx-background-color: linear-gradient(to bottom, #14171D, #1D5EAB);
 }
 
 .shadow {
-    -fx-effect: dropshadow(gaussian, #14171D, 10, 0, 1, 1);
+  -fx-effect: dropshadow(gaussian, #14171D, 10, 0, 1, 1);
 }
 
 .tab-header-background {
-    -fx-background-color: #1D2129;
-
+  -fx-background-color: transparent;
 }
 
 .tab {
-    -fx-pref-width: 100;
-    -fx-font: 16px "Ebrima";
+  -fx-background-color: transparent;
+  -fx-text-fill: #F3F3F3;
+  -fx-pref-width: 100;
+  -fx-font-size: 16px;
 }
 
 .tab-label {
-    -fx-text-fill: #f3f3f3;
+  -fx-text-fill: #f3f3f3;
 
 }
 
 .tab:focused .tab-label {
-    -fx-text-fill: #2880E8;
+  -fx-text-fill: #2880E8;
 }
 
 .tab:selected .tab-label {
-    -fx-text-fill: #2880E8;
+  -fx-text-fill: #2880E8;
 }
 
-.tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator {
-    -fx-border-color: transparent;
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+  -fx-border-color: transparent;
 }
 
 .table-view {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.table-view .column-header-background .filler {
-    -fx-background-color: transparent;
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
 }
 
 .table-view .corner {
-    -fx-background-color: transparent;
+  -fx-background-color: transparent;
 }
 
 .table-view .table-cell {
-    -fx-border-color: transparent;
-    -fx-padding: 4px 0 4px 10px;
+  -fx-text-fill: #F3F3F3;
+  -fx-border-color: transparent;
+  -fx-padding: 4px 0 4px 10px;
+  -fx-font-size: 18px;
+  -fx-alignment: center;
 }
 
-.table-row-cell:hover {
-    -fx-background-color: #49546A;
-
+.table-view .table-row-cell {
+  -fx-background-color: transparent;
 }
 
-.table-row-cell:odd {
-    -fx-background-color: #49546A;
-    -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0.0em;
+.table-view .table-row-cell:selected {
+  -fx-background-color: #2880E8;
+  -fx-cursor: hand;
 }
 
+.table-row-cell:odd,
 .table-row-cell:even {
-    -fx-background-color: #49546A;
-    -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0.0em;
+  -fx-background-insets: 0, 0 0 1 0;
+  -fx-padding: 0.0em;
 }
 
 .table-view .column-header,
 .table-view .column-header .label {
-    -fx-text-fill: #f3f3f3;
-    -fx-font: 16px "Ebrima";
+  -fx-background-color: #1D2129;
+  -fx-text-fill: #f3f3f3;
+  -fx-font-size: 16px;
 }
 
 .table-view .virtual-flow .scroll-bar:vertical,
@@ -138,39 +160,75 @@
 .table-view .virtual-flow .scroll-bar:horizontal,
 .table-view .virtual-flow .scroll-bar:horizontal .track,
 .table-view .virtual-flow .scroll-bar:horizontal .track-background {
-    -fx-background-color: transparent;
+  -fx-background-color: transparent;
 }
 
 .table-view .virtual-flow .scroll-bar:vertical .thumb {
-    -fx-background-color: linear-gradient(to bottom, #14171D, #1D5EAB);
+  -fx-background-color: linear-gradient(to bottom, #14171D, #1D5EAB);
 }
 
 .table-view .virtual-flow .scroll-bar:horizontal .thumb {
-    -fx-background-color: linear-gradient(to right, #14171D, #1D5EAB);
+  -fx-background-color: linear-gradient(to right, #14171D, #1D5EAB);
 }
 
 .noheader .column-header-background {
-    -fx-max-height: 0;
-    -fx-pref-height: 0;
-    -fx-min-height: 0;
+  -fx-max-height: 0;
+  -fx-pref-height: 0;
+  -fx-min-height: 0;
 }
 
 .choice-box .label {
-    -fx-text-fill: #f3f3f3;
+  -fx-text-fill: #f3f3f3;
 }
 
 .choice-box {
-    -fx-backgroundcolor: #1D2129;
-    -fx-focus-color: #49546A;
-    -fx-faint-focus-color: #1D2129;
-    -fx-control-inner-background: #1D2129;
-    -fx-selection-bar: #49546A;
+  -fx-backgroundcolor: #1D2129;
+  -fx-focus-color: #49546A;
+  -fx-faint-focus-color: #1D2129;
+  -fx-control-inner-background: #1D2129;
+  -fx-selection-bar: #49546A;
 }
 
 .choice-box .menu-item:focused .label {
-    -fx-text-fill: #2880E8;
+  -fx-text-fill: #2880E8;
 }
 
 .centered-choice-box .list-cell {
-    -fx-alignment: center;
+  -fx-alignment: center;
+}
+
+.playAllButton {
+  -fx-background-color: #2880E8;
+  -fx-background-radius: 5;
+}
+
+.playSelectedButton,
+.shuffleButton,
+.filterChoiceBox {
+  -fx-background-color: #1D2129;
+  -fx-border-color: #2880E8;
+  -fx-border-radius: 5;
+}
+
+.filterChoiceBox {
+  -fx-background-color: transparent;
+}
+
+.addFolderButton {
+  -fx-background-color: transparent;
+}
+
+.deleteButton {
+  -fx-background-color: #e24545;
+  -fx-background-radius: 5;
+}
+
+.addFolderButton,
+.playAllButton,
+.playSelectedButton,
+.shuffleButton,
+.filterChoiceBox,
+.deleteButton,
+.tab {
+  -fx-cursor: hand;
 }

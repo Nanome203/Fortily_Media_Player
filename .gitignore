@@ -1,5 +1,6 @@
-bin
-*.class
-.project
-.settings/
-.vscode/*
+/bin
+/.project
+/.settings
+/.vscode
+/**/*.db
+/src/assets/videos

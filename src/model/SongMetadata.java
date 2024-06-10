@@ -1,67 +1,80 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author DELL
- */
 public class SongMetadata {
-    private String Title;
-    private String Artist;
-    private String Duration;
-    private String Album;
-    private long Date;
+  private String title;
+  private String artist;
+  private String album;
+  private String duration;
+  private long lastModified;
+  private String pathname;
+  private String lastDayOpened; // Format "yyyy-mm-dd HH:mm:ss"
+  
+  public String getLastDayOpened() {
+	return lastDayOpened;
+}
 
-    public SongMetadata(String Title, String Artist, String Duration, String Album, long Date) {
-        this.Title = Title;
-        this.Artist = Artist;
-        this.Duration = Duration;
-        this.Album = Album;
-        this.Date = Date;
-    }
+  public SongMetadata() {
+	  
+  }
+  
+public void setLastDayOpened(String lastDayOpened) {
+	this.lastDayOpened = lastDayOpened;
+}
 
-    public String getTitle() {
-        return Title;
-    }
+public SongMetadata(String title, String artist, String album, String duration, long lastModified, String pathname) {
+    this.title = title;
+    this.artist = artist;
+    this.album = album;
+    this.duration = duration;
+    this.lastModified = lastModified;
+    this.pathname = pathname;
+  }
 
-    public void setTitle(String Title) {
-        this.Title = Title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public String getArtist() {
-        return Artist;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setArtist(String Artist) {
-        this.Artist = Artist;
-    }
+  public String getArtist() {
+    return artist;
+  }
 
-    public String getDuration() {
-        return Duration;
-    }
+  public void setArtist(String artist) {
+    this.artist = artist;
+  }
 
-    public void setDuration(String Duration) {
-        this.Duration = Duration;
-    }
+  public String getAlbum() {
+    return album;
+  }
 
-    public String getAlbum() {
-        return Album;
-    }
+  public void setAlbum(String album) {
+    this.album = album;
+  }
 
-    public void setAlbum(String Album) {
-        this.Album = Album;
-    }
+  public String getDuration() {
+    return duration;
+  }
 
-    public long getDate() {
-        return Date;
-    }
+  public void setDuration(String duration) {
+    this.duration = duration;
+  }
 
-    public void setDate(long Date) {
-        this.Date = Date;
-    }
-    
-    
+  public long getLastModified() {
+    return lastModified;
+  }
+
+  public void setLastModified(long lastModified) {
+    this.lastModified = lastModified;
+  }
+
+  public String getPathname() {
+    return pathname;
+  }
+
+  public void setPathname(String pathname) {
+    this.pathname = pathname;
+  }
 }
