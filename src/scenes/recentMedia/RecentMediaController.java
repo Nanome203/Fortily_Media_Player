@@ -109,7 +109,8 @@ public class RecentMediaController implements Initializable {
 
   @FXML
   public void playSingleFile(ActionEvent evt) throws SQLException {
-	  if (selectionModel.getSelectedItem() == null) return;
+    if (selectionModel.getSelectedItem() == null)
+      return;
     playSingleMedia(selectionModel.getSelectedItem());
   }
 
@@ -173,11 +174,12 @@ public class RecentMediaController implements Initializable {
       return;
 
     for (SongMetadata getPath : selectedItems) {
-      if (getPath.getPathname().equals(getCurrentFilePlaying.getAbsolutePath())) {
-        // mediaLoader.deleteCurrentFileInLSong(getPath);
+      if (getCurrentFilePlaying != null)
+        if (getPath.getPathname().equals(getCurrentFilePlaying.getAbsolutePath())) {
+          // mediaLoader.deleteCurrentFileInLSong(getPath);
 
-        mediaLoader.removeDeletedMediaFileFromLayout();
-      }
+          mediaLoader.removeDeletedMediaFileFromLayout();
+        }
 
       // LSong.remove(getPath);
       songDAO.deleteMedia(getPath.getPathname());
@@ -192,7 +194,8 @@ public class RecentMediaController implements Initializable {
   }
 
   private void playSingleMedia(SongMetadata selectedItem) {
-	 if(selectedItem == null) return;
+    if (selectedItem == null)
+      return;
     // stopPlaying();
     mediaLoader.pauseCurrentMediaFile();
     getCurrentMediaPlaying = selectedItem;
