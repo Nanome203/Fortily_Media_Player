@@ -93,7 +93,7 @@
   -fx-background-color: transparent;
   -fx-text-fill: #F3F3F3;
   -fx-pref-width: 100;
-  -fx-font: 16px "Ebrima";
+  -fx-font-size: 16px;
 }
 
 .tab-label {
@@ -109,7 +109,7 @@
   -fx-text-fill: #2880E8;
 }
 
-.tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator {
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
   -fx-border-color: transparent;
 }
 
@@ -149,7 +149,7 @@
 .table-view .column-header .label {
   -fx-background-color: #1D2129;
   -fx-text-fill: #f3f3f3;
-  -fx-font: 16px "Ebrima";
+  -fx-font-size: 16px;
 }
 
 .table-view .virtual-flow .scroll-bar:vertical,
