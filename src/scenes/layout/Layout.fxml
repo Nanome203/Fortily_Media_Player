@@ -377,7 +377,7 @@
                   </ImageView>
                   <Label fx:id="songName" text="SONG NAME" textFill="#fffefe">
                      <font>
-                        <Font name="Ebrima Bold" size="20.0" />
+                        <Font name="Arial Bold" size="20.0" />
                      </font>
                   </Label>
                </children>
