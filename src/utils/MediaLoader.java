@@ -183,8 +183,10 @@ public class MediaLoader {
     private void synchronizeWithLayout(File selectedFile) {
         if (LayoutController.isMuted) {
             mediaPlayer.setMute(LayoutController.isMuted);
-        }
+        } else
+            mediaPlayer.setVolume(LayoutController.volume * 0.01);
         layoutController.setPauseButtonImage();
+        mfsController.startRotation();
         mediaPlayer.setOnReady(() -> {
             if (Helpers.isVideoFile(selectedFile)) {
                 if (fullScreenFlag == 0) {
@@ -200,7 +202,6 @@ public class MediaLoader {
                 }
                 LayoutController.isAudioFile = true;
                 LayoutController.isVideoFile = false;
-                mfsController.startRotation();
             }
             layoutController.setTotalDuration(mediaPlayer.getTotalDuration());
             layoutController.getCurrentTimeLabel().setText(Helpers.formatTime(mediaPlayer.getCurrentTime()));
