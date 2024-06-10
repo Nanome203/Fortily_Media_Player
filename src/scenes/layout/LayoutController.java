@@ -31,6 +31,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -76,6 +77,9 @@ public class LayoutController implements Initializable {
 
 	@FXML
 	private ComboBox<String> speedBox;
+
+	@FXML
+	private TextField searchBox;
 
 	private MediaView smallMediaView;
 
