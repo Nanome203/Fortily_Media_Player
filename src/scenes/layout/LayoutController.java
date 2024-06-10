@@ -183,11 +183,16 @@ public class LayoutController implements Initializable {
 		progressSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-				StackPane trackPane = (StackPane) progressSlider.lookup(".track");
-				String newValString = String.valueOf((int) (new_val.doubleValue() * 100000) / 100000.0);
-				String style = "-fx-background-color: linear-gradient(to right, #2880E8 " + newValString + "%, white "
-						+ newValString + "%);";
-				trackPane.setStyle(style);
+				if (mediaLoader.mediaPlayerExists()) {
+					StackPane trackPane = (StackPane) progressSlider.lookup(".track");
+					String newValString = String.valueOf((int) (new_val.doubleValue() * 100000) / 100000.0);
+					String style = "-fx-background-color: linear-gradient(to right, #2880E8 " + newValString
+							+ "%, white "
+							+ newValString + "%);";
+					trackPane.setStyle(style);
+				} else {
+					progressSlider.setValue(0);
+				}
 			}
 		});
 

@@ -5,7 +5,8 @@
 
 .tab,
 .column {
-  -fx-background-color: #1D2129;
+  /* -fx-background-color: #1D2129; */
+  -fx-background-color: transparent;
   -fx-text-fill: #F3F3F3;
 }
 
@@ -19,6 +20,10 @@
   -fx-background-color: #1D2129;
   -fx-border-color: #2880E8;
   -fx-border-radius: 5;
+}
+
+.filterChoiceBox {
+  -fx-background-color: transparent;
 }
 
 .addFolderButton {

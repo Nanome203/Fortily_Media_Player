@@ -50,7 +50,7 @@
                           <ChoiceBox fx:id="filterChoiceBox" maxHeight="31.2" minHeight="31.2" prefHeight="31.2" prefWidth="150.0" styleClass="filterChoiceBox" />
                </children>
                <padding>
-                  <Insets left="20.0" right="20.0" />
+                  <Insets left="30.0" right="20.0" />
                </padding>
             </HBox>
             <TableView fx:id="videoLibraryTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#playMediaOnRowClick">
@@ -73,6 +73,9 @@
                   <String fx:value="noheader" />
                   <String fx:value="table" />
                </styleClass>
+               <VBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </VBox.margin>
             </TableView>
          </children>
          <padding>
