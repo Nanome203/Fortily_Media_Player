@@ -3,4 +3,4 @@
 /.settings
 /.vscode
 /**/*.db
-/src/assets/videos
+# /src/assets/videos

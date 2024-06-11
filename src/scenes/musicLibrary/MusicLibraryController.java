@@ -244,7 +244,7 @@ public class MusicLibraryController implements Initializable {
     DirectoryChooser directoryChooser = new DirectoryChooser();
     directoryChooser.setTitle("Add Music Files");
     directoryChooser
-        .setInitialDirectory(new File(System.getProperty("user.dir") + "/src/assets/audios"));
+        .setInitialDirectory(new File(System.getProperty("user.dir") + "/src/assets"));
     File selectedDirectory = directoryChooser.showDialog(null);
     if (selectedDirectory == null) {
       return;
