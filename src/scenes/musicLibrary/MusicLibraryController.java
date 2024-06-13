@@ -396,6 +396,9 @@ public class MusicLibraryController implements Initializable {
     }
     List<File> shuffledAudioFilesList = new ArrayList<File>(audioFilesList);
     java.util.Collections.shuffle(shuffledAudioFilesList);
+    mediaPlayer.stop();
+    mediaLoader.receiveListOfMediaFiles(shuffledAudioFilesList);
+    mediaLoader.playReceivedList();
   }
 
   @FXML

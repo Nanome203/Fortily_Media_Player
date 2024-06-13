@@ -381,6 +381,9 @@ public class VideoLibraryController implements Initializable {
     }
     List<File> shuffledVideoFilesList = new ArrayList<File>(videoFilesList);
     java.util.Collections.shuffle(shuffledVideoFilesList);
+    mediaPlayer.stop();
+    mediaLoader.receiveListOfMediaFiles(shuffledVideoFilesList);
+    mediaLoader.playReceivedList();
   }
 
   @FXML

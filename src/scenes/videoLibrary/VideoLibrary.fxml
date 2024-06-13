@@ -42,7 +42,7 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="shuffleButton" mnemonicParsing="false" onMouseClicked="#shuffleAllVideos" prefWidth="85.0" styleClass="shuffleButton" text="Shuffle" textFill="#f3f3f3">
+                  <Button fx:id="shuffleButton" mnemonicParsing="false" onMouseClicked="#shuffleAllVideos" prefWidth="85.0" styleClass="shuffleButton" text="Shuffle and play" textFill="#f3f3f3">
                      <font>
                         <Font size="14.0" />
                      </font>

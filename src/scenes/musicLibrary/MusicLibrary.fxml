@@ -50,7 +50,7 @@
               <Font size="14.0" />
             </font>
           </Button>
-                  <Button fx:id="allSongsShuffleButton" mnemonicParsing="false" onMouseClicked="#shuffleAllSongs" prefWidth="85.0" styleClass="shuffleButton" text="Shuffle" textFill="#f3f3f3">
+                  <Button fx:id="allSongsShuffleButton" mnemonicParsing="false" onMouseClicked="#shuffleAllSongs" prefWidth="85.0" styleClass="shuffleButton" text="Shuffle and play" textFill="#f3f3f3">
                      <font>
                         <Font size="14.0" />
                      </font>
