@@ -236,7 +236,7 @@ public class VideoLibraryController implements Initializable {
     DirectoryChooser directoryChooser = new DirectoryChooser();
     directoryChooser.setTitle("Add Music Files");
     directoryChooser
-        .setInitialDirectory(new File(System.getProperty("user.dir") + "/src/assets/videos"));
+        .setInitialDirectory(new File(System.getProperty("user.dir") + "/src/assets"));
     File selectedDirectory = directoryChooser.showDialog(null);
     if (selectedDirectory == null) {
       return;
@@ -381,6 +381,9 @@ public class VideoLibraryController implements Initializable {
     }
     List<File> shuffledVideoFilesList = new ArrayList<File>(videoFilesList);
     java.util.Collections.shuffle(shuffledVideoFilesList);
+    mediaPlayer.stop();
+    mediaLoader.receiveListOfMediaFiles(shuffledVideoFilesList);
+    mediaLoader.playReceivedList();
   }
 
   @FXML
